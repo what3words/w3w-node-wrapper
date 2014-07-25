@@ -1,0 +1,28 @@
+# -- IDE's files -----------------------------------------
+# vim
+.*.sw[a-z]
+*.un~
+Session.vim
+.netrwhist
+
+# sublimetext
+/*.sublime-project
+*.sublime-workspace
+
+# -- OS's files ------------------------------
+# Linux
+!.gitkeep
+!.gitignore
+*~
+
+# Mac OS X
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+#-- Project ------------------------------------
+node_modules
