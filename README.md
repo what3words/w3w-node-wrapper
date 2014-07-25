@@ -1,6 +1,6 @@
 # JS.Geo.What3Words
 
-A node.js wrapper for the What3Words API.
+A node.js wrapper for the [What3Words](http://what3words.com/) API.
 
 Turns WGS84 coordinates into three words or OneWords and vice-versa using what3words.com HTTP API
 
