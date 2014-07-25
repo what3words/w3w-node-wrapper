@@ -1,5 +1,7 @@
 {
   "name": "Geo.What3Words",
+  "description": "Turns WGS84 coordinates into three words or OneWords and vice-versa using what3words.com HTTP API",
+  "main": "index.js",
   "version": "0.0.1",
   "private": false,
   "repository": {
@@ -9,5 +11,20 @@
   "dependencies": {
     "lodash": "~2.4.1",
     "request": "~2.36.0"
+  },
+  "keywords": [
+    "lokku",
+    "what3words",
+    "api",
+    "library",
+    "utility",
+    "geo",
+    "maps",
+    "geolocation"
+  ],
+  "author": "Ignacio Rivas <rivasign@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lokku/js-geo-what3words/issues"
   }
 }
