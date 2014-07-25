@@ -1,0 +1,13 @@
+{
+  "name": "Geo.What3Words",
+  "version": "0.0.1",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lokku/js-geo-what3words.git"
+  },
+  "dependencies": {
+    "lodash": "~2.4.1",
+    "request": "~2.36.0"
+  }
+}
