@@ -1,5 +1,5 @@
 {
-  "name": "Geo.What3Words",
+  "name": "geo.what3words",
   "description": "Turns WGS84 coordinates into three words or OneWords and vice-versa using what3words.com HTTP API",
   "main": "index.js",
   "version": "0.0.1",
