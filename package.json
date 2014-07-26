@@ -8,9 +8,16 @@
     "type": "git",
     "url": "https://github.com/lokku/js-geo-what3words.git"
   },
+  "scripts": {
+    "test": "make test"
+  },
   "dependencies": {
     "lodash": "~2.4.1",
     "unirest": "^0.2.7"
+  },
+  "devDependencies": {
+    "mocha": "~1.21.0",
+    "should": "~4.0.4"
   },
   "keywords": [
     "lokku",
