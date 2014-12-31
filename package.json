@@ -12,6 +12,7 @@
     "test": "make test"
   },
   "dependencies": {
+    "bluebird": "^2.5.3",
     "lodash": "~2.4.1",
     "unirest": "^0.2.7"
   },
