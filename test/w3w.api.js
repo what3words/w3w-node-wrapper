@@ -16,7 +16,7 @@ describe('What3Words API Wrapper', function(){
     it('with a valid API KEY', function() {
       (function() {
         w3w = new What3Words(API_KEY);
-        w3w.getLanguages({}, function(r) {});
+        w3w.getLanguages({});
       }).should.not.throw();
     });
 
@@ -42,7 +42,7 @@ describe('What3Words API Wrapper', function(){
     });
 
     it('should return all languages', function(done) {
-      w3w.getLanguages({}, function(res) {
+      w3w.getLanguages({}).then(function(res) {
         res.should.eql(['de', 'en', 'es', 'fr', 'pt', 'ru', 'sv', 'tr']);
         done();
       });
@@ -51,7 +51,7 @@ describe('What3Words API Wrapper', function(){
     it('should be able to translate words to position', function(done) {
       w3w.wordsToPosition({
         words: 'prom.cape.pump'
-      }, function(res) {
+      }).then(function(res) {
         res.should.eql('51.484463,-0.195405').and.be.a.String;
         done();
       });
@@ -60,8 +60,8 @@ describe('What3Words API Wrapper', function(){
     it('should be able to translate position to words', function(done) {
       w3w.positionToWords({
         position: '51.484463,-0.195405'
-      }, function(res) {
-        res.should.eql('prom.cape.pump').and.be.a.String;
+      }).then(function(res) {
+        res.should.eql('prom,cape,pump').and.be.a.String;
         done();
       });
     });
@@ -69,7 +69,7 @@ describe('What3Words API Wrapper', function(){
     it('should be able to check if a word is available', function(done) {
       w3w.oneWordAvailable({
         word: 'nestoria'
-      }, function(res) {
+      }).then(function(res) {
         res.should.eql('1').and.be.a.Number;
         done();
       });
