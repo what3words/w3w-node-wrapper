@@ -4,14 +4,14 @@ A node.js wrapper for the [What3Words](http://what3words.com/) API.
 
 Turns WGS84 coordinates into three words or OneWords and vice-versa using what3words.com HTTP API
 
-Further information on the What3Words API and its features is available at [http://what3words.com/api/reference](http://what3words.com/api/reference). 
+Further information on the What3Words API and its features is available at [http://what3words.com/api/reference](http://what3words.com/api/reference).
 
 ## Installation
 
 Installing using npm (node package manager):
 
     npm install what3words
-    
+
 If you don't have npm installed or don't want to use it:
 
     cd ~/.node_libraries
@@ -42,8 +42,10 @@ var What3Words = require('./lib/geo.what3words.js'),
 ```javascript
 w3w.wordsToPosition({
   words: 'prom.cape.pump'
-}, function(response) {
-  console.log(response); // 51.484463,-0.195405 
+}).then(function(response) {
+  console.log(response); // 51.484463,-0.195405
+}).catch(function(err) {
+  console.log(err);
 });
 ```
 
@@ -56,7 +58,7 @@ Optional parameters:
 ```javascript
 w3w.positionToWords({
   position: '51.484463,-0.195405'
-}, function(response) {
+}).then(function(response) {
 
   console.log(response); //prom.cape.pump
 });
@@ -71,7 +73,7 @@ Optional parameters:
 ```javascript
 w3w.oneWordAvailable({
   word: 'nestoria'
-}, function(response) {
+}).then(function(response) {
 
   console.log(response); // 1
 });
@@ -85,7 +87,7 @@ Optional parameters:
 
 ### GetLanguages ###
 ```javascript
-w3w.getLanguages({}, function(response) {
+w3w.getLanguages({}).then(function(response) {
   console.log(response); // [ 'de', 'en', 'es', 'fr', 'pt', 'ru', 'sv', 'tr' ]
 });
 ```
@@ -93,8 +95,12 @@ w3w.getLanguages({}, function(response) {
 Optional parameters:
 
 * _full_ returns the full response of the api
-* _lang_ sets a different language for the response 
+* _lang_ sets a different language for the response
 
+
+### Errors ###
+
+All the methods return a [Bluebird](https://github.com/petkaantonov/bluebird/blob/master/API.md) promise.
 
 ## License
 
