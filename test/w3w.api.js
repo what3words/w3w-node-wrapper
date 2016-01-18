@@ -43,7 +43,7 @@ describe('What3Words API Wrapper', function(){
 
     it('should return all languages', function(done) {
       w3w.getLanguages({}).then(function(res) {
-        res.should.eql(['de', 'en', 'es', 'fr', 'pt', 'ru', 'sv', 'tr']);
+        res.should.eql(['de', 'en', 'es', 'fr', 'it', 'pt', 'ru', 'sv', 'sw', 'tr']);
         done();
       });
     });
