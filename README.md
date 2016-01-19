@@ -88,7 +88,7 @@ Optional parameters:
 ### GetLanguages ###
 ```javascript
 w3w.getLanguages({}).then(function(response) {
-  console.log(response); // [ 'de', 'en', 'es', 'fr', 'pt', 'ru', 'sv', 'tr' ]
+  console.log(response); // [ 'de', 'en', 'es', 'fr', 'it', 'pt', 'ru', 'sv', 'sw', 'tr' ]
 });
 ```
 
