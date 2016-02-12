@@ -28,7 +28,7 @@ describe('What3Words API Wrapper', function(){
 
       w3w.getLanguage().should.be.exactly('ru').and.be.a.String;
       w3w.getUserAgent().should.be.exactly('custom').and.be.a.String;
-      w3w.getEndpoint().should.be.exactly('http://api.what3words.com/').and.be.a.String;
+      w3w.getEndpoint().should.be.exactly('https://api.what3words.com/').and.be.a.String;
     });
 
   });
