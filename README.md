@@ -10,14 +10,14 @@ Further information on the What3Words API and its features is available at [http
 
 Installing using npm (node package manager):
 
-    npm install what3words
+    npm install geo.what3words
 
 If you don't have npm installed or don't want to use it:
 
     cd ~/.node_libraries
     git clone git://github.com/lokku/js-geo-what3words.git what3words
 
-Please note that parts of this library depend on [unirest](https://github.com/Mashape/unirest-nodejs) by [Mashape](https://github.com/Mashape/). This library needs to be installed for the API to work.
+Please note that parts of this library depend on [request](https://github.com/request/request). This library needs to be installed for the API to work.
 
 
 ## Usage ##
@@ -33,8 +33,8 @@ The constructor function also takes an optional configuration object:
 ```javascript
 var What3Words = require('./lib/geo.what3words.js'),
     w3w = new What3Words('YOUR_API_KEY', {
-    	language: ''ru',
-    	userAgent: ''Your custom UA'
+    	language: 'ru',
+    	userAgent: 'Your custom UA'
     });
 ```
 
@@ -100,7 +100,7 @@ Optional parameters:
 
 ### Errors ###
 
-All the methods return a [Bluebird](https://github.com/petkaantonov/bluebird/blob/master/API.md) promise.
+All the methods return a promise.
 
 ## License
 
