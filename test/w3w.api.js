@@ -1,6 +1,6 @@
 var should = require('should'),
     What3Words  = require('../lib/geo.what3words'),
-    API_KEY = 'YOUR_API_KEY';    
+    API_KEY = 'YOUR_API_KEY';
 
 describe('What3Words API Wrapper', function(){
   var w3w;
@@ -46,6 +46,7 @@ describe('What3Words API Wrapper', function(){
         //res.should.eql(['de', 'en', 'es', 'fr', 'it', 'pt', 'ru', 'sv', 'sw', 'tr']);
         //regarding evolving languages just check this is an array
         res.should.be.a.Array;
+        res.length.should.be.greaterThan(0);
         done();
       });
     });
@@ -64,15 +65,6 @@ describe('What3Words API Wrapper', function(){
         position: '51.484463,-0.195405'
       }).then(function(res) {
         res.should.eql('prom.cape.pump').and.be.a.String;
-        done();
-      });
-    });
-
-    it('should be able to check if a word is available', function(done) {
-      w3w.oneWordAvailable({
-        word: 'nestoria'
-      }).then(function(res) {
-        res.should.eql('1').and.be.a.Number;
         done();
       });
     });
