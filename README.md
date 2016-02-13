@@ -69,21 +69,6 @@ Optional parameters:
 * _full_ returns the full response of the api
 * _lang_ sets a different language for the response
 
-### OneWordAvailable ###
-```javascript
-w3w.oneWordAvailable({
-  word: 'nestoria'
-}).then(function(response) {
-
-  console.log(response); // 1
-});
-```
-
-Optional parameters:
-
-* _full_ returns the full response of the api
-* _lang_ sets a different language for the response
-
 
 ### GetLanguages ###
 ```javascript
