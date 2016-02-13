@@ -6,7 +6,7 @@
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/lokku/js-geo-what3words.git"
+    "url": "https://github.com/OpenCageData/js-geo-what3words.git"
   },
   "scripts": {
     "test": "make test"
@@ -33,6 +33,6 @@
   "author": "Ignacio Rivas <rivasign@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/lokku/js-geo-what3words/issues"
+    "url": "https://github.com/OpenCageData/js-geo-what3words/issues"
   }
 }
