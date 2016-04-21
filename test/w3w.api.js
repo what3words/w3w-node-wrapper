@@ -1,6 +1,6 @@
 var should = require('should'),
     What3Words  = require('../lib/geo.what3words'),
-    API_KEY = 'YOUR_API_KEY';
+    API_KEY = process.env.W3W_APIKEY || null;
 
 describe('What3Words API Wrapper', function(){
   var w3w;
