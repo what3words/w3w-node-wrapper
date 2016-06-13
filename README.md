@@ -38,10 +38,10 @@ var What3Words = require('./lib/geo.what3words.js'),
     });
 ```
 
-### Words2Position ###
+### Forward ###
 ```javascript
 w3w.wordsToPosition({
-  words: 'prom.cape.pump'
+  addr: 'prom.cape.pump'
 }).then(function(response) {
   console.log(response); // 51.484463,-0.195405
 }).catch(function(err) {
@@ -51,15 +51,15 @@ w3w.wordsToPosition({
 
 Optional parameters:
 
-* _full_ returns the full response of the api
 * _lang_ sets a different language for the response
+* _full_ returns the full response of the api
+* You can pass all [request params](https://docs.what3words.com/api/v2/#forward-params)  
 
-### Position2Words ###
+### Reverse ###
 ```javascript
 w3w.positionToWords({
-  position: '51.484463,-0.195405'
+  coords: '51.484463,-0.195405'
 }).then(function(response) {
-
   console.log(response); //prom.cape.pump
 });
 ```
@@ -68,6 +68,50 @@ Optional parameters:
 
 * _full_ returns the full response of the api
 * _lang_ sets a different language for the response
+* You can pass all [request params](https://docs.what3words.com/api/v2/#reverse-params)
+
+### Autosuggest ###
+```javascript
+w3w.autosuggest({
+  addr: 'plan.clips.a'
+}).then(function(response) {
+  console.log(response);
+});
+```
+
+Optional parameters:
+
+* _full_ returns the full response of the api
+* _lang_ sets a different language for the response
+* You can pass all [request params](https://docs.what3words.com/api/v2/#autosuggest-params)
+
+### StandardBlend ###
+```javascript
+w3w.standardBlend({
+  addr: 'plan.clips.a'
+}).then(function(response) {
+  console.log(response);
+});
+```
+
+Optional parameters:
+
+* _lang_ sets a different language for the response
+* You can pass all [request params](https://docs.what3words.com/api/v2/#standardblend)
+
+### Grid ###
+```javascript
+w3w.grid({
+  bbox: '52.208867,0.117540,52.207988,0.116126'
+}).then(function(response) {
+  console.log(response);
+});
+```
+
+Optional parameters:
+
+* _lang_ sets a different language for the response
+* You can pass all [request params](https://docs.what3words.com/api/v2/#grid-params)
 
 
 ### GetLanguages ###
