@@ -110,7 +110,6 @@ w3w.grid({
 
 Optional parameters:
 
-* _lang_ sets a different language for the response
 * You can pass all [request params](https://docs.what3words.com/api/v2/#grid-params)
 
 
