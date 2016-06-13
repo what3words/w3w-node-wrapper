@@ -40,7 +40,7 @@ var What3Words = require('./lib/geo.what3words.js'),
 
 ### Forward ###
 ```javascript
-w3w.wordsToPosition({
+w3w.forward({
   addr: 'prom.cape.pump'
 }).then(function(response) {
   console.log(response); // 51.484463,-0.195405
@@ -57,7 +57,7 @@ Optional parameters:
 
 ### Reverse ###
 ```javascript
-w3w.positionToWords({
+w3w.reverse({
   coords: '51.484463,-0.195405'
 }).then(function(response) {
   console.log(response); //prom.cape.pump
