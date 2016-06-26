@@ -1,4 +1,10 @@
 language: node_js
+node_js:
+  - "node"
+  - "6"
+  - "5"
+  - "4"
+  - "iojs"
 before_install: npm install -g grunt-cli
 install: npm install
 env:
