@@ -1,0 +1,6 @@
+{
+    "node": true,
+    "globals": {
+        "Promise": false
+    }
+}

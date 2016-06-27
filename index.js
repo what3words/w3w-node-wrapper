@@ -1,1 +1,1 @@
-module.exports = require('./lib/geo.what3words');
+module.exports = require('./lib/W3W.Geocoder');
