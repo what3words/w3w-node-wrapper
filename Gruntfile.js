@@ -44,4 +44,5 @@ module.exports = function(grunt) {
         });
     });
     grunt.registerTask('test', ['mochaTest']);
+    grunt.registerTask('build', ['jshint', 'test']);
 };
