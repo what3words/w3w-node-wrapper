@@ -1,21 +1,26 @@
 {
   "name": "geo.what3words",
-  "description": "Turns WGS84 coordinates into three words or OneWords and vice-versa using what3words.com HTTP API",
+  "description": "Node.js wrapper for the what3words API",
   "main": "index.js",
   "version": "2.0.0",
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/OpenCageData/js-geo-what3words.git"
+    "url": "https://github.com/what3words/js-geo-what3words.git"
   },
   "scripts": {
-    "test": "make test"
+    "test": "grunt test"
   },
   "dependencies": {
     "lodash": "~2.4.1",
     "request": "^2.69.0"
   },
   "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-mocha-test": "^0.12.7",
+    "load-grunt-tasks": "^3.5.0",
     "mocha": "~1.21.0",
     "should": "~4.0.4",
     "when": "~3.4.2"
@@ -31,8 +36,25 @@
     "geolocation"
   ],
   "author": "Ignacio Rivas <rivasign@gmail.com>",
+  "contributors": [
+    {
+      "name": "Gary Gale",
+      "email": "gary@vicchi.org"
+    },
+    {
+      "name": "Ignacio Rivas",
+      "email": "rivasign@gmail.com"
+    },
+    {
+      "name": "Stephan Georg"
+    },
+    {
+      "name": "Arnaud Ferrand",
+      "email": "arferrand@gmail.com"
+    }
+  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/OpenCageData/js-geo-what3words/issues"
+    "url": "https://github.com/what3words/js-geo-what3words/issues"
   }
 }

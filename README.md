@@ -1,135 +1,166 @@
-# JS.Geo.What3Words
+# ![what3words](https://map.what3words.com/images/map/marker-border.png)w3w-node-wrapper ![Build Status](https://travis-ci.org/what3words/w3w-node-wrapper.svg)
 
-A node.js wrapper for the [What3Words](http://what3words.com/) API.
-
-Turns WGS84 coordinates into three words or OneWords and vice-versa using what3words.com HTTP API
-
-Further information on the What3Words API and its features is available at [http://what3words.com/api/reference](http://what3words.com/api/reference).
+A [Node.js](https://nodejs.org/en/) wrapper to authenticate and interact with v2 of the [what3words RESTful API](https://docs.what3words.com/api/v2/).
 
 ## Installation
 
+### Via NPM
+
 Installing using npm (node package manager):
 
-    npm install geo.what3words
+```bash
+$ npm install w3w-node-wrapper
+```
 
-If you don't have npm installed or don't want to use it:
+### Via Git Clone
 
-    cd ~/.node_libraries
-    git clone git://github.com/lokku/js-geo-what3words.git what3words
+If you don't have `npm` installed or don't want to use it:
 
-Please note that parts of this library depend on [request](https://github.com/request/request). This library needs to be installed for the API to work.
+```
+$ cd ~/.node_libraries
+$ git clone git://github.com/what3words/w3w-node-wrapper what3words
+```
 
+Please note that parts of this wrapper depend on [request](https://github.com/request/request), which is installed as part of the wrapper's dependencies.
 
-## Usage ##
+### Via Download
+
+The latest version is always available for download from https://github.com/what3words/w3w-node-wrapper/archive/master.zip
+
+## Getting Started
+
+You'll need to [register](https://map.what3words.com/register?dev=true) for a what3words API key to access the API. The key is passed to a new instance of the `W3W.Geocoder` class.
 
 ### Initialization ###
 ```javascript
-var What3Words = require('./lib/geo.what3words.js'),
-    w3w = new What3Words('YOUR_API_KEY');
+
+var Geocoder = require('./lib/W3W.Geocoder.js');
+var options = {
+        apiKey: 'API-KEY'   // Mandatory
+        language: 'fr'      // optional
+        userAgent: 'Custom UserAgent string'
+};
+var w3w = new Geocoder(options);
 ```
 
-The constructor function also takes an optional configuration object:
+## Forward Geocoding
 
-```javascript
-var What3Words = require('./lib/geo.what3words.js'),
-    w3w = new What3Words('YOUR_API_KEY', {
-    	language: 'ru',
-    	userAgent: 'Your custom UA'
-    });
-```
+Forward geocodes a 3 word address to a position, expressed as coordinates of latitude and longitude.
 
-### Forward ###
+See also the [what3words API forward geocoding documentation](https://docs.what3words.com/api/v2/#forward) for more detailed information.
+
 ```javascript
 w3w.forward({
-  addr: 'prom.cape.pump'
+    addr: 'prom.cape.pump'
 }).then(function(response) {
-  console.log(response); // 51.484463,-0.195405
+    console.log(response); // 51.484463,-0.195405
 }).catch(function(err) {
-  console.log(err);
+    console.log(err);
 });
 ```
 
 Optional parameters:
 
 * _lang_ sets a different language for the response
-* _full_ returns the full response of the api
-* You can pass all [request params](https://docs.what3words.com/api/v2/#forward-params)  
+* _full_ returns the full response payload from the API
+* You can pass all supported [`forward` API request parameters](https://docs.what3words.com/api/v2/#forward-params) as part of the `options` object literal
 
-### Reverse ###
+## Reverse Geocoding
+
+Reverse geocodes coordinates, expressed as latitude and longitude to a 3 word address.
+
+See also the [what3words API reverse geocoding documentation](https://docs.what3words.com/api/v2/#reverse) for more detailed information.
+
 ```javascript
 w3w.reverse({
-  coords: '51.484463,-0.195405'
+    coords: '51.484463,-0.195405'
 }).then(function(response) {
-  console.log(response); //prom.cape.pump
+    console.log(response); //prom.cape.pump
 });
 ```
 
 Optional parameters:
 
-* _full_ returns the full response of the api
 * _lang_ sets a different language for the response
-* You can pass all [request params](https://docs.what3words.com/api/v2/#reverse-params)
+* _full_ returns the full response payload from the API
+* You can pass all supported [`reverse` API request parameters](https://docs.what3words.com/api/v2/#reverse-params) as part of the `options` object literal
 
-### Autosuggest ###
+## AutoSuggest
+
+Returns a list of 3 word addresses based on user input and other parameters.
+
+This method provides corrections for the following types of input error:
+
+* typing errors
+* spelling errors
+* misremembered words (e.g. singular vs. plural)
+words in the wrong order
+
+The `autosuggest` method determines possible corrections to the supplied 3 word address string based on the probability of the input errors listed above and returns a ranked list of suggestions. This resource can also take into consideration the geographic proximity of possible corrections to a given location to further improve the suggestions returned.
+
+See also the [what3words API autosuggest documentation](https://docs.what3words.com/api/v2/#autosuggest) for more detailed information.
+
 ```javascript
 w3w.autosuggest({
-  addr: 'plan.clips.a'
+    addr: 'plan.clips.a'
 }).then(function(response) {
-  console.log(response);
+    console.log(response);
 });
 ```
 
 Optional parameters:
 
-* _full_ returns the full response of the api
 * _lang_ sets a different language for the response
-* You can pass all [request params](https://docs.what3words.com/api/v2/#autosuggest-params)
+* _full_ returns the full response payload from the API
+* You can pass all supported [`autosuggest` API request parameters](https://docs.what3words.com/api/v2/#autosuggest-params) as part of the `options` object literal
 
-### StandardBlend ###
+## StandardBlend
+
+Returns a blend of the three most relevant 3 word address candidates for a given location, based on a full or partial 3 word address.
+
+The specified 3 word address may either be a full 3 word address or a partial 3 word address containing the first 2 words in full and at least 1 character of the 3rd word. The `standardblend` method provides the search logic that powers the search box on [map.what3words.com](map.what3words.com) and in the what3words mobile apps.
+
+See also the [what3words API standardblend documentation](https://docs.what3words.com/api/v2/#standardblend) for more detailed information.
+
 ```javascript
 w3w.standardBlend({
-  addr: 'plan.clips.a'
+    addr: 'plan.clips.a'
 }).then(function(response) {
-  console.log(response);
+    console.log(response);
 });
 ```
 
 Optional parameters:
 
 * _lang_ sets a different language for the response
-* You can pass all [request params](https://docs.what3words.com/api/v2/#standardblend)
+* You can pass all supported [`standardblend` API request parameters](https://docs.what3words.com/api/v2/#standardblend-params) as part of the `options` object literal
 
-### Grid ###
+## Grid
+
+Returns a section of the 3m x 3m what3words grid for a given area.
+
+See also the [what3words API grid documentation](https://docs.what3words.com/api/v2/#grid) for more detailed information.
+
 ```javascript
 w3w.grid({
-  bbox: '52.208867,0.117540,52.207988,0.116126'
+    bbox: '52.208867,0.117540,52.207988,0.116126'
 }).then(function(response) {
-  console.log(response);
+    console.log(response);
 });
 ```
 
 Optional parameters:
 
-* You can pass all [request params](https://docs.what3words.com/api/v2/#grid-params)
+* You can pass all supported [`grid` API request parameters](https://docs.what3words.com/api/v2/#grid-params) as part of the `options` object literal
 
+## Get Languages
 
-### GetLanguages ###
+Retrieves a list of the currently loaded and available 3 word address languages.
+
+See also the [what3words API languages documentation](https://docs.what3words.com/api/v2/#lang) for more detailed information.
+
 ```javascript
 w3w.getLanguages({}).then(function(response) {
-  console.log(response); // [ 'de', 'en', 'es', 'fr', 'it', 'pt', 'ru', 'sv', 'sw', 'tr' ]
+    console.log(response); // [ 'de', 'en', 'es', 'fr', 'it', 'pt', 'ru', 'sv', 'sw', 'tr' ]
 });
 ```
-
-Optional parameters:
-
-* _full_ returns the full response of the api
-* _lang_ sets a different language for the response
-
-
-### Errors ###
-
-All the methods return a promise.
-
-## License
-
-_JS.Geo.What3Words_ is licensed under the MIT License. (See [LICENSE](https://github.com/lokku/js-geo-what3words/blob/master/LICENCe.md))
