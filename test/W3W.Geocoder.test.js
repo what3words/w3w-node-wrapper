@@ -53,6 +53,31 @@ describe('what3words API Wrapper', function() {
         });
 
         it('should be able to forward geocode (translate 3 word address to coordinates)', function(done) {
+            w3w.forward({
+                addr: 'prom.cape.pump'
+            }).then(function(res) {
+                res.should.eql('51.484463,-0.195405').and.be.a.String;
+                done();
+            });
+        });
+
+        it('should be able to forward geocode with full response (translate 3 word address to coordinates)', function(done) {
+            w3w.forward({
+                addr: 'prom.cape.pump',
+                full: true
+            }).then(function(res) {
+                res.should.have.property('words');
+                res.words.should.eql('prom.cape.pump').and.be.a.String;
+                res.should.have.property('geometry');
+                res.geometry.should.have.property('lat');
+                res.geometry.should.have.property('lng');
+                res.geometry.lat.should.eql(51.484463);
+                res.geometry.lng.should.eql(-0.195405);
+                done();
+            });
+        });
+
+        it('should be able to forward geocode in v1 legacy mode (translate 3 word address to coordinates)', function(done) {
             w3w.wordsToPosition({
                 addr: 'prom.cape.pump'
             }).then(function(res) {
@@ -62,6 +87,31 @@ describe('what3words API Wrapper', function() {
         });
 
         it('should be able to reverse geocode (translate coordinates to 3 word address)', function(done) {
+            w3w.reverse({
+                coords: '51.484463,-0.195405'
+            }).then(function(res) {
+                res.should.eql('prom.cape.pump').and.be.a.String;
+                done();
+            });
+        });
+
+        it('should be able to reverse geocode with full response (translate coordinates to 3 word address)', function(done) {
+            w3w.reverse({
+                coords: '51.484463,-0.195405',
+                full: true
+            }).then(function(res) {
+                res.should.have.property('words');
+                res.words.should.eql('prom.cape.pump').and.be.a.String;
+                res.should.have.property('geometry');
+                res.geometry.should.have.property('lat');
+                res.geometry.should.have.property('lng');
+                res.geometry.lat.should.eql(51.484463);
+                res.geometry.lng.should.eql(-0.195405);
+                done();
+            });
+        });
+
+        it('should be able to reverse geocode in v1 legacy mode (translate coordinates to 3 word address)', function(done) {
             w3w.positionToWords({
                 coords: '51.484463,-0.195405'
             }).then(function(res) {
