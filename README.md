@@ -2,6 +2,10 @@
 
 A [Node.js](https://nodejs.org/en/) wrapper to authenticate and interact with v2 of the [what3words RESTful API](https://docs.what3words.com/api/v2/).
 
+## Credits
+
+Originally developed by the [Lokku](http://lokku.com/) and [OpenCage Data](http://www.opencagedata.com/) teams as `js-geo-what3words`; thanks and credit are due to all the contributors and to OpenCage Data for donating this repository to what3words.
+
 ## Installation
 
 ### Via NPM
