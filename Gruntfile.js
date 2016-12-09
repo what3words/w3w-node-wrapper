@@ -15,6 +15,11 @@ module.exports = function(grunt) {
             js: ['lib/**/*.js'],
             grunt: ['Gruntfile.js']
         },
+        version: {
+            project: {
+                src: ['package.json', 'lib/W3W.Geocoder.js', ]
+            }
+        },
         watch: {
             options: {
                 livereload: true,
