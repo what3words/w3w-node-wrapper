@@ -2,7 +2,7 @@
   "name": "w3w-node-wrapper",
   "description": "Node.js wrapper for the what3words API",
   "main": "index.js",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "private": false,
   "repository": {
     "type": "git",
@@ -12,19 +12,19 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "lodash": "~2.4.1",
-    "request": "^2.69.0"
+    "lodash": "^4.17.2",
+    "request": "^2.79.0"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
     "grunt": "^1.0.1",
-    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-watch": "^1.0.0",
-    "grunt-mocha-test": "^0.12.7",
+    "grunt-mocha": "^1.0.2",
+    "grunt-mocha-test": "^0.13.2",
     "grunt-version": "^1.1.1",
-    "load-grunt-tasks": "^3.5.0",
-    "mocha": "~1.21.0",
-    "should": "~4.0.4",
-    "when": "~3.4.2"
+    "load-grunt-tasks": "^3.5.2",
+    "mocha": "^3.2.0"
   },
   "keywords": [
     "lokku",
