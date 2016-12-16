@@ -37,12 +37,11 @@ You'll need to [register](https://map.what3words.com/register?dev=true) for a wh
 
 ### Initialization ###
 ```javascript
-
-var Geocoder = require('./lib/W3W.Geocoder.js');
+var Geocoder = require('w3w-node-wrapper');
 var options = {
         apiKey: 'API-KEY'   // Mandatory
         language: 'fr'      // optional
-        userAgent: 'Custom UserAgent string'
+        userAgent: 'Custom UserAgent string' // optional
 };
 var w3w = new Geocoder(options);
 ```
@@ -164,7 +163,7 @@ Retrieves a list of the currently loaded and available 3 word address languages.
 See also the [what3words API languages documentation](https://docs.what3words.com/api/v2/#lang) for more detailed information.
 
 ```javascript
-w3w.getLanguages({}).then(function(response) {
+w3w.languages({}).then(function(response) {
     console.log(response); // [ 'de', 'en', 'es', 'fr', 'it', 'pt', 'ru', 'sv', 'sw', 'tr' ]
 });
 ```
