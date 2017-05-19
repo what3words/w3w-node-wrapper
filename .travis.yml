@@ -8,6 +8,11 @@ node_js:
   - "4"
 before_install: npm install -g grunt-cli
 install: npm install
+script:
+script:
+  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then echo "TRAVIS_PULL_REQUEST is not false"; fi'
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then echo "TRAVIS_PULL_REQUEST is false"; fi'
+  - npm build
 env:
   matrix:
     secure: G5V8fwLUc98lo5lUf/y6hnziq+k924NrY4M/l8A6z5cHYs66WNWTZe5fs30wjylkLTgT1SDFHBoGNpl2B3rLH8Bt9rZf4PB01XidHXp1S7OJh5BYcLMsN9UgBIi8il61iLXpkLqVX9qH/j8Drr9V5blbA3SoU+cnEIzHY+S4kFo=

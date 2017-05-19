@@ -9,7 +9,8 @@
     "url": "https://github.com/what3words/w3w-node-wrapper.git"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "build": "grunt build"
   },
   "dependencies": {
     "lodash": "^4.17.2",
