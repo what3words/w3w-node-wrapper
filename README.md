@@ -1,4 +1,4 @@
-# <img src="https://what3words.com/assets/images/w3w_square_red.png" width="64" height="64" alt="what3words">&nbsp;w3w-node-wrapper ![Build Status](https://travis-ci.org/what3words/w3w-node-wrapper.svg)
+# <img src="https://what3words.com/assets/images/w3w_square_red.png" width="64" height="64" alt="what3words">&nbsp;w3w-node-wrapper [![Build Status](https://travis-ci.org/what3words/w3w-node-wrapper.svg?branch=master)](https://travis-ci.org/what3words/w3w-node-wrapper)
 
 A [Node.js](https://nodejs.org/en/) wrapper to authenticate and interact with v2 of the [what3words RESTful API](https://docs.what3words.com/api/v2/).
 
@@ -33,7 +33,7 @@ The latest version is always available for download from https://github.com/what
 
 ## Getting Started
 
-You'll need to [register](https://map.what3words.com/register?dev=true) for a what3words API key to access the API. The key is passed to a new instance of the `W3W.Geocoder` class.
+You'll need to [register](https://what3words.com/register?dev=true) for a what3words API key to access the API. The key is passed to a new instance of the `W3W.Geocoder` class.
 
 ### Initialization ###
 ```javascript
