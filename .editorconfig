@@ -7,16 +7,12 @@ root = true
 [*]
 end_of_line = lf
 insert_final_newline = true
+trim_trailing_whitespace= true
 
 # Set default charset
 charset = utf-8
 
 # Indentation using soft tab
-indent_style = space
-indent_size = 2
-
-# Javascript files
-[*.js]
 indent_style = space
 indent_size = 2
 

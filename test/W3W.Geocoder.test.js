@@ -190,6 +190,30 @@ describe('what3words API Wrapper', function() {
       });
     });
 
+    it('should be able to autosuggest 3 word addresses (multilingual)', function(done) {
+      w3w.autosuggest_ml({
+        addr: 'plan.clips.a'
+      }).then(function(res) {
+        res.should.be.json;
+        res.suggestions.should.be.array;
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it('should be able to return a blend (multilingual)', function(done) {
+      w3w.standardBlend_ml({
+        addr: 'plan.clips.a'
+      }).then(function(res) {
+        res.should.be.json;
+        res.blends.should.be.array;
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
     it('should be able return a grid', function(done) {
       w3w.grid({
         bbox: '52.208867,0.117540,52.207988,0.116126'

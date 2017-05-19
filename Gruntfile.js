@@ -1,53 +1,56 @@
 module.exports = function(grunt) {
-    require('load-grunt-tasks')(grunt);
+  require('load-grunt-tasks')(grunt);
 
-    grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
-        mochaTest: {
-            test: {
-                src: ['test/**/*.js']
-            }
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
+    mochaTest: {
+      test: {
+        options: {
+          timeout: 10000
         },
-        jshint: {
-            options: {
-                jshintrc: true
-            },
-            js: ['lib/**/*.js'],
-            grunt: ['Gruntfile.js']
-        },
-        version: {
-            project: {
-                src: ['package.json', 'lib/W3W.Geocoder.js', ]
-            }
-        },
-        watch: {
-            options: {
-                livereload: true,
-            },
-            js: {
-                files: ['index.js', 'lib/**/*.js'],
-                tasks: ['jshint', 'test']
-            },
-            grunt: {
-                files: ['Gruntfile.js'],
-                tasks: ['jshint'],
-            },
-            test: {
-                files: ['test/**/*.js'],
-                tasks: ['test']
-            }
-        }
-    });
+        src: ['test/**/*.js']
+      }
+    },
+    jshint: {
+      options: {
+        jshintrc: true
+      },
+      js: ['lib/**/*.js'],
+      grunt: ['Gruntfile.js']
+    },
+    version: {
+      project: {
+        src: ['package.json', 'lib/W3W.Geocoder.js', ]
+      }
+    },
+    watch: {
+      options: {
+        livereload: true,
+      },
+      js: {
+        files: ['index.js', 'lib/**/*.js'],
+        tasks: ['jshint', 'test']
+      },
+      grunt: {
+        files: ['Gruntfile.js'],
+        tasks: ['jshint'],
+      },
+      test: {
+        files: ['test/**/*.js'],
+        tasks: ['test']
+      }
+    }
+  });
 
-    grunt.registerTask('default', ['watch']);
-    grunt.registerTask('nodsstore', function() {
-        grunt.file.expand({
-            filter: 'isFile',
-            cwd: '.'
-        }, ['**/.DS_Store']).forEach(function(file) {
-            grunt.file.delete(file);
-        });
+  grunt.registerTask('default', ['build', 'watch']);
+  grunt.registerTask('nodsstore', function() {
+    grunt.file.expand({
+      filter: 'isFile',
+      cwd: '.'
+    }, ['**/.DS_Store']).forEach(function(file) {
+      grunt.file.delete(file);
     });
-    grunt.registerTask('test', ['mochaTest']);
-    grunt.registerTask('build', ['jshint', 'test']);
+  });
+  grunt.registerTask('test', ['mochaTest']);
+  grunt.registerTask('build', ['jshint', 'test']);
 };
