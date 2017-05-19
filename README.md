@@ -101,10 +101,21 @@ words in the wrong order
 
 The `autosuggest` method determines possible corrections to the supplied 3 word address string based on the probability of the input errors listed above and returns a ranked list of suggestions. This resource can also take into consideration the geographic proximity of possible corrections to a given location to further improve the suggestions returned.
 
+### Single and Multilingual Variants
+AutoSuggest is provided via 2 variant resources; single language and multilingual.
+
 See also the [what3words API autosuggest documentation](https://docs.what3words.com/api/v2/#autosuggest) for more detailed information.
 
 ```javascript
 w3w.autosuggest({
+    addr: 'plan.clips.a'
+}).then(function(response) {
+    console.log(response);
+});
+```
+
+```javascript
+w3w.autosuggest_ml({
     addr: 'plan.clips.a'
 }).then(function(response) {
     console.log(response);
@@ -123,10 +134,21 @@ Returns a blend of the three most relevant 3 word address candidates for a given
 
 The specified 3 word address may either be a full 3 word address or a partial 3 word address containing the first 2 words in full and at least 1 character of the 3rd word. The `standardblend` method provides the search logic that powers the search box on [map.what3words.com](map.what3words.com) and in the what3words mobile apps.
 
+### Single and Multilingual Variants
+StandardBlend is provided via 2 variant resources; single language and multilingual.
+
 See also the [what3words API standardblend documentation](https://docs.what3words.com/api/v2/#standardblend) for more detailed information.
 
 ```javascript
 w3w.standardBlend({
+    addr: 'plan.clips.a'
+}).then(function(response) {
+    console.log(response);
+});
+```
+
+```javascript
+w3w.standardBlend_ml({
     addr: 'plan.clips.a'
 }).then(function(response) {
     console.log(response);
