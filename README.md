@@ -1,4 +1,4 @@
-# <img src="https://what3words.com/assets/images/w3w_square_red.png" width="64" height="64" alt="what3words">&nbsp;w3w-node-wrapper ![Build Status](https://travis-ci.org/what3words/w3w-node-wrapper.svg)
+# <img src="https://what3words.com/assets/images/w3w_square_red.png" width="64" height="64" alt="what3words">&nbsp;w3w-node-wrapper [![Build Status](https://travis-ci.org/what3words/w3w-node-wrapper.svg?branch=master)](https://travis-ci.org/what3words/w3w-node-wrapper)
 
 A [Node.js](https://nodejs.org/en/) wrapper to authenticate and interact with v2 of the [what3words RESTful API](https://docs.what3words.com/api/v2/).
 
