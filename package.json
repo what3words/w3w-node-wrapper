@@ -48,7 +48,9 @@
       "email": "rivasign@gmail.com"
     },
     {
-      "name": "Stephan Georg"
+      "name": "Stephan Georg",
+      "email": "s.georg@nearest.place",
+      "url" : "https://nearest.place"
     },
     {
       "name": "Arnaud Ferrand",
