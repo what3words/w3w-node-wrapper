@@ -2,7 +2,7 @@
   "name": "w3w-node-wrapper",
   "description": "Node.js wrapper for the what3words API",
   "main": "index.js",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "private": false,
   "repository": {
     "type": "git",
@@ -13,8 +13,8 @@
     "build": "grunt build"
   },
   "dependencies": {
-    "lodash": "^4.17.2",
-    "request": "^2.79.0"
+    "es6-promise": "^4.1.1",
+    "isomorphic-fetch": "^2.2.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
@@ -48,7 +48,9 @@
       "email": "rivasign@gmail.com"
     },
     {
-      "name": "Stephan Georg"
+      "name": "Stephan Georg",
+      "email": "s.georg@nearest.place",
+      "url" : "https://nearest.place"
     },
     {
       "name": "Arnaud Ferrand",
