@@ -1,0 +1,33 @@
+{
+  "author": {
+    "name": "what3words"
+  },
+  "bugs": {
+    "url": "https://github.com/w3w-internal/what3words-api-javascript/issues"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "keywords": [
+    "what3words",
+    "api",
+    "library",
+    "utility",
+    "geo",
+    "maps",
+    "geolocation"
+  ],
+  "deprecated": false,
+  "description": "what3words javascript api",
+  "homepage": "https://github.com/w3w-internal/what3words-api-javascript#readme",
+  "main": "./umd/index.js",
+  "module": "./es2015/index.js",
+  "name": "@what3words/api",
+  "types": "./es2015/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/w3w-internal/what3words-api-javascript.git"
+  },
+  "sideEffects": false,
+  "version": "1.0.0-BETA.8"
+}

@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "lib": [
+      "dom",
+      "es2017"
+    ],
+    "module": "commonjs",
+    "target": "es2015",
+    "strict": true,
+    "outDir": "dist"
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "test"
+  ]
+}
