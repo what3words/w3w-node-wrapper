@@ -3,7 +3,7 @@
     "name": "what3words"
   },
   "bugs": {
-    "url": "https://github.com/w3w-internal/what3words-api-javascript/issues"
+    "url": "https://github.com/what3words/w3w-node-wrapper/issues"
   },
   "engines": {
     "node": ">=8"
@@ -19,15 +19,15 @@
   ],
   "deprecated": false,
   "description": "what3words javascript api",
-  "homepage": "https://github.com/w3w-internal/what3words-api-javascript#readme",
+  "homepage": "https://github.com/what3words/w3w-node-wrapper#readme",
   "main": "./umd/index.js",
   "module": "./es2015/index.js",
   "name": "@what3words/api",
   "types": "./es2015/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/w3w-internal/what3words-api-javascript.git"
+    "url": "git+https://github.com/what3words/w3w-node-wrapper.git"
   },
   "sideEffects": false,
-  "version": "3.0.0"
+  "version": "3.0.1"
 }

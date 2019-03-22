@@ -4,7 +4,8 @@ import { get } from "https";
 
 export const fetchGet = <T>(
   url: string,
-  data: { [x: string]: string } = {}
+  data: { [x: string]: string } = {},
+  signal: any = null
 ): Promise<T> => {
   return new Promise<T>((resolve, error) => {
     if (
