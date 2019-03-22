@@ -29,5 +29,5 @@
     "url": "git+https://github.com/w3w-internal/what3words-api-javascript.git"
   },
   "sideEffects": false,
-  "version": "1.0.0-BETA.8"
+  "version": "3.0.0"
 }
