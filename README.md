@@ -1,10 +1,10 @@
-# <img valign='top' src="https://what3words.com/assets/images/w3w_square_red.png" width="64" height="64" alt="what3words">&nbsp;w3w-javascript-wrapper
+# <img valign='top' src="https://what3words.com/assets/images/w3w_square_red.png" width="64" height="64" alt="what3words">&nbsp;w3w-node-wrapper
 
-A JavaScript library to use the [what3words REST API](https://docs.what3words.com/api/v3/).
+A Node.js library to use the [what3words REST API](https://docs.what3words.com/api/v3/).
 
 # Overview
 
-The what3words JavaScript wrapper gives you programmatic access to 
+The what3words Node.js wrapper gives you programmatic access to 
 
 * convert a 3 word address to coordinates 
 * convert coordinates to a 3 word address
