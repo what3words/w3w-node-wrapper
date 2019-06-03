@@ -1,6 +1,6 @@
 import { fetchGet } from "../fetch";
 
-interface AvailableLanguagesResponse {
+export interface AvailableLanguagesResponse {
   languages: {
     code: string;
     name: string;

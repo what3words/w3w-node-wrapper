@@ -19,8 +19,8 @@ export const coordinatesToString = (coordinates: Coordinates): string =>
   `${coordinates.lat},${coordinates.lng}`;
 
 export const boundsToString = (bounds: Bounds): string =>
-  `${coordinatesToString(bounds.northeast)},${coordinatesToString(
-    bounds.southwest
+  `${coordinatesToString(bounds.southwest)},${coordinatesToString(
+    bounds.northeast
   )}`;
 
 export const arrayToString = (array: number[] | string[]): string =>

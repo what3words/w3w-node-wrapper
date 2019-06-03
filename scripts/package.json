@@ -29,5 +29,5 @@
     "url": "git+https://github.com/what3words/w3w-node-wrapper.git"
   },
   "sideEffects": false,
-  "version": "3.0.2"
+  "version": "3.0.3"
 }

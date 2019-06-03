@@ -5,14 +5,14 @@ import { fetchGet } from "../fetch";
 export interface AutosuggestResponse {
   suggestions: {
     country: string;
-    "nearest-place": string;
+    nearestPlace: string;
     words: string;
     distanceToFocusKm: number;
     rank: number;
     language: string;
   }[];
 }
-interface AutosuggestOptions {
+export interface AutosuggestOptions {
   nResults?: number;
   focus?: Coordinates;
   nFocusResults?: number;

@@ -2,13 +2,13 @@ import { Bounds, Coordinates, RequestOptions, ResponseFormat } from "../types";
 import { boundsToString } from "../utils";
 import { fetchGet } from "../fetch";
 
-interface GridSectionJsonResponse {
+export interface GridSectionJsonResponse {
   lines: {
     start: Coordinates;
     end: Coordinates;
   }[];
 }
-interface GridSectionGeoJsonResponse {
+export interface GridSectionGeoJsonResponse {
   geometry: {
     coordinates: [number, number][][];
     type: "MultiLineString";
