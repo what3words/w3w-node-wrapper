@@ -1,6 +1,8 @@
 import { ErrorResponse } from "./types";
 import { GLOBAL_OPTIONS, searchParams } from "./utils";
-import { get } from "https";
+import axios, { AxiosError } from 'axios';
+import { version } from "./version";
+import * as os from 'os';
 
 export const fetchGet = <T>(
   url: string,
@@ -14,24 +16,35 @@ export const fetchGet = <T>(
     ) {
       data["key"] = GLOBAL_OPTIONS.key;
     }
-    get(`${GLOBAL_OPTIONS.baseUrl}/${url}?${searchParams(data)}`, response => {
-      let data = "";
 
-      response.on("data", chunk => {
-        data += chunk;
-      });
+    var platform = (function(platform) {  
+      switch(platform) {
+        case 'darwin':
+          return 'Mac OS X';
+        case 'win32':
+          return 'Windows';
+        case 'linux':
+          return 'Linux';
+      }
+    })(os.platform());
 
-      response.on("end", () => {
-        const json = JSON.parse(data);
-        if (response && response.statusCode) {
-          if (response.statusCode >= 400) {
-            error((json as ErrorResponse).error);
+    axios.request({
+        url: `${GLOBAL_OPTIONS.baseUrl}/${url}?${searchParams(data)}`,
+        headers: {'X-W3W-Wrapper': `what3words-Node/${version} (Node ${process.version}; ${platform} ${os.release()})`}
+      })
+      .then((response) => {
+        if (response && response.status) {
+          if (response.status >= 400) {
+            error((response.data as ErrorResponse).error);
           }
         }
-        resolve(json);
+        resolve(response.data);
+      }).catch((data: AxiosError) => {
+        if (data.response) {
+          error(data.response.data);
+        } else {
+          error(data.message);
+        }
       });
-    }).on("error", (data: Error) => {
-      error(data);
-    });
   });
 };
