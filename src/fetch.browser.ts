@@ -1,5 +1,6 @@
 import { ErrorResponse } from "./types";
 import { GLOBAL_OPTIONS, searchParams } from "./utils";
+import { version } from "./version";
 
 export const fetchGet = <T>(
   url: string,
@@ -7,7 +8,10 @@ export const fetchGet = <T>(
   signal?: AbortSignal
 ): Promise<T> => {
   const options: RequestInit = {
-    method: "GET"
+    method: "GET",
+    headers: {
+      'X-W3W-Wrapper': `what3words-JavaScript/${version} (${navigator.userAgent})`,
+    }
   };
 
   if (signal !== undefined) {
