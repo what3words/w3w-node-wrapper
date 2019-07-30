@@ -16,15 +16,17 @@
     "geolocation"
   ],
   "scripts": {
-    "build": "npm run clear && npm run build-js && npm run build-node && npm run build-script",
+    "build": "npm run clear && npm run create-version && npm run build-js && npm run build-node && npm run build-script",
     "build-js": "tsc --target es2015 --module es2015 --outDir dist/es2015",
     "build-node": "tsc --target es5 --module umd --outDir dist/umd",
     "build-script": "node ./scripts/index.js",
+    "create-version": "node ./scripts/version.js",
     "clear": "node ./scripts/clear.js",
     "publish": "npm run build && npm publish dist"
   },
   "dependencies": {
-    "axios": "^0.19.0"
+    "axios": "^0.19.0",
+    "express": "^4.17.1"
   },
   "devDependencies": {
     "@types/node": "8.10.40",

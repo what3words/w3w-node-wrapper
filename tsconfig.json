@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "declaration": true,
+    "moduleResolution": "node",
     "lib": [
       "dom",
       "es2017"
