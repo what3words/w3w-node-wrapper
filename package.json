@@ -25,8 +25,7 @@
     "publish": "npm run build && npm publish dist"
   },
   "dependencies": {
-    "axios": "^0.19.0",
-    "express": "^4.17.1"
+    "axios": "^0.19.0"
   },
   "devDependencies": {
     "@types/node": "8.10.40",
