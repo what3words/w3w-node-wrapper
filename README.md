@@ -18,7 +18,7 @@ To use this library you’ll need a what3words API key, which can be signed up f
 
 # Installation
 
-`npm i --save @what3words/api`
+`npm i --save @what3words/api axios`
 
 ## Initialise
 
