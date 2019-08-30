@@ -20,8 +20,9 @@ export interface AutosuggestOptions {
   clipToBoundingBox?: Bounds;
   clipToCircle?: { center: Coordinates; radius: number };
   clipToPolygon?: number[];
-  inputType?: "text" | "vocon-hybrid" | "nmdp-asr";
+  inputType?: "text" | "vocon-hybrid" | "nmdp-asr" | "generic-voice";
   language?: string;
+  preferLand?: boolean;
 }
 export const autosuggest = (
   input: string,
@@ -65,6 +66,9 @@ export const autosuggest = (
     }
     if (options.language !== undefined) {
       requestOptions["language"] = options.language;
+    }
+    if (options.preferLand !== undefined) {
+      requestOptions["prefer-land"] = options.preferLand.toString();
     }
   }
 
