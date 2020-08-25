@@ -1,4 +1,5 @@
 import { fetchGet } from './fetch.browser';
+import { version } from "./version";
 
 const length = (obj: any) => Object.keys(obj).length;
 const first = ([head]) => head;
@@ -17,6 +18,6 @@ describe('fetchGet', () => {
     const numberOfHeaders = length(headers);
     const wrapperHeader = headers["X-W3W-Wrapper"];
     expect(numberOfHeaders).toBe(1);
-    expect(wrapperHeader).not.toBeUndefined();
+    expect(wrapperHeader).toBe(`what3words-JavaScript/${version} (${navigator.userAgent})`)
   })
 })
