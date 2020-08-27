@@ -18,8 +18,12 @@ export const fetchGet = <T>(
     options.signal = signal;
   }
 
-  if (typeof GLOBAL_OPTIONS.key === "string" && GLOBAL_OPTIONS.key.length > 0) {
+  if (typeof GLOBAL_OPTIONS.key === "string") {
     data["key"] = GLOBAL_OPTIONS.key;
+  }
+
+  if (GLOBAL_OPTIONS.headers) {
+    options.headers = { ...options.headers, ...GLOBAL_OPTIONS.headers }
   }
 
   let hasError = false;

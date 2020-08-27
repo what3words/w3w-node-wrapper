@@ -1,8 +1,9 @@
 import { Bounds, Coordinates } from "./types";
 
 interface ApiOptions {
-  key: string;
+  key?: string;
   baseUrl?: string;
+  headers?: {}
 }
 
 export let GLOBAL_OPTIONS: ApiOptions = {
