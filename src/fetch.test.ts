@@ -1,36 +1,38 @@
-import fetch from "jest-fetch-mock";
-import { fetchGet } from './fetch.browser';
+import axios from 'axios';
+import { fetchGet } from './fetch';
 import { version } from "./version";
-import { setOptions } from "./utils";
+import { setOptions, getPlatform } from "./utils";
+import * as os from 'os';
 
 const length = (obj: {}) => Object.keys(obj).length;
 const first = <T>([ head ]: T[]) => head;
-const params = <T, U>([ _, args ]: [ T, U ]) =>  args;
+const getHeaders = (call:any) =>  call.headers;
+
+jest.mock('axios');
+const mockedAxios = axios as jest.Mocked<typeof axios>;
+const platform = getPlatform(os.platform());
 
 describe('fetchGet', () => {
-  beforeEach(() => {
-    fetch.resetMocks();
-  })
 
   it('should send "X-W3W-Wrapper" header', () => {
-    fetch.mockResponseOnce(JSON.stringify({ ok: true }));
+    mockedAxios.request.mockResolvedValue(JSON.stringify({ ok: true }));
 
     const response = fetchGet('test');
-    const request = first(( fetch.mock.calls as [string, RequestInit][] ));
-    const param = params(request);
-    const headers = param.headers as { [headers: string]: string };
+    const call = first(mockedAxios.request.mock.calls);
+    const request = first(call);
+    const headers = getHeaders(request);
     const numberOfHeaders = length(headers);
     const wrapperHeader = headers["X-W3W-Wrapper"];
 
     expect(numberOfHeaders).toBe(1);
-    expect(wrapperHeader).toBe(`what3words-JavaScript/${version} (${navigator.userAgent})`);
+    expect(wrapperHeader).toBe(`what3words-Node/${version} (Node ${process.version}; ${platform} ${os.release()})`);
   })
 
   it('should allow additional headers to be set', () => {
     const testHeaderKey = 'X-W3W-Test';
     const testHeaderValue = `what3words-test/${version} (test)`;
 
-    fetch.mockResponseOnce(JSON.stringify({ ok: true }));
+    mockedAxios.request.mockResolvedValue(JSON.stringify({ ok: true }));
 
     setOptions({
       'headers': {
@@ -39,9 +41,9 @@ describe('fetchGet', () => {
     });
 
     const response = fetchGet('test');
-    const request = first(( fetch.mock.calls as [string, RequestInit][] ));
-    const param = params(request);
-    const headers = param.headers as { [headers: string]: string };
+    const call = first(mockedAxios.request.mock.calls);
+    const request = first(call);
+    const headers = getHeaders(request);
     const numberOfHeaders = length(headers);
     const testHeader = headers[testHeaderKey];
     expect(numberOfHeaders).toBe(2);

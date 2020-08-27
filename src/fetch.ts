@@ -23,6 +23,10 @@ export const fetchGet = <T>(
   signal: any = null
 ): Promise<T> => {
   return new Promise<T>((resolve, error) => {
+    let headers = {
+      'X-W3W-Wrapper': `what3words-Node/${version} (Node ${process.version}; ${platform} ${os.release()})`
+    }
+
     if (
       typeof GLOBAL_OPTIONS.key === "string" &&
       GLOBAL_OPTIONS.key.length > 0
@@ -30,9 +34,13 @@ export const fetchGet = <T>(
       data["key"] = GLOBAL_OPTIONS.key;
     }
 
+    if (GLOBAL_OPTIONS.headers) {
+      headers = { ...headers, ...GLOBAL_OPTIONS.headers };
+    }
+
     axios.request<T>({
         url: `${GLOBAL_OPTIONS.baseUrl}/${url}?${searchParams(data)}`,
-        headers: {'X-W3W-Wrapper': `what3words-Node/${version} (Node ${process.version}; ${platform} ${os.release()})`}
+        headers
       })
       .then((response) => {
         if (response && response.status) {

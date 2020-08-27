@@ -3,7 +3,7 @@ import { Bounds, Coordinates } from "./types";
 interface ApiOptions {
   key?: string;
   baseUrl?: string;
-  headers?: {}
+  headers?: {[x:string]: string}
 }
 
 export let GLOBAL_OPTIONS: ApiOptions = {
@@ -32,3 +32,16 @@ export const setOptions = (options: ApiOptions): void => {
 };
 
 export const getOptions = (): ApiOptions => GLOBAL_OPTIONS;
+
+export const getPlatform = (platform: string) => {
+  switch(platform) {
+    case 'darwin':
+      return 'Mac OS X';
+    case 'win32':
+      return 'Windows';
+    case 'linux':
+      return 'Linux';
+    default:
+      return "";
+  }
+};
