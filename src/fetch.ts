@@ -1,21 +1,10 @@
 import { ErrorResponse } from "./types";
-import { GLOBAL_OPTIONS, searchParams } from "./utils";
+import { GLOBAL_OPTIONS, searchParams, getPlatform } from "./utils";
 import axios, { AxiosError } from "axios";
 import { version } from "./version";
 import * as os from 'os';
 
-const platform = (platform => {
-  switch(platform) {
-    case 'darwin':
-      return 'Mac OS X';
-    case 'win32':
-      return 'Windows';
-    case 'linux':
-      return 'Linux';
-    default:
-      return "";
-  }
-})(os.platform());
+const platform = getPlatform(os.platform());
 
 export const fetchGet = <T>(
   url: string,
