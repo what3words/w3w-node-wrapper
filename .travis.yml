@@ -1,9 +1,5 @@
 language: node_js
 node_js:
-  - "node"
-  - "12"
-  - "8"
-  - "6"
   - "4"
 install:
   - if [ "$TRAVIS_NODE_VERSION" -lt 6 ]; then npm install --production; else npm install; fi
