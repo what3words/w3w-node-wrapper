@@ -5,8 +5,7 @@ node_js:
   - "8"
   - "6"
   - "4"
-install: 
-  - if [ \"$TRAVIS_NODE_VERSION\" -le 6 ]; then npm install --production; else npm install; fi
+install: npm install --silent
 script:
   - echo $TRAVIS_NODE_VERSION
   - npm test
