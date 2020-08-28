@@ -23,7 +23,8 @@
     "create-version": "node ./scripts/version.js",
     "clear": "node ./scripts/clear.js",
     "publish": "npm run build && npm publish dist",
-    "test": "jest"
+    "run_test": "jest",
+    "test": "if [ \"$TRAVIS_NODE_VERSION\" > \"12\" ] ; then npm run run_test ; fi;"
   },
   "dependencies": {
     "axios": "^0.19.0"
