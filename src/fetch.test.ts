@@ -4,7 +4,6 @@ import { version } from "./version";
 import { setOptions, getPlatform } from "./utils";
 import * as os from 'os';
 
-const length = (obj: {}) => Object.keys(obj).length;
 const first = <T>([ head ]: T[]) => head;
 const getHeaders = (call:any) =>  call.headers;
 
@@ -21,11 +20,10 @@ describe('fetchGet', () => {
     const call = first(mockedAxios.request.mock.calls);
     const request = first(call);
     const headers = getHeaders(request);
-    const numberOfHeaders = length(headers);
-    const wrapperHeader = headers["X-W3W-Wrapper"];
 
-    expect(numberOfHeaders).toBe(1);
-    expect(wrapperHeader).toBe(`what3words-Node/${version} (Node ${process.version}; ${platform} ${os.release()})`);
+    expect(headers).toEqual({
+      'X-W3W-Wrapper': `what3words-Node/${version} (Node ${process.version}; ${platform} ${os.release()})`
+    })
   })
 
   it('should allow additional headers to be set', () => {
@@ -36,7 +34,7 @@ describe('fetchGet', () => {
 
     setOptions({
       'headers': {
-        ['X-W3W-Test']: `what3words-test/${version} (test)`
+        'X-W3W-Test': `what3words-test/${version} (test)`
       }
     });
 
@@ -44,9 +42,10 @@ describe('fetchGet', () => {
     const call = first(mockedAxios.request.mock.calls);
     const request = first(call);
     const headers = getHeaders(request);
-    const numberOfHeaders = length(headers);
-    const testHeader = headers[testHeaderKey];
-    expect(numberOfHeaders).toBe(2);
-    expect(testHeader).toBe(testHeaderValue);
+
+    expect(headers).toEqual({
+      'X-W3W-Wrapper': `what3words-Node/${version} (Node ${process.version}; ${platform} ${os.release()})`,
+      'X-W3W-Test': `what3words-test/${version} (test)`
+    });
   })
 })

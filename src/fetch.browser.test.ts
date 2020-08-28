@@ -3,7 +3,6 @@ import { fetchGet } from './fetch.browser';
 import { version } from "./version";
 import { setOptions } from "./utils";
 
-const length = (obj: {}) => Object.keys(obj).length;
 const first = <T>([ head ]: T[]) => head;
 const params = <T, U>([ _, args ]: [ T, U ]) =>  args;
 
@@ -19,11 +18,10 @@ describe('fetchGet', () => {
     const request = first(( fetch.mock.calls as [string, RequestInit][] ));
     const param = params(request);
     const headers = param.headers as { [headers: string]: string };
-    const numberOfHeaders = length(headers);
-    const wrapperHeader = headers["X-W3W-Wrapper"];
 
-    expect(numberOfHeaders).toBe(1);
-    expect(wrapperHeader).toBe(`what3words-JavaScript/${version} (${navigator.userAgent})`);
+    expect(headers).toEqual({
+      'X-W3W-Wrapper': `what3words-JavaScript/${version} (${navigator.userAgent})`
+    });
   })
 
   it('should allow additional headers to be set', () => {
@@ -34,7 +32,7 @@ describe('fetchGet', () => {
 
     setOptions({
       'headers': {
-        ['X-W3W-Test']: `what3words-test/${version} (test)`
+        'X-W3W-Test': `what3words-test/${version} (test)`
       }
     });
 
@@ -42,9 +40,10 @@ describe('fetchGet', () => {
     const request = first(( fetch.mock.calls as [string, RequestInit][] ));
     const param = params(request);
     const headers = param.headers as { [headers: string]: string };
-    const numberOfHeaders = length(headers);
-    const testHeader = headers[testHeaderKey];
-    expect(numberOfHeaders).toBe(2);
-    expect(testHeader).toBe(testHeaderValue);
+
+    expect(headers).toEqual({
+      'X-W3W-Wrapper': `what3words-JavaScript/${version} (${navigator.userAgent})`,
+      'X-W3W-Test': `what3words-test/${version} (test)`
+    });
   })
 })
