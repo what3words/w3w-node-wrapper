@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@what3words/api",
-  "version": "3.1.0",
+  "version": "3.1.1-next.1",
   "description": "what3words javascript api",
   "engines": {
     "node": ">=8"
@@ -23,7 +23,8 @@
     "create-version": "node ./scripts/version.js",
     "clear": "node ./scripts/clear.js",
     "publish": "npm run build && npm publish dist",
-    "test": "jest"
+    "run_test": "jest",
+    "test": "if [ \"$TRAVIS_NODE_VERSION\" -ge 12 ]  ; then npm run run_test ; fi;"
   },
   "dependencies": {
     "axios": "^0.19.0"
