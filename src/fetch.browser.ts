@@ -22,6 +22,10 @@ export const fetchGet = <T>(
     data["key"] = GLOBAL_OPTIONS.key;
   }
 
+  if (GLOBAL_OPTIONS.headers) {
+    options.headers = { ...options.headers, ...GLOBAL_OPTIONS.headers }
+  }
+
   let hasError = false;
   return fetch(
     `${GLOBAL_OPTIONS.baseUrl}/${url}?${searchParams(data)}`,
