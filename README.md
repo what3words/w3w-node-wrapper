@@ -130,7 +130,7 @@ api.autosuggest("fun.with.code", { clipToCountry: ["FR", "DE"] })
 
 Errors returned from the API can be caught with the wrapper through the use of a `catch` function.
 
-Within the `catch` function, `code` and `message` values which represent the error, are accessbable from the error object parameter
+Within the `catch` function, `code` and `message` values which represent the error, are accessible from the error object parameter
 
 ```javascript
 api.convertToCoordinates("filled.count.soap")
