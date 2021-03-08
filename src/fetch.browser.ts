@@ -33,7 +33,10 @@ export const fetchGet = <T>(
   )
     .then(response => {
       hasError = !response.ok;
-      return response.json();
+      const contentType = response.headers.get('content-type')
+      if (!contentType) return null
+      if (contentType.indexOf('application/json') !== -1) return response.json();
+      return response.text()
     })
     .then(data => {
       if (hasError) {

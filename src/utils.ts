@@ -1,6 +1,7 @@
 import { Bounds, Coordinates } from "./types";
+import { W3W_REGEX } from './constants'
 
-interface ApiOptions {
+export interface ApiOptions {
   key?: string;
   baseUrl?: string;
   headers?: {[x:string]: string}
@@ -45,3 +46,15 @@ export const getPlatform = (platform: string) => {
       return "";
   }
 };
+
+export function valid3wa(value: string): boolean {
+  return W3W_REGEX.test(value)
+}
+
+export function getWords(value: string): string  {
+  const exec = W3W_REGEX.exec(value)
+  if (!exec) return ''
+  const [, words] = exec
+  if (!words) return ''
+  return words
+}
