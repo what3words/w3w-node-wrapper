@@ -24,13 +24,8 @@ export interface AutosuggestOptions {
   language?: string;
   preferLand?: boolean;
 }
-export const autosuggest = (
-  input: string,
-  options?: AutosuggestOptions,
-  signal?: AbortSignal
-): Promise<AutosuggestResponse> => {
-  const requestOptions: RequestOptions = { input };
-
+export function autosuggestOptionsToQuery(options?: AutosuggestOptions): { [key: string]: string } {
+  const requestOptions: { [key: string]: string } = {}
   if (options !== undefined) {
     if (options.nResults !== undefined) {
       requestOptions["n-results"] = options.nResults.toString();
@@ -71,6 +66,13 @@ export const autosuggest = (
       requestOptions["prefer-land"] = options.preferLand.toString();
     }
   }
-
+  return requestOptions
+}
+export const autosuggest = (
+  input: string,
+  options?: AutosuggestOptions,
+  signal?: AbortSignal
+): Promise<AutosuggestResponse> => {
+  const requestOptions: RequestOptions = { input, ...autosuggestOptionsToQuery(options) };
   return fetchGet("autosuggest", requestOptions, signal);
 };
