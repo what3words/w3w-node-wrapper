@@ -9,10 +9,10 @@ export const autosuggestSelection = (
   sourceApi: 'text' | 'voice' = 'text',
 ): Promise<null> => {
   return fetchGet("autosuggest-selection", {
-    ['raw-input']: rawInput,
+    'raw-input': rawInput,
     selection,
     rank: rank.toString(),
-    ['source-api']: sourceApi,
+    'source-api': sourceApi,
     ...autosuggestOptionsToQuery(options)
   });
 };
