@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@what3words/api",
-  "version": "3.2.1",
+  "version": "3.3.0",
   "description": "what3words javascript api",
   "engines": {
     "node": ">=8"
