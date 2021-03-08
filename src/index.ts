@@ -1,6 +1,7 @@
-export { setOptions } from "./utils";
-export { availableLanguages } from "./requests/available-languages";
+export { setOptions, getOptions } from "./utils";
 export { autosuggest } from "./requests/autosuggest";
+export { autosuggestSelection } from "./requests/autosuggest-selection";
+export { availableLanguages } from "./requests/available-languages";
 export { convertTo3wa, convertTo3waGeoJson } from "./requests/convert-to-3wa";
 export {
   convertToCoordinates,
