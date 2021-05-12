@@ -16,6 +16,7 @@
     "geolocation"
   ],
   "scripts": {
+    "compile": "if [ \"$TRAVIS_NODE_VERSION\" = \"node\" ]; then npm run build; elif [ \"$TRAVIS_NODE_VERSION\" -gt 6 ]; then npm run build; fi;",
     "build": "npm run clear && npm run create-version && npm run build-js && npm run build-node && npm run build-script",
     "build-js": "tsc --target es2015 --module es2015 --outDir dist/es2015",
     "build-node": "tsc --target es5 --module umd --outDir dist/umd",
@@ -24,7 +25,7 @@
     "clear": "node ./scripts/clear.js",
     "publish": "npm run build && npm publish dist",
     "run_test": "jest",
-    "test": "if [ \"$TRAVIS_NODE_VERSION\" -ge 12 ]  ; then npm run run_test ; fi;"
+    "test": "if [ \"$TRAVIS_NODE_VERSION\" = \"node\" ] ; then npm run run_test; elif [ \"$TRAVIS_NODE_VERSION\" -ge 12 ] ; then npm run run_test ; fi;"
   },
   "dependencies": {
     "axios": "^0.19.0"
