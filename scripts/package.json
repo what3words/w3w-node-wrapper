@@ -29,7 +29,7 @@
     "url": "git+https://github.com/what3words/w3w-node-wrapper.git"
   },
   "sideEffects": false,
-  "version": "3.3.0",
+  "version": "3.3.2",
   "peerDependencies": {
     "axios": "^0.19.0"
   }
