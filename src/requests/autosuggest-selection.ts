@@ -9,7 +9,7 @@ export const autosuggestSelection = (
   options: AutosuggestOptions = {},
   sourceApi: 'text' | 'voice' = 'text',
 ): Promise<null> => {
-  const W3W_DOMAIN_REGEX = /^[\w.-_]*.(what3words.com|w3w.io){1}/ig
+  const W3W_DOMAIN_REGEX = /(what3words.com|w3w.io)/ig
   const baseUrl = getOptions().baseUrl
   if (baseUrl && !W3W_DOMAIN_REGEX.test(baseUrl)) return Promise.resolve(null)
   return fetchGet("autosuggest-selection", {
