@@ -28,10 +28,7 @@
     "test": "if [ \"$TRAVIS_NODE_VERSION\" = \"node\" ] ; then npm run run_test; elif [ \"$TRAVIS_NODE_VERSION\" -ge 12 ] ; then npm run run_test ; fi;",
     "lint": "gts lint",
     "clean": "gts clean",
-    "fix": "gts fix",
-    "prepare": "npm run compile",
-    "pretest": "npm run compile",
-    "posttest": "npm run lint"
+    "fix": "gts fix"
   },
   "dependencies": {
     "axios": "^0.21.1"
