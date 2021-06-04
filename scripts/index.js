@@ -35,5 +35,5 @@ renameFile('../dist/es2015/fetch.browser.d.ts', '../dist/es2015/fetch.d.ts');
 renameFile('../dist/es2015/fetch.browser.js', '../dist/es2015/fetch.js');
 
 // package.json
-copyFile('./package.json', '../dist/package.json');
+copyFile('../package.json', '../dist/package.json');
 copyFile('../README.md', '../dist/README.md');
