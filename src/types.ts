@@ -5,7 +5,7 @@ export interface ErrorResponse {
   };
 }
 
-export type ResponseFormat = "json" | "geojson";
+export type ResponseFormat = 'json' | 'geojson';
 
 export interface Coordinates {
   lat: number;

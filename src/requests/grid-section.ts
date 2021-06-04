@@ -1,6 +1,6 @@
-import { Bounds, Coordinates, RequestOptions, ResponseFormat } from "../types";
-import { boundsToString } from "../utils";
-import { fetchGet } from "../fetch";
+import { Bounds, Coordinates, RequestOptions, ResponseFormat } from '../types';
+import { boundsToString } from '../utils';
+import { fetchGet } from '../fetch';
 
 export interface GridSectionJsonResponse {
   lines: {
@@ -11,9 +11,9 @@ export interface GridSectionJsonResponse {
 export interface GridSectionGeoJsonResponse {
   geometry: {
     coordinates: [number, number][][];
-    type: "MultiLineString";
+    type: 'MultiLineString';
   };
-  type: "Feature";
+  type: 'Feature';
   properties: {};
 }
 
@@ -23,23 +23,23 @@ const gridSectionBase = <T>(
   signal?: AbortSignal
 ): Promise<T> => {
   const requestOptions: RequestOptions = {
-    "bounding-box": boundsToString(boundingBox)
+    'bounding-box': boundsToString(boundingBox),
   };
 
   if (format !== undefined) {
-    requestOptions["format"] = format;
+    requestOptions['format'] = format;
   }
-  return fetchGet("grid-section", requestOptions, signal);
+  return fetchGet('grid-section', requestOptions, signal);
 };
 
 export const gridSection = (
   boundingBox: Bounds,
   signal?: AbortSignal
 ): Promise<GridSectionJsonResponse> =>
-  gridSectionBase<GridSectionJsonResponse>(boundingBox, "json", signal);
+  gridSectionBase<GridSectionJsonResponse>(boundingBox, 'json', signal);
 
 export const gridSectionGeoJson = (
   bbox: Bounds,
   signal?: AbortSignal
 ): Promise<GridSectionGeoJsonResponse> =>
-  gridSectionBase<GridSectionGeoJsonResponse>(bbox, "geojson", signal);
+  gridSectionBase<GridSectionGeoJsonResponse>(bbox, 'geojson', signal);
