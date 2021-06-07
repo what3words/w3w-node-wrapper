@@ -3,10 +3,10 @@ import {
   LocationGeoJsonResponse,
   LocationJsonResponse,
   RequestOptions,
-  ResponseFormat
-} from "../types";
-import { coordinatesToString } from "../utils";
-import { fetchGet } from "../fetch";
+  ResponseFormat,
+} from '../types';
+import { coordinatesToString } from '../utils';
+import { fetchGet } from '../fetch';
 
 const convertTo3waBase = <T>(
   coordinates: Coordinates,
@@ -15,16 +15,16 @@ const convertTo3waBase = <T>(
   signal?: AbortSignal
 ): Promise<T> => {
   const requestOptions: RequestOptions = {
-    coordinates: coordinatesToString(coordinates)
+    coordinates: coordinatesToString(coordinates),
   };
   if (language !== undefined) {
-    requestOptions["language"] = language;
+    requestOptions['language'] = language;
   }
   if (format !== undefined) {
-    requestOptions["format"] = format;
+    requestOptions['format'] = format;
   }
 
-  return fetchGet("convert-to-3wa", requestOptions, signal);
+  return fetchGet('convert-to-3wa', requestOptions, signal);
 };
 
 export const convertTo3wa = (
@@ -32,7 +32,7 @@ export const convertTo3wa = (
   language?: string,
   signal?: AbortSignal
 ): Promise<LocationJsonResponse> =>
-  convertTo3waBase<LocationJsonResponse>(coordinates, language, "json", signal);
+  convertTo3waBase<LocationJsonResponse>(coordinates, language, 'json', signal);
 
 export const convertTo3waGeoJson = (
   coordinates: Coordinates,
@@ -42,6 +42,6 @@ export const convertTo3waGeoJson = (
   convertTo3waBase<LocationGeoJsonResponse>(
     coordinates,
     language,
-    "geojson",
+    'geojson',
     signal
   );

@@ -1,6 +1,6 @@
-import { ErrorResponse } from "./types";
-import { GLOBAL_OPTIONS, searchParams } from "./utils";
-import { version } from "./version";
+import { ErrorResponse } from './types';
+import { GLOBAL_OPTIONS, searchParams } from './utils';
+import { version } from './version';
 
 export const fetchGet = <T>(
   url: string,
@@ -8,22 +8,22 @@ export const fetchGet = <T>(
   signal?: AbortSignal
 ): Promise<T> => {
   const options: RequestInit = {
-    method: "GET",
+    method: 'GET',
     headers: {
       'X-W3W-Wrapper': `what3words-JavaScript/${version} (${navigator.userAgent})`,
-    }
+    },
   };
 
   if (signal !== undefined) {
     options.signal = signal;
   }
 
-  if (typeof GLOBAL_OPTIONS.key === "string" && GLOBAL_OPTIONS.key.length > 0) {
-    data["key"] = GLOBAL_OPTIONS.key;
+  if (typeof GLOBAL_OPTIONS.key === 'string' && GLOBAL_OPTIONS.key.length > 0) {
+    data['key'] = GLOBAL_OPTIONS.key;
   }
 
   if (GLOBAL_OPTIONS.headers) {
-    options.headers = { ...options.headers, ...GLOBAL_OPTIONS.headers }
+    options.headers = { ...options.headers, ...GLOBAL_OPTIONS.headers };
   }
 
   let hasError = false;
@@ -33,10 +33,11 @@ export const fetchGet = <T>(
   )
     .then(response => {
       hasError = !response.ok;
-      const contentType = response.headers.get('content-type')
-      if (!contentType) return null
-      if (contentType.indexOf('application/json') !== -1) return response.json();
-      return response.text()
+      const contentType = response.headers.get('content-type');
+      if (!contentType) return null;
+      if (contentType.indexOf('application/json') !== -1)
+        return response.json();
+      return response.text();
     })
     .then(data => {
       if (hasError) {

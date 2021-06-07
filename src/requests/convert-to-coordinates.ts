@@ -2,9 +2,9 @@ import {
   LocationGeoJsonResponse,
   LocationJsonResponse,
   RequestOptions,
-  ResponseFormat
-} from "../types";
-import { fetchGet } from "../fetch";
+  ResponseFormat,
+} from '../types';
+import { fetchGet } from '../fetch';
 
 const convertToCoordinatesBase = <T>(
   words: string,
@@ -14,19 +14,19 @@ const convertToCoordinatesBase = <T>(
   const requestOptions: RequestOptions = { words };
 
   if (format !== undefined) {
-    requestOptions["format"] = format;
+    requestOptions['format'] = format;
   }
-  return fetchGet("convert-to-coordinates", requestOptions, signal);
+  return fetchGet('convert-to-coordinates', requestOptions, signal);
 };
 
 export const convertToCoordinates = (
   words: string,
   signal?: AbortSignal
 ): Promise<LocationJsonResponse> =>
-  convertToCoordinatesBase<LocationJsonResponse>(words, "json", signal);
+  convertToCoordinatesBase<LocationJsonResponse>(words, 'json', signal);
 
 export const convertToCoordinatesGeoJson = (
   words: string,
   signal?: AbortSignal
 ): Promise<LocationGeoJsonResponse> =>
-  convertToCoordinatesBase<LocationGeoJsonResponse>(words, "geojson", signal);
+  convertToCoordinatesBase<LocationGeoJsonResponse>(words, 'geojson', signal);

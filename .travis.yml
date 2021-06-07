@@ -2,11 +2,10 @@ language: node_js
 node_js:
   - "node"
   - "12"
-  - "8"
-  - "6"
 install:
   - npm install
 script:
+  - npm run lint
   - npm test
   - npm run compile
 env:

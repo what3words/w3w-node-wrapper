@@ -1,4 +1,4 @@
-import { fetchGet } from "../fetch";
+import { fetchGet } from '../fetch';
 
 export interface AvailableLanguagesResponse {
   languages: {
@@ -10,5 +10,5 @@ export interface AvailableLanguagesResponse {
 export const availableLanguages = (
   signal?: AbortSignal
 ): Promise<AvailableLanguagesResponse> => {
-  return fetchGet("available-languages", {}, signal);
+  return fetchGet('available-languages', {}, signal);
 };
