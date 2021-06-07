@@ -1,16 +1,21 @@
 {
-  "private": true,
+  "private": false,
   "name": "@what3words/api",
-  "version": "3.3.4",
+  "version": "3.3.6",
   "description": "what3words javascript api",
   "homepage": "https://github.com/what3words/w3w-node-wrapper#readme",
-  "main": "dist/umd/index.js",
-  "module": "dist/es2015/index.js",
-  "types": "dist/es2015/index.d.ts",
-  "files": ["dist"],
-  "engines": { "node": ">=12" },
-  "author": { "name": "what3words" },
-  "bugs": { "url": "https://github.com/what3words/w3w-node-wrapper/issues" },
+  "main": "umd/index.js",
+  "module": "es2015/index.js",
+  "types": "es2015/index.d.ts",
+  "engines": {
+    "node": ">=12"
+  },
+  "author": {
+    "name": "what3words"
+  },
+  "bugs": {
+    "url": "https://github.com/what3words/w3w-node-wrapper/issues"
+  },
   "keywords": [
     "what3words",
     "api",
@@ -27,7 +32,7 @@
     "build-js": "tsc --target es2015 --module es2015 --outDir dist/es2015",
     "build-node": "tsc --target es5 --module umd --outDir dist/umd",
     "build-script": "node ./scripts/index.js",
-    "publish": "npm run compile && npm publish dist",
+    "publish": "npm publish dist",
     "test": "jest",
     "lint": "gts lint",
     "clean": "gts clean",
