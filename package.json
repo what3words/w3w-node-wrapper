@@ -23,9 +23,11 @@
     "posttest": "npm run lint"
   },
   "dependencies": {
-    "axios": "^0.21.1",
-    "isomorphic-unfetch": "^3.1.0",
     "pkginfo": "^0.4.1"
+  },
+  "peerDependencies": {
+    "axios": "^0.21.2",
+    "isomorphic-unfetch": "^3.1.0"
   },
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.1",

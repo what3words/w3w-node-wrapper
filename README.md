@@ -46,6 +46,8 @@ npm install @what3words/api
 yarn add @what3words/api
 ```
 
+If you wish to use the built-in transports you will also need to install the peer dependencies for them. For more information on the default transports read the section on [Built-in Transports](#built-ins)
+
 ## Usage
 
 ### JavaScript
@@ -133,6 +135,32 @@ A `TransportResponse` consists of the following properties:
 
 There are two built-in transports available with this library that you can use; either [isomorphic-unfetch][] or [axios][]. By specifying which transport you would like to use on initialisation of the `What3wordsService` or a client, if you wish to instantiate a client for yourself.
 
+#### Built-ins
+
+There are two built-in transports available:
+
+* [Isomorphic-unfetch][isomorphic-unfetch]
+* [Axios][axios]
+
+In order to use either of these you will need install the peer dependency. By default [isomorphic-unfetch][isomorphic-unfetch] is assumed by the `What3wordsService` or any instantiated client where no override is provided.
+
+[npm][]:
+```sh
+npm install isomorphic-unfetch
+```
+or
+```sh
+npm install axios
+```
+
+[yarn][]:
+```sh
+yarn add isomorphic-unfetch
+```
+or
+```sh
+yarn add axios
+```
 
 ## Examples
 
