@@ -110,7 +110,7 @@ jobs:
     steps:
       - checkout
       - add_fingerprint:
-          fingerprint: "76:a5:8e:a6:80:e4:dd:8d:04:fe:53:d2:d1:5e:6c:a9"
+          fingerprint: "81:f0:38:72:86:c7:e4:b2:92:6b:d8:b8:43:fb:24:6a"
       - setup_environment
       - git_config:
           email: circleci@what3words.com
