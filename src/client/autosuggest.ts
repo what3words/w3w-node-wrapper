@@ -131,7 +131,7 @@ export class AutosuggestClient extends ApiClient<
         message = 'You must provide language when using a speech input type';
       }
     }
-    if (options.language && options.language.length > 2) {
+    if (options.language && options.language.length !== 2) {
       valid = false;
       message = 'Invalid language code. It must be an ISO-639-1 2 letter code.';
     }
