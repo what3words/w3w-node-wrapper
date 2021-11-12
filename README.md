@@ -46,7 +46,7 @@ npm install @what3words/api
 yarn add @what3words/api
 ```
 
-If you wish to use the built-in transports you will also need to install the peer dependencies for them. For more information on the default transports read the section on [Built-in Transports](#built-ins)
+If you wish to use the built-in transports you will also need to install the peer dependencies for them. For more information on the default transports read the section on [Transports](#transport).
 
 ## Usage
 
@@ -161,6 +161,14 @@ or
 ```sh
 yarn add axios
 ```
+
+#### Custom
+
+You can provide your own custom transport, if you wish to use another library for handling requests, which might be useful if you have other integrations or you are already using a http library elsewhere.
+
+If order to do so you need to define your own `Transport` and pass it into the `What3wordsService` or client to use it.
+
+The custom `Transport` you create should be a function that accepts a `ClientRequest` as an argument and returns a promise that resolves to a `TransportResponse`.
 
 ## Examples
 
