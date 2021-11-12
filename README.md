@@ -1,146 +1,251 @@
-# <img valign='top' src="https://what3words.com/assets/images/w3w_square_red.png" width="64" height="64" alt="what3words">&nbsp;w3w-node-wrapper
+[![what3words](https://what3words.com/assets/images/w3w_square_red.png)](https://developer.what3words.com)
+# what3words JavaScript API Wrapper
 
-A Node.js library to use the [what3words REST API](https://docs.what3words.com/api/v3/).
+[![CircleCI](https://circleci.com/gh/what3words/w3w-node-wrapper.svg?style=svg)](https://github.com/what3words/w3w-node-wrapper)
 
-# Overview
+A JavaScript library to make requests to the [what3words REST API][api]. __Now with better support for use within both browser and node based environments!__ See the what3words public API [documentation](apidocs) for more information about how to use our REST API.
 
-The what3words Node.js wrapper gives you programmatic access to 
+## Table of Contents
 
-* convert a 3 word address to coordinates 
-* convert coordinates to a 3 word address
-* autosuggest functionality which takes a slightly incorrect 3 word address, and suggests a list of valid 3 word addresses
-* obtain a section of the 3m x 3m what3words grid for a bounding box.
-* determine the currently support 3 word address languages.
+* [Overview](#overview)
+* [Install](#install)
+* [Usage](#usage)
+  * [JavaScript](#javascript)
+  * [Typescript](#typescript)
+* [Documentation](#documentation)
+  * [What3wordsService](#what3words-service)
+  * [Clients](#clients)
+  * [Transport](#transport)
+* [Examples](#examples)
+  * [CustomTransport](#custom-transport)
+  * [Autosuggest](#autosuggest)
+  * [Convert to Coordinates](#convert-to-coordinates)
+  * [Convert to Three Word Address](#convert-to-three-word-address)
+  * [Available Languages](#available-languages)
+  * [Grid Section](#grid-section)
 
-## Authentication
+## Overview
 
-To use this library you’ll need a what3words API key, which can be signed up for [here](https://accounts.what3words.com/register?dev=true).
+The what3words JavaScript wrapper gives you programmatic access to:
 
-# Installation
+* [Convert a 3 word address to coordinates](https://developer.what3words.com/public-api/docs#convert-to-coords)
+* [Convert coordinates to a 3 word address](https://developer.what3words.com/public-api/docs#convert-to-3wa)
+* [Autosuggest functionality which takes a slightly incorrect 3 word address, and suggests a list of valid 3 word addresses](https://developer.what3words.com/public-api/docs#autosuggest)
+* [Obtain a section of the 3m x 3m what3words grid for a bounding box.](https://developer.what3words.com/public-api/docs#grid-section)
+* [Determine the currently support 3 word address languages.](https://developer.what3words.com/public-api/docs#available-languages)
 
-`npm i --save @what3words/api axios`
+## Install
 
-## Initialise
-
-```javascript
-const api = require("@what3words/api");
-            
-api.setOptions({ key: "what3words-api-key" });
+[npm][]:
+```sh
+npm install @what3words/api
 ```
 
-# Documentation
-
-See the what3words public API [documentation](https://docs.what3words.com/api/v3/)
-
-# General Usage
-
-## Convert To Coordinates
-Convert a 3 word address to a position, expressed as coordinates of latitude and longitude.
-
-This function takes the words parameter as a string of 3 words `'table.book.chair'`
-
-The returned payload from the `convertToCoordinates` method is described in the [what3words REST API documentation](https://docs.what3words.com/api/v3/#convert-to-coordinates).
-
-#### Code Example
-```javascript
-api.convertToCoordinates("filled.count.soap")
-  .then(data => console.log(data));
+[yarn][]:
+```sh
+yarn add @what3words/api
 ```
 
-## Convert To 3 Word Address
+## Usage
 
-Convert coordinates, expressed as latitude and longitude to a 3 word address.
-
-The returned payload from the `convertTo3wa` method is described in the [what3words REST API documentation](https://docs.what3words.com/api/v3/#convert-to-3wa).
-
-#### Code Example
-```javascript
-api.convertTo3wa({lat:51.520847, lng:-0.195521})
-    .then(data => console.log(data));
-```
-
-## Available Languages
-
-This function returns the currently supported languages.  It will return the two letter code ([ISO 639](https://en.wikipedia.org/wiki/ISO_639)), and the name of the language both in that language and in English.
-
-The returned payload from the `convertTo3wa` method is described in the [what3words REST API documentation](https://docs.what3words.com/api/v3/#available-languages)
-
-#### Code Example
-```javascript
-api.availableLanguages()
-  .then(data => console.log(data));
-```
-
-## Grid Section
-
-Returns a section of the 3m x 3m what3words grid for a given area. The requested box must not exceed 4km from corner to corner, or a BadBoundingBoxTooBig error will be returned. Latitudes must be >= -90 and <= 90, but longitudes are allowed to wrap around 180. To specify a bounding-box that crosses the anti-meridian, use longitude greater than 180. Example value: 50.0, 179.995, 50.01, 180.0005. 
-
-The returned payload from the `gridSection` function  is described in the [what3words REST API documentation](https://docs.what3words.com/api/v3/#grid-section)
-
-#### Code Example
-```javascript
-api.gridSection({
-    southwest: { lat: 52.208867, lng: 0.117540 },
-    northeast: { lat: 52.207988, lng: 0.116126 }
-  })
-  .then(data => console.log(data));
-```
-
-## AutoSuggest
-
-Returns a list of 3 word addresses based on user input and other parameters.
-
-This method provides corrections for the following types of input error:
-* typing errors
-* spelling errors
-* misremembered words (e.g. singular vs. plural)
-* words in the wrong order
-
-The `autoSuggest` method determines possible corrections to the supplied 3 word address string based on the probability of the input errors listed above and returns a ranked list of suggestions. This method can also take into consideration the geographic proximity of possible corrections to a given location to further improve the suggestions returned.
-
-### Input 3 word address
-
-You will only receive results back if the partial 3 word address string you submit contains the first two words and at least the first character of the third word; otherwise an error message will be returned.
-
-### Clipping and Focus
-
-We provide various `clip` policies to allow you to specify a geographic area that is used to exclude results that are not likely to be relevant to your users. We recommend that you use the clipping to give a more targeted, shorter set of results to your user. If you know your user’s current location, we also strongly recommend that you use the `focus` to return results which are likely to be more relevant.
-
-In summary, the clip policy is used to optionally restrict the list of candidate AutoSuggest results, after which, if focus has been supplied, this will be used to rank the results in order of relevancy to the focus.
-
-The returned payload from the `autosuggest` method is described in the [what3words REST API documentation](https://docs.what3words.com/api/v2/#autosuggest-result).
-
-### Usage
-
-#### Code Example
-```javascript
-api.autosuggest("fun.with.code")
-  .then(data => console.log(data));
-```
-
-#### Code Example Two
-Clipping the results returned to France and Germany..
+### JavaScript
 
 ```javascript
-api.autosuggest("fun.with.code", { clipToCountry: ["FR", "DE"] })
-  .then(data => console.log(data));
+const what3words = require("@what3words/api");
+
+const apiKey = '<YOUR_API_KEY>';
+const config = {
+  host: 'https://api.what3words.com',
+  apiVersion: 'v3',
+}
+const transport = 'fetch'; // or you can use 'axios'
+const w3wService = what3words(apiKey, config, { transport });
+
+// you can uncomment the following lines to set your api key and config after instantiation of the w3w service
+// w3wService.setApiKey(apiKey);
+// w3wService.setConfig(config);
 ```
 
-## Handling Errors
+### Typescript
 
-Errors returned from the API can be caught with the wrapper through the use of a `catch` function.
+```typescript
+import what3words, { ApiVersion, What3wordsService } from '@what3words/api';
 
-Within the `catch` function, `code` and `message` values which represent the error, are accessible from the error object parameter
+const apiKey: string = '<YOUR_API_KEY>';
+const config: {
+  host: string,
+  apiVersion: ApiVersion,
+} = {
+  host: 'https://api.what3words.com',
+  apiVersion: ApiVersion.Version3,
+};
+const transport: 'axios' | 'fetch' = 'fetch';
+const w3wService: What3wordsService = what3words(apiKey, config, { transport });
 
-```javascript
-api.convertToCoordinates("filled.count.soap")
-  .then(function(response) {
-    console.log("[convertToCoordinates]", response);
-  })
-  .catch(function(error) { // catch errors here
-    console.log("[code]", error.code);
-    console.log("[message]", error.message);
-  });
+// code continues...
 ```
 
-Error values are listed in the [what3words REST API documentation](https://docs.what3words.com/api/v3/#error-handling). 
+## Documentation
+
+### what3words Service
+
+The `What3wordsService` provides a quick and easy way to instantiate the API clients that can be used to make requests against the what3words API. It also provides helper functions for setting API configuration, such as host and API version and your API key across the what3words API clients.
+
+### Clients
+
+The what3words API clients in this library are used to validate request options, serialise and handle request/response and errors against an API endpoint. Each client extends the abstract `ApiClient` class.
+
+There is a specific client for each request and you can use them independently of the `What3wordsService`. This can be particularly useful if you want to extend the client behaviour, minimise your code or, in a more extreme example, use a custom transport to handle requests differently in each client.
+
+
+Every client accepts the following parameters:
+
+| Parameter   | Datatype          | Default value                |
+| ----------- | ----------------- | ---------------------------- |
+| apiKey      | string            | `''`                         |
+| config      | config.host       | `https://api.what3words.com` |
+|             | config.apiVersion | `v3`                         |
+
+### Transport
+
+The transport is a function responsible for executing the request against the API. Given a `ClientRequest` the transport should return a promise that resolves to `TransportResponse`.
+
+A `ClientRequest` consists of the following properties:
+
+| Property         | Datatype                             |
+| ---------------- | ------------------------------------ |
+| __host__*        | `string`                             |
+| __url__*         | `string`                             |
+| __method__*      | `get` or `post`                      |
+| __query__        | `object`                             |
+| __headers__      | `object`                             |
+| __body__         | `object`                             |
+| __format__*      | `json` or `geojson`. Default: `json` |
+
+A `TransportResponse` consists of the following properties:
+
+| Property         | Datatype          |
+| ---------------- | ----------------- |
+| __status__*      | `number`          |
+| __statusText__*  | `string`          |
+| __body__*        | `any`             |
+| __headers__      | `object`          |
+
+There are two built-in transports available with this library that you can use; either [isomorphic-unfetch][] or [axios][]. By specifying which transport you would like to use on initialisation of the `What3wordsService` or a client, if you wish to instantiate a client for yourself.
+
+
+## Examples
+
+### Custom Transport
+
+```typescript
+import what3words, { ClientRequest, TransportResponse } from '@what3words/api';
+import superagent from 'superagent';
+
+const API_KEY = '<YOUR_API_KEY>';
+const config = {} // This will ensure we do not override the defaults
+
+async function customTransport(request: ClientRequest): Promise<TransportResponse> {
+  const { method, host, url, query = {}, headers = {}, body = {}, format } = request;
+  superagent[method](`${host}${url}`)
+    .query({ ...query, format })
+    .send(body)
+    .set(headers)
+    .end((err, res) => {
+      if (err) throw err;
+      const reponse: TransportResponse = {
+        status: res.status,
+        statusText: res.
+        headers: res.headers,
+        body: res.body,
+      };
+      return response;
+    })
+}
+
+const service = what3words(API_KEY, config, { transport: customTransport });
+service.availableLanguages()
+  .then(({ languages }) => console.log('Available languages', languages));
+```
+
+### Autosuggest
+
+```typescript
+import { ApiVersion, AutosuggestClient, AutosuggestOptions, AutosuggestResponse } from '@what3words/api';
+
+const API_KEY: string = '<YOUR_API_KEY>';
+const client: AutosuggestClient = AutosuggestClient.init(API_KEY);
+const options: AutosuggestOptions = {
+  input: 'filled.count.s',
+};
+client.run(options)
+  .then((res: AutosuggestResponse) =>
+    console.log(`suggestions for "${autosuggestOptions.input}"`, res)
+  );
+```
+
+### Convert to Coordinates
+
+```typescript
+import { ConvertToCoordinatesClient, ConvertToCoordinatesOptions, ConvertToCoordinatesResponse } from '@what3words/api';
+
+const API_KEY = '<YOUR_API_KEY>';
+const client: ConvertToCoordinatesClient = ConvertToCoordinatesClient.init(API_KEY)
+const options: ConvertToCoordinatesOptions = { words: 'filled.count.soap' };
+client.run(options)
+  .then((res: ConvertToCoordinatesResponse) => console.log('Convert to coordinates', res));
+```
+
+### Convert to Three Word Address
+
+```typescript
+import { ConvertTo3waClient, ConvertTo3waOptions, ConvertTo3waResponse } from '@what3words/api';
+
+const API_KEY = '<YOUR_API_KEY>';
+const client: ConvertTo3waClient = ConvertTo3waClient.init(API_KEY)
+const options: ConvertTo3waOptions = { lat: 51.520847, lng: -0.195521 };
+client.run(options)
+    .then((res: ConvertTo3waResponse) => console.log('Convert to 3wa', res));
+```
+
+### Available Languages
+
+```typescript
+import { AvailableLanguagesClient, AvailableLanguagesResponse } from '@what3words/api';
+
+const API_KEY = '<YOUR_API_KEY>';
+const client: AvailableLanguagesClient = AvailableLanguagesClient.init(API_KEY);
+client.run()
+    .then((res: AvailableLanguagesResponse) => console.log('Available Languages', res));
+```
+
+### Grid Section
+
+```typescript
+import { GridSectionClient, GridSectionOptions, GridSectionResponse } from '@what3words/api';
+
+const API_KEY = '<YOUR_API_KEY>';
+const client: AvailableLanguagesClient = AvailableLanguagesClient.init(API_KEY);
+const options: GridSectionOptions = {
+  southwest: { lat: 52.208867, lng: 0.117540 },
+  northeast: { lat: 52.207988, lng: 0.116126 }
+};
+client.run(options)
+    .then((res: GridSectionResponse) => console.log('Grid Section', res));
+```
+
+> __The requested box must not exceed 4km from corner to corner, or a BadBoundingBoxTooBig error will be returned. Latitudes must be >= -90 and <= 90, but longitudes are allowed to wrap around 180. To specify a bounding-box that crosses the anti-meridian, use longitude greater than 180.__
+
+##
+
+[npm]: https://www.npmjs.com/
+
+[yarn]: https://yarnpkg.com/
+
+[api]: https://developer.what3words.com/public-api/
+
+[apidocs]: https://developer.what3words.com/public-api/docs
+
+[isomorphic-unfetch]: https://www.npmjs.com/package/isomorphic-unfetch
+
+[axios]: https://www.npmjs.com/package/axios

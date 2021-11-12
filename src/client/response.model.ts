@@ -4,19 +4,15 @@ export interface ErrorResponse {
     message: string;
   };
 }
-
 export type ResponseFormat = 'json' | 'geojson';
-
 export interface Coordinates {
   lat: number;
   lng: number;
 }
-
 export interface Bounds {
   southwest: Coordinates;
   northeast: Coordinates;
 }
-
 export interface LocationProperties {
   country: string;
   nearestPlace: string;
@@ -24,12 +20,10 @@ export interface LocationProperties {
   language: string;
   map: string;
 }
-
 export interface LocationJsonResponse extends LocationProperties {
   coordinates: Coordinates;
   square: Bounds;
 }
-
 export interface LocationGeoJsonResponse {
   bbox: [number, number, number, number];
   geometry: {
@@ -39,7 +33,6 @@ export interface LocationGeoJsonResponse {
   type: string;
   properties: LocationProperties;
 }
-
 export interface RequestOptions {
   [x: string]: string;
 }
