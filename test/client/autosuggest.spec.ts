@@ -474,7 +474,6 @@ describe('Autosuggest Client', () => {
               .join(','),
             language,
             'prefer-land': `${preferLand}`,
-            // 'input-type': inputType,
           },
         };
       });
