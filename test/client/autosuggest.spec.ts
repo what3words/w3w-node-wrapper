@@ -462,7 +462,6 @@ describe('Autosuggest Client', () => {
             'raw-input': input,
             selection: selected.words,
             rank: selected.rank,
-            // 'source-api': 'text',
             'n-results': `${nResults}`,
             focus: `${focus.lat},${focus.lng}`,
             'n-focus-results': `${nFocusResults}`,
