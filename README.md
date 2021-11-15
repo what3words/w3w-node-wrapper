@@ -166,7 +166,7 @@ yarn add axios
 
 You can provide your own custom transport, if you wish to use another library for handling requests, which might be useful if you have other integrations or you are already using a http library elsewhere.
 
-If order to do so you need to define your own `Transport` and pass it into the `What3wordsService` or client to use it.
+In order to do so you need to define your own `Transport` and pass it into the `What3wordsService` or client to use it.
 
 The custom `Transport` you create should be a function that accepts a `ClientRequest` as an argument and returns a promise that resolves to a `TransportResponse`.
 
@@ -183,7 +183,7 @@ const config = {} // This will ensure we do not override the defaults
 
 async function customTransport(request: ClientRequest): Promise<TransportResponse> {
   const { method, host, url, query = {}, headers = {}, body = {}, format } = request;
-  superagent[method](`${host}${url}`)
+  return superagent[method](`${host}${url}`)
     .query({ ...query, format })
     .send(body)
     .set(headers)
