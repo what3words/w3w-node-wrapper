@@ -17,7 +17,7 @@ import type {
   LocationGeoJsonResponse,
   LocationJsonResponse,
 } from './client';
-import { ApiClientConfiguration, fetchTransport, axiosTransport } from './lib';
+import { ApiClientConfiguration, getTransport } from './lib';
 import type { Transport } from './lib';
 
 export type What3wordsService = {
@@ -47,12 +47,7 @@ export function what3words(
   config?: ApiClientConfiguration,
   opts?: { transport: 'fetch' | 'axios' | Transport }
 ): What3wordsService {
-  const transport =
-    typeof opts?.transport === 'function'
-      ? opts?.transport
-      : opts?.transport === 'axios'
-      ? axiosTransport()
-      : fetchTransport();
+  const transport = getTransport(opts?.transport);
   const autosuggestClient = new AutosuggestClient(apiKey, config, transport);
   const availableLanguagesClient = new AvailableLanguagesClient(
     apiKey,
