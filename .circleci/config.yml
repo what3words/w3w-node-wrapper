@@ -130,7 +130,7 @@ workflows:
             - build_test
           filters:
             branches:
-              only: main
+              only: master
       - tag:
           requires:
             - publish
