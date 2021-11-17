@@ -1,7 +1,6 @@
 {
   "extends": "./node_modules/gts/",
   "rules": {
-    "object-curly-spacing": ["warn", "always"],
-    "node/no-unpublished-import": [0]
+    "object-curly-spacing": ["warn", "always"]
   }
 }

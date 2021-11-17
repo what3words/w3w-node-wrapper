@@ -1,2 +1,4 @@
-build/
-**/*.js
+.nyc_output/
+coverage/
+dist/
+node_modules/
