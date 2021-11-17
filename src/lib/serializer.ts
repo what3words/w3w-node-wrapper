@@ -11,9 +11,8 @@ export function coordinatesToString(
   coordinates: Coordinates,
   ordered = false
 ): string {
-  if (ordered) {
-    if (coordinates.lat < coordinates.lng)
-      return `${coordinates.lng},${coordinates.lat}`;
+  if (ordered && coordinates.lat < coordinates.lng) {
+    return `${coordinates.lng},${coordinates.lat}`;
   }
   return `${coordinates.lat},${coordinates.lng}`;
 }
