@@ -13,6 +13,7 @@ export interface ClientRequest {
   url: string;
   query?: { [key: string]: string };
   headers?: { [key: string]: string };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body?: { [key: string]: any } | null;
   format?: 'json' | 'geojson';
 }

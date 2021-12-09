@@ -42,11 +42,13 @@ describe('Axios Transport', () => {
   it('should make a request given a ClientRequest', async () => {
     nock(host)
       [method](`${url}?${searchParams(request.query)}`)
-      .reply(200, MOCK_RESPONSE);
+      .reply(200, MOCK_RESPONSE, {
+        'Content-Type': 'application/json;charset=utf-8',
+      });
     (await axiosTransport()(request)).should.be.eql({
       status: 200,
       statusText: null,
-      headers: { 'content-type': 'application/json' },
+      headers: { 'content-type': 'application/json;charset=utf-8' },
       body: MOCK_RESPONSE,
     });
   });

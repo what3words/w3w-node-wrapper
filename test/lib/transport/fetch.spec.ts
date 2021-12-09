@@ -42,12 +42,14 @@ describe('Fetch Transport', () => {
     const response = { foo: 'bar' };
     nock(host)
       [method](`${url}?${searchParams(request.query)}`)
-      .reply(200, response);
+      .reply(200, response, {
+        'Content-Type': 'application/json;charset=utf-8',
+      });
     (await fetchTransport()(request)).should.be.eql({
       status: 200,
       statusText: 'OK',
       body: response,
-      headers: { 'content-type': 'application/json' },
+      headers: { 'content-type': 'application/json;charset=utf-8' },
     });
   });
 

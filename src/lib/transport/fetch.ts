@@ -33,10 +33,9 @@ async function toTransportResponse<T>(
   return {
     status: res.status,
     statusText: res.statusText,
-    body:
-      res.headers.get('content-type') === 'application/json'
-        ? await res.json()
-        : await res.text(),
+    body: res.headers.get('content-type')?.includes('application/json')
+      ? await res.json()
+      : await res.text(),
     headers,
   };
 }

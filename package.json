@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@what3words/api",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "what3words JavaScript API",
   "homepage": "https://github.com/what3words/w3w-node-wrapper#readme",
   "main": "dist/index.js",
@@ -21,9 +21,6 @@
     "precoverage": "rm -rf .nyc_output coverage",
     "precompile": "npm rum clean",
     "posttest": "npm run lint"
-  },
-  "dependencies": {
-    "pkginfo": "^0.4.1"
   },
   "peerDependencies": {
     "axios": "^0.21.2",
