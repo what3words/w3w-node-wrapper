@@ -81,9 +81,9 @@ jobs:
       - setup_environment
       - node/install-packages
       - run: npm run coverage
-      - run: |
-          sed -ie "s/__VERSION__/${VERSION}/g" src/lib/constants.ts
-          cat src/lib/constants.ts
+      - run:
+          name: Inject version constant
+          command: sed -ie "s/__VERSION__/${VERSION}/g" src/lib/constants.ts
       - run: npm run compile
       - store_test_results:
           path: ./coverage
