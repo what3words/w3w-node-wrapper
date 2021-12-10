@@ -2,12 +2,19 @@ import { ApiClient, boundsToString } from '../lib';
 import type { ApiClientConfiguration, Transport } from '../lib';
 import type { Coordinates } from './response.model';
 
-export interface GridSectionResponse {
-  languages: {
-    code: string;
-    name: string;
-    nativeName: string;
+export interface GridSectionJsonResponse {
+  lines: {
+    start: Coordinates;
+    end: Coordinates;
   }[];
+}
+export interface GridSectionGeoJsonResponse {
+  geometry: {
+    coordinates: [number, number][][];
+    type: 'MultiLineString';
+  };
+  type: 'Feature';
+  properties: {};
 }
 
 export type GridSectionOptions = {
@@ -16,7 +23,7 @@ export type GridSectionOptions = {
 };
 
 export class GridSectionClient extends ApiClient<
-  GridSectionResponse,
+  GridSectionJsonResponse | GridSectionGeoJsonResponse,
   GridSectionOptions
 > {
   protected readonly method = 'get';

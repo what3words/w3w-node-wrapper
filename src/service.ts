@@ -13,7 +13,8 @@ import type {
   ConvertTo3waOptions,
   ConvertToCoordinatesOptions,
   GridSectionOptions,
-  GridSectionResponse,
+  GridSectionJsonResponse,
+  GridSectionGeoJsonResponse,
   LocationGeoJsonResponse,
   LocationJsonResponse,
 } from './client';
@@ -39,7 +40,9 @@ export type What3wordsService = {
   convertToCoordinates: (
     options: ConvertToCoordinatesOptions
   ) => Promise<LocationJsonResponse | LocationGeoJsonResponse>;
-  gridSection: (options: GridSectionOptions) => Promise<GridSectionResponse>;
+  gridSection: (
+    options: GridSectionOptions
+  ) => Promise<GridSectionJsonResponse | GridSectionGeoJsonResponse>;
 };
 
 export function what3words(
