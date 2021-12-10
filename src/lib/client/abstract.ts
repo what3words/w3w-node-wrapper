@@ -53,7 +53,7 @@ export abstract class ApiClient<Response, Params = undefined> {
       );
     }
     const params = {
-      headers: this.headers(options),
+      headers: { ...this.headers(), ...(this._config.headers || {}) },
       body: this.body(options),
       query: this.query(options),
     };

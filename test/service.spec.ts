@@ -32,6 +32,7 @@ describe('what3words', () => {
     config = {
       host: CHANCE.url(),
       apiVersion,
+      headers: {},
     };
   });
 
@@ -97,6 +98,7 @@ describe('what3words', () => {
             ApiVersion.Version3,
           ].filter(v => v !== apiVersion)
         ),
+        headers: {},
       };
 
       service.clients.autosuggest.config().should.be.eql(config);
