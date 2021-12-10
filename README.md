@@ -239,7 +239,7 @@ import { ConvertTo3waClient, ConvertTo3waOptions, ConvertTo3waResponse } from '@
 
 const API_KEY = '<YOUR_API_KEY>';
 const client: ConvertTo3waClient = ConvertTo3waClient.init(API_KEY)
-const options: ConvertTo3waOptions = { lat: 51.520847, lng: -0.195521 };
+const options: ConvertTo3waOptions = { coordinates: { lat: 51.520847, lng: -0.195521 } };
 client.run(options)
     .then((res: ConvertTo3waResponse) => console.log('Convert to 3wa', res));
 ```
