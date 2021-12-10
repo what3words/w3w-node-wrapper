@@ -73,6 +73,7 @@ describe('Convert to 3wa Client', () => {
     const config = {
       host: CHANCE.url(),
       apiVersion: CHANCE.pickone([ApiVersion.Version2, ApiVersion.Version3]),
+      headers: {},
     };
     client
       .config()

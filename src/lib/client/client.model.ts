@@ -6,6 +6,7 @@ export enum ApiVersion {
 export interface ApiClientConfiguration {
   apiVersion?: ApiVersion;
   host?: string;
+  headers?: { [key: string]: string };
 }
 export interface ClientRequest {
   method: 'get' | 'post';

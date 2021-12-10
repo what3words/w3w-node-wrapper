@@ -26,7 +26,7 @@ describe('Autosuggest Client', () => {
     apiKey = CHANCE.string({ length: 8 });
     apiVersion = ApiVersion.Version1;
     host = CHANCE.url({ path: '' });
-    config = { host, apiVersion };
+    config = { host, apiVersion, headers: {} };
     transportSpy = spy();
     transport = async (...args) => {
       transportSpy(...args);
@@ -79,10 +79,11 @@ describe('Autosuggest Client', () => {
     client.config().should.be.eql(config, 'config does not match');
   });
   it('should set the config when config function is called with value', () => {
-    const defaultConfig = { host, apiVersion };
+    const defaultConfig = { host, apiVersion, headers: {} };
     const config = {
       host: CHANCE.url(),
       apiVersion: CHANCE.pickone([ApiVersion.Version2, ApiVersion.Version3]),
+      headers: {},
     };
     client
       .config()
