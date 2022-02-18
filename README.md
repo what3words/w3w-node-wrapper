@@ -133,20 +133,20 @@ A `TransportResponse` consists of the following properties:
 | __body__*        | `any`             |
 | __headers__      | `object`          |
 
-There are two built-in transports available with this library that you can use; either [isomorphic-unfetch][] or [axios][]. By specifying which transport you would like to use on initialisation of the `What3wordsService` or a client, if you wish to instantiate a client for yourself.
+There are two built-in transports available with this library that you can use; either [cross-fetch][] or [axios][]. By specifying which transport you would like to use on initialisation of the `What3wordsService` or a client, if you wish to instantiate a client for yourself.
 
 #### Built-ins
 
 There are two built-in transports available:
 
-* [Isomorphic-unfetch][isomorphic-unfetch]
+* [Cross-fetch][cross-fetch]
 * [Axios][axios]
 
-In order to use either of these you will need install the peer dependency. By default [isomorphic-unfetch][isomorphic-unfetch] is assumed by the `What3wordsService` or any instantiated client where no override is provided.
+In order to use either of these you will need install the peer dependency. By default [cross-fetch][cross-fetch] is assumed by the `What3wordsService` or any instantiated client where no override is provided.
 
 [npm][]:
 ```sh
-npm install isomorphic-unfetch
+npm install cross-fetch
 ```
 or
 ```sh
@@ -155,7 +155,7 @@ npm install axios
 
 [yarn][]:
 ```sh
-yarn add isomorphic-unfetch
+yarn add cross-fetch
 ```
 or
 ```sh
@@ -282,6 +282,6 @@ client.run(options)
 
 [apidocs]: https://developer.what3words.com/public-api/docs
 
-[isomorphic-unfetch]: https://www.npmjs.com/package/isomorphic-unfetch
+[cross-fetch]: https://www.npmjs.com/package/cross-fetch
 
 [axios]: https://www.npmjs.com/package/axios

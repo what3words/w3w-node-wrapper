@@ -4,6 +4,7 @@
     "baseUrl": "src/",
     "declaration": true,
     "esModuleInterop": true,
+    "jsx": "react",
     "lib": [
       "dom"
     ],

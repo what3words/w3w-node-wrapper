@@ -1,4 +1,4 @@
-import fetch from 'isomorphic-unfetch';
+import fetch from 'cross-fetch';
 import type { Transport, TransportResponse } from './model';
 import { ClientRequest } from '../client';
 import { errorHandler } from './error';

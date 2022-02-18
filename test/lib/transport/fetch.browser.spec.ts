@@ -1,12 +1,13 @@
 import 'should';
 import nock from 'nock';
 import { Chance } from 'chance';
+import { useEffect } from 'react';
+import { renderComponent, setup } from '../../setup';
 import { fetchTransport, HEADERS, searchParams } from '../../../src';
 
 const CHANCE = new Chance();
-const MOCK_ERROR_RESPONSE = { response: 'My custom error response message' };
 
-describe('Fetch Transport', () => {
+describe('Fetch Transport - Browser ', () => {
   const query = {
     example: 'params',
     random: 'value',
@@ -32,6 +33,7 @@ describe('Fetch Transport', () => {
       },
       body: null,
     };
+    setup();
   });
 
   afterEach(() => {
@@ -45,7 +47,17 @@ describe('Fetch Transport', () => {
       .reply(200, response, {
         'Content-Type': 'application/json;charset=utf-8',
       });
-    (await fetchTransport()(request)).should.be.eql({
+
+    await renderComponent(res => {
+      useEffect(() => {
+        fetchTransport()(request).then(result => {
+          window.result = result;
+          res(null);
+        });
+      }, []);
+    });
+
+    window.result.should.be.eql({
       status: 200,
       statusText: 'OK',
       body: response,
@@ -58,7 +70,17 @@ describe('Fetch Transport', () => {
     nock(host)
       [method](`${url}?${searchParams(request.query)}`)
       .reply(200, response);
-    (await fetchTransport()(request)).should.be.eql({
+
+    await renderComponent(res => {
+      useEffect(() => {
+        fetchTransport()(request).then(result => {
+          window.result = result;
+          res(null);
+        });
+      }, []);
+    });
+
+    window.result.should.be.eql({
       status: 200,
       statusText: 'OK',
       body: response,
@@ -70,7 +92,17 @@ describe('Fetch Transport', () => {
     const response = CHANCE.sentence();
     delete request.query;
     nock(host)[method](url).reply(200, response);
-    (await fetchTransport()(request)).should.be.eql({
+
+    await renderComponent(res => {
+      useEffect(() => {
+        fetchTransport()(request).then(result => {
+          window.result = result;
+          res(null);
+        });
+      }, []);
+    });
+
+    window.result.should.be.eql({
       status: 200,
       statusText: 'OK',
       body: response,
@@ -93,15 +125,21 @@ describe('Fetch Transport', () => {
       it(`should handle ${status} errors`, async () => {
         nock(host)
           [method](`${url}?${searchParams(query)}`)
-          .reply(status, MOCK_ERROR_RESPONSE);
+          .reply(status);
 
-        try {
-          (await fetchTransport()(request)).should.be.eql(MOCK_ERROR_RESPONSE);
-        } catch (err) {
-          err.should.have.properties(['message', 'status']);
-          err.message.should.be.equal(message);
-          err.status.should.be.equal(status);
-        }
+        await renderComponent(res => {
+          useEffect(() => {
+            fetchTransport()(request).catch(error => {
+              window.result = {
+                message: error.message,
+                status: error.status,
+              };
+              res(null);
+            });
+          }, []);
+        });
+
+        window.result.should.be.eql({ status, message });
       });
     });
   });
