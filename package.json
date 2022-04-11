@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@what3words/api",
-  "version": "4.0.5",
+  "version": "4.0.6-tt-7263",
   "description": "what3words JavaScript API",
   "homepage": "https://github.com/what3words/w3w-node-wrapper#readme",
   "main": "dist/index.js",
@@ -26,6 +26,14 @@
   "peerDependencies": {
     "axios": "^0.21.2",
     "cross-fetch": "^3.1.5"
+  },
+  "peerDependenciesMeta": {
+    "axios": {
+      "optional": true
+    },
+    "cross-fetch": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
