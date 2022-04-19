@@ -1,9 +1,10 @@
-import axios from 'axios';
+import { AxiosResponse } from 'axios';
 import type { Transport, TransportResponse } from './model';
 import { ClientRequest } from '../client';
 import { errorHandler } from './error';
 
 export function axiosTransport(): Transport {
+  const axios = require('axios');
   return async function axiosTransport<T>(
     req: ClientRequest
   ): Promise<TransportResponse<T>> {
@@ -16,7 +17,7 @@ export function axiosTransport(): Transport {
       params,
     };
     return await axios(options)
-      .then(res => {
+      .then((res: AxiosResponse) => {
         const response = errorHandler({
           status: res.status,
           statusText: res.statusText,
@@ -25,7 +26,7 @@ export function axiosTransport(): Transport {
         });
         return response;
       })
-      .catch(err => {
+      .catch((err: any) => {
         if (err.isAxiosError)
           errorHandler<T>({
             status: err.response?.status || err.status || 500,
