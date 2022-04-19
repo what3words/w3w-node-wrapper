@@ -5,6 +5,7 @@ import what3words, {
   ApiClientConfiguration,
   ApiVersion,
   searchParams,
+  axiosTransport,
 } from '../src';
 import { What3wordsService } from '../src/service';
 
@@ -120,7 +121,7 @@ describe('what3words', () => {
   describe('Axios Transport', () => {
     let input: string;
     beforeEach(() => {
-      service = what3words(apiKey, config, { transport: 'axios' });
+      service = what3words(apiKey, config, { transport: axiosTransport() });
       input = CHANCE.string();
       nock(`${config.host!}/${config.apiVersion}`)
         .get(`/autosuggest?${searchParams({ input, key: apiKey })}`)

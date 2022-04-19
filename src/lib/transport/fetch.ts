@@ -1,10 +1,10 @@
-import fetch from 'cross-fetch';
 import type { Transport, TransportResponse } from './model';
 import { ClientRequest } from '../client';
 import { errorHandler } from './error';
 import { searchParams } from '../serializer';
 
 export function fetchTransport(): Transport {
+  const fetch = require('cross-fetch');
   return async function fetchTransport<T>(
     req: ClientRequest
   ): Promise<TransportResponse<T>> {
