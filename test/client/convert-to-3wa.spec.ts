@@ -1,11 +1,9 @@
-import { spy, SinonSpy } from 'sinon';
 import { Chance } from 'chance';
 import {
   ApiClientConfiguration,
   ApiVersion,
   ConvertTo3waClient,
   HEADERS,
-  Transport,
 } from '../../src';
 import { generateCoordinate } from '../fixtures';
 
@@ -16,8 +14,7 @@ describe('Convert to 3wa Client', () => {
   let apiVersion: ApiVersion;
   let host: string;
   let config: ApiClientConfiguration;
-  let transportSpy: SinonSpy;
-  let transport: Transport;
+  let transportSpy: jest.Mock<Promise<{ status: number; body: never }>, never>;
   let client: ConvertTo3waClient;
 
   beforeEach(() => {
@@ -25,12 +22,14 @@ describe('Convert to 3wa Client', () => {
     apiVersion = ApiVersion.Version1;
     host = CHANCE.url({ path: '' });
     config = { host, apiVersion };
-    transportSpy = spy();
-    transport = async (...args) => {
-      transportSpy(...args);
-      return { status: 200, body: {} as never };
-    };
-    client = ConvertTo3waClient.init(apiKey, config, transport);
+    transportSpy = jest.fn(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      async (..._args: never): Promise<{ status: number; body: never }> => ({
+        status: 200,
+        body: {} as never,
+      })
+    );
+    client = ConvertTo3waClient.init(apiKey, config, transportSpy);
   });
 
   it('should return instantiate an Convert to 3wa Client instance', () => {
@@ -94,9 +93,8 @@ describe('Convert to 3wa Client', () => {
       body: null,
     };
     await client.run({ coordinates, language, format });
-    const actual = transportSpy.calledOnceWith(transportArguments);
 
-    expect(actual).toEqual(true);
+    expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
   });
   it('should call /convert-to-3wa when run is called (no format/language)', async () => {
     const coordinates = generateCoordinate();
@@ -114,9 +112,8 @@ describe('Convert to 3wa Client', () => {
       body: null,
     };
     await client.run({ coordinates });
-    const actual = transportSpy.calledOnceWith(transportArguments);
 
-    expect(actual).toEqual(true);
+    expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
   });
   it('should throw error when no coordinates are provided', async () => {
     try {
@@ -124,7 +121,7 @@ describe('Convert to 3wa Client', () => {
     } catch (err) {
       expect(err.message).toEqual('No coordinates provided');
     } finally {
-      expect(transportSpy.notCalled).toEqual(true);
+      expect(transportSpy).not.toHaveBeenCalled();
     }
   });
 });

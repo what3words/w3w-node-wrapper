@@ -1,4 +1,3 @@
-import { spy, SinonSpy } from 'sinon';
 import { Chance } from 'chance';
 import {
   ApiClientConfiguration,
@@ -6,7 +5,6 @@ import {
   AutosuggestClient,
   AutosuggestInputType,
   HEADERS,
-  Transport,
 } from '../../src';
 import { generateAutosuggestSuggestion, generateCoordinate } from '../fixtures';
 
@@ -17,8 +15,7 @@ describe('Autosuggest Client', () => {
   let apiVersion: ApiVersion;
   let host: string;
   let config: ApiClientConfiguration;
-  let transportSpy: SinonSpy;
-  let transport: Transport;
+  let transportSpy: jest.Mock<Promise<{ status: number; body: never }>, never>;
   let client: AutosuggestClient;
 
   beforeEach(() => {
@@ -26,16 +23,14 @@ describe('Autosuggest Client', () => {
     apiVersion = ApiVersion.Version1;
     host = CHANCE.url({ path: '' });
     config = { host, apiVersion, headers: {} };
-    transportSpy = spy();
-    transport = async (...args) => {
-      transportSpy(...args);
-      return {
+    transportSpy = jest.fn(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      async (..._args: never): Promise<{ status: number; body: never }> => ({
         status: 200,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        body: {} as any,
-      };
-    };
-    client = AutosuggestClient.init(apiKey, config, transport);
+        body: {} as never,
+      })
+    );
+    client = AutosuggestClient.init(apiKey, config, transportSpy);
   });
 
   it('should instantiate an Autosuggest Client instance', () => {
@@ -146,7 +141,7 @@ describe('Autosuggest Client', () => {
       language,
       preferLand,
     });
-    expect(transportSpy.calledOnceWith(transportArguments)).toEqual(true);
+    expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
   });
   it('should call /autosuggest with voice input type', async () => {
     const input = `${CHANCE.word()}.${CHANCE.word()}.${CHANCE.letter()}`;
@@ -175,7 +170,7 @@ describe('Autosuggest Client', () => {
       inputType,
       language,
     });
-    expect(transportSpy.calledOnceWith(transportArguments)).toEqual(true);
+    expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
   });
   it('should throw error when no language provided with voice input type', async () => {
     const input = `${CHANCE.word()}.${CHANCE.word()}.${CHANCE.letter()}`;
@@ -195,7 +190,7 @@ describe('Autosuggest Client', () => {
         'You must provide language when using a speech input type'
       );
     } finally {
-      expect(transportSpy.notCalled).toEqual(true);
+      expect(transportSpy).not.toHaveBeenCalled();
     }
   });
   it('should throw error if no options provided', async () => {
@@ -205,7 +200,7 @@ describe('Autosuggest Client', () => {
     } catch (err) {
       expect(err.message).toEqual('You must provide at least options.input');
     } finally {
-      expect(transportSpy.notCalled).toEqual(true);
+      expect(transportSpy).not.toHaveBeenCalled();
     }
   });
   it('should throw error if input is empty', async () => {
@@ -216,7 +211,7 @@ describe('Autosuggest Client', () => {
     } catch (err) {
       expect(err.message).toEqual('You must specify an input value');
     } finally {
-      expect(transportSpy.notCalled).toEqual(true);
+      expect(transportSpy).not.toHaveBeenCalled();
     }
   });
   it('should throw error if clipToBoundingBox has southwest lat > northeast lat', async () => {
@@ -233,7 +228,7 @@ describe('Autosuggest Client', () => {
         'Southwest lat must be less than or equal to northeast lat and southwest lng must be less than or equal to northeast lng'
       );
     } finally {
-      expect(transportSpy.notCalled).toEqual(true);
+      expect(transportSpy).not.toHaveBeenCalled();
     }
   });
   it('should throw error if clipToBoundingBox has southwest lng > northeast lng', async () => {
@@ -250,7 +245,7 @@ describe('Autosuggest Client', () => {
         'Southwest lat must be less than or equal to northeast lat and southwest lng must be less than or equal to northeast lng'
       );
     } finally {
-      expect(transportSpy.notCalled).toEqual(true);
+      expect(transportSpy).not.toHaveBeenCalled();
     }
   });
   it('should throw error if clipToCountry has incorrect value', async () => {
@@ -268,7 +263,7 @@ describe('Autosuggest Client', () => {
         'Invalid clip to country. All values must be an ISO 3166-1 alpha-2 country code'
       );
     } finally {
-      expect(transportSpy.notCalled).toEqual(true);
+      expect(transportSpy).not.toHaveBeenCalled();
     }
   });
   it('should throw error if clipToPolygon has less than 4 entries', async () => {
@@ -287,7 +282,7 @@ describe('Autosuggest Client', () => {
         'Invalid clip to polygon value. Array must contain at least 4 coordinates and no more than 25'
       );
     } finally {
-      expect(transportSpy.notCalled).toEqual(true);
+      expect(transportSpy).not.toHaveBeenCalled();
     }
   });
   it('should throw error if clipToPolygon is not closed', async () => {
@@ -306,7 +301,7 @@ describe('Autosuggest Client', () => {
         'Invalid clip to polygon value. The polygon bounds must be closed.'
       );
     } finally {
-      expect(transportSpy.notCalled).toEqual(true);
+      expect(transportSpy).not.toHaveBeenCalled();
     }
   });
   it('should throw error if inputType is not valid', async () => {
@@ -320,7 +315,7 @@ describe('Autosuggest Client', () => {
         'Invalid input type provided. Must provide a valid input type.'
       );
     } finally {
-      expect(transportSpy.notCalled).toEqual(true);
+      expect(transportSpy).not.toHaveBeenCalled();
     }
   });
   const voiceInputTypes = [
@@ -339,7 +334,7 @@ describe('Autosuggest Client', () => {
           'You must provide language when using a speech input type'
         );
       } finally {
-        expect(transportSpy.notCalled).toEqual(true);
+        expect(transportSpy).not.toHaveBeenCalled();
       }
     });
   });
@@ -354,7 +349,7 @@ describe('Autosuggest Client', () => {
         'Invalid language code. It must be an ISO-639-1 2 letter code.'
       );
     } finally {
-      expect(transportSpy.notCalled).toEqual(true);
+      expect(transportSpy).not.toHaveBeenCalled();
     }
   });
   it('should call /autosuggest-selection with selected suggestion', async () => {
@@ -375,8 +370,7 @@ describe('Autosuggest Client', () => {
 
     const actualOnSelected = await client.onSelected(selected);
     expect(actualOnSelected).toEqual(undefined);
-    const actual = transportSpy.calledOnceWith(transportArguments);
-    expect(actual).toEqual(true);
+    expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
   });
   describe('should call /autosuggest-selection with initial request options override', () => {
     const input = `${CHANCE.word()}.${CHANCE.word()}.${CHANCE.letter()}`;
@@ -451,9 +445,9 @@ describe('Autosuggest Client', () => {
         preferLand,
       });
       expect(actualOnSelected).toEqual(undefined);
-      const actual = transportSpy.calledOnceWith(transportArguments);
-      expect(actual).toEqual(true);
+      expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
     });
+
     it('voice input type', async () => {
       const inputType = AutosuggestInputType.GenericVoice;
       transportArguments.body['input-type'] = inputType;
@@ -473,8 +467,7 @@ describe('Autosuggest Client', () => {
         preferLand,
       });
       expect(actualOnSelected).toEqual(undefined);
-      const actual = transportSpy.calledOnceWith(transportArguments);
-      expect(actual).toEqual(true);
+      expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
     });
   });
 });

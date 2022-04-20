@@ -1,11 +1,9 @@
-import { spy, SinonSpy } from 'sinon';
 import { Chance } from 'chance';
 import {
   ApiClientConfiguration,
   ApiVersion,
   GridSectionClient,
   HEADERS,
-  Transport,
 } from '../../src';
 import { generateCoordinate } from '../fixtures';
 
@@ -16,8 +14,7 @@ describe('Grid Section Client', () => {
   let apiVersion: ApiVersion;
   let host: string;
   let config: ApiClientConfiguration;
-  let transportSpy: SinonSpy;
-  let transport: Transport;
+  let transportSpy: jest.Mock<Promise<{ status: number; body: never }>, never>;
   let client: GridSectionClient;
 
   beforeEach(() => {
@@ -25,12 +22,14 @@ describe('Grid Section Client', () => {
     apiVersion = ApiVersion.Version1;
     host = CHANCE.url({ path: '' });
     config = { host, apiVersion };
-    transportSpy = spy();
-    transport = async (...args) => {
-      transportSpy(...args);
-      return { status: 200, body: {} as never };
-    };
-    client = GridSectionClient.init(apiKey, config, transport);
+    transportSpy = jest.fn(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      async (..._args: never): Promise<{ status: number; body: never }> => ({
+        status: 200,
+        body: {} as never,
+      })
+    );
+    client = GridSectionClient.init(apiKey, config, transportSpy);
   });
 
   it('should return instantiate an Grid Section Client instance', () => {
@@ -94,8 +93,8 @@ describe('Grid Section Client', () => {
       body: null,
     };
     await client.run({ boundingBox });
-    const actual = transportSpy.calledOnceWith(transportArguments);
-    expect(actual).toEqual(true);
+
+    expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
   });
   it('should throw error if no bounding box is specified', async () => {
     try {
@@ -103,7 +102,7 @@ describe('Grid Section Client', () => {
     } catch (err) {
       expect(err.message).toEqual('No bounding box specified');
     } finally {
-      expect(transportSpy.notCalled).toEqual(true);
+      expect(transportSpy).not.toHaveBeenCalled();
     }
   });
   it('should throw error if bounding box latitudes are invalid', async () => {
@@ -118,7 +117,7 @@ describe('Grid Section Client', () => {
         'Invalid latitude provided. Latitude must be >= -90 and <= 90'
       );
     } finally {
-      expect(transportSpy.notCalled).toEqual(true);
+      expect(transportSpy).not.toHaveBeenCalledWith();
     }
   });
 });

@@ -1,11 +1,9 @@
-import { spy, SinonSpy } from 'sinon';
 import { Chance } from 'chance';
 import {
   ApiClientConfiguration,
   ApiVersion,
   AvailableLanguagesClient,
   HEADERS,
-  Transport,
 } from '../../src';
 
 const CHANCE = new Chance();
@@ -15,8 +13,7 @@ describe('Available Languages Client', () => {
   let apiVersion: ApiVersion;
   let host: string;
   let config: ApiClientConfiguration;
-  let transportSpy: SinonSpy;
-  let transport: Transport;
+  let transportSpy: jest.Mock<Promise<{ status: number; body: never }>, never>;
   let client: AvailableLanguagesClient;
 
   beforeEach(() => {
@@ -24,13 +21,14 @@ describe('Available Languages Client', () => {
     apiVersion = ApiVersion.Version1;
     host = CHANCE.url({ path: '' });
     config = { host, apiVersion };
-    transportSpy = spy();
-    transport = async (...args) => {
-      transportSpy(...args);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return { status: 200, body: {} as any };
-    };
-    client = AvailableLanguagesClient.init(apiKey, config, transport);
+    transportSpy = jest.fn(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      async (..._args: never): Promise<{ status: number; body: never }> => ({
+        status: 200,
+        body: {} as never,
+      })
+    );
+    client = AvailableLanguagesClient.init(apiKey, config, transportSpy);
   });
 
   it('should return instantiate an Available Languages Client instance', () => {
@@ -84,6 +82,6 @@ describe('Available Languages Client', () => {
       body: null,
     };
     await client.run();
-    expect(transportSpy.calledOnceWith(transportArguments)).toEqual(true);
+    expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
   });
 });

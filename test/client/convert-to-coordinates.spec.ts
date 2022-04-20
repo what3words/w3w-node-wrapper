@@ -1,11 +1,9 @@
-import { spy, SinonSpy } from 'sinon';
 import { Chance } from 'chance';
 import {
   ApiClientConfiguration,
   ApiVersion,
   ConvertToCoordinatesClient,
   HEADERS,
-  Transport,
 } from '../../src';
 
 const CHANCE = new Chance();
@@ -15,8 +13,7 @@ describe('Convert to Coordinates Client', () => {
   let apiVersion: ApiVersion;
   let host: string;
   let config: ApiClientConfiguration;
-  let transportSpy: SinonSpy;
-  let transport: Transport;
+  let transportSpy: jest.Mock<Promise<{ status: number; body: never }>, never>;
   let client: ConvertToCoordinatesClient;
 
   beforeEach(() => {
@@ -24,12 +21,14 @@ describe('Convert to Coordinates Client', () => {
     apiVersion = ApiVersion.Version1;
     host = CHANCE.url({ path: '' });
     config = { host, apiVersion };
-    transportSpy = spy();
-    transport = async (...args) => {
-      transportSpy(...args);
-      return { status: 200, body: {} as never };
-    };
-    client = ConvertToCoordinatesClient.init(apiKey, config, transport);
+    transportSpy = jest.fn(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      async (..._args: never): Promise<{ status: number; body: never }> => ({
+        status: 200,
+        body: {} as never,
+      })
+    );
+    client = ConvertToCoordinatesClient.init(apiKey, config, transportSpy);
   });
 
   it('should return instantiate an Convert to Coordinates Client instance', () => {
@@ -90,9 +89,8 @@ describe('Convert to Coordinates Client', () => {
       body: null,
     };
     await client.run({ words });
-    const actual = transportSpy.calledOnceWith(transportArguments);
 
-    expect(actual).toEqual(true);
+    expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
   });
   it('should throw error if no words provided', async () => {
     try {
@@ -102,7 +100,7 @@ describe('Convert to Coordinates Client', () => {
         'You must specify the words to convert to coordinates'
       );
     } finally {
-      expect(transportSpy.notCalled).toEqual(true);
+      expect(transportSpy).not.toHaveBeenCalled();
     }
   });
 });
