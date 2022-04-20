@@ -1,4 +1,3 @@
-import 'should';
 import { spy, SinonSpy } from 'sinon';
 import { Chance } from 'chance';
 import {
@@ -35,37 +34,34 @@ describe('Available Languages Client', () => {
   });
 
   it('should return instantiate an Available Languages Client instance', () => {
-    client.should.be.instanceOf(AvailableLanguagesClient);
-    client.should.have.properties([
+    expect(client).toBeInstanceOf(AvailableLanguagesClient);
+    const properties = [
       '_apiKey',
       'apiKey',
       '_config',
       'config',
       'run',
       'transport',
-    ]);
-    client['_apiKey'].should.be
-      .String()
-      .and.equal(apiKey, 'api key does not match');
-    client['_config'].should.be
-      .Object()
-      .and.eql(config, 'config does not match');
-    client.apiKey.should.be.Function();
-    client.config.should.be.Function();
+    ];
+    properties.forEach(property => expect(client).toHaveProperty(property));
+    expect(typeof client['_apiKey']).toEqual('string');
+    expect(client['_apiKey']).toEqual(apiKey);
+    expect(typeof client['_config']).toBe('object');
+    expect(client['_config']).toEqual(config);
+    expect(typeof client.apiKey).toBe('function');
+    expect(typeof client.config).toBe('function');
   });
   it('should return the api key when apiKey function is called with no parameter', () => {
-    client.apiKey().should.be.equal(apiKey, 'api key does not match');
+    expect(client.apiKey()).toEqual(apiKey);
   });
   it('should set the api key when apiKey function is called with value', () => {
     const _apiKey = CHANCE.string({ length: 8 });
-    client
-      .apiKey()
-      .should.be.equal(apiKey, 'initial api key should match new value');
-    client.apiKey(_apiKey).should.be.equal(client, 'api key does not match');
-    client.apiKey().should.be.equal(_apiKey, 'api key should match new value');
+    expect(client.apiKey()).toEqual(apiKey);
+    expect(client.apiKey(_apiKey)).toEqual(client);
+    expect(client.apiKey()).toEqual(_apiKey);
   });
   it('should return the config when config function is called with no parameter', () => {
-    client.config().should.be.eql(config, 'config does not match');
+    expect(client.config()).toEqual(config);
   });
   it('should set the config when config function is called with value', () => {
     const defaultConfig = { host, apiVersion };
@@ -74,11 +70,9 @@ describe('Available Languages Client', () => {
       apiVersion: CHANCE.pickone([ApiVersion.Version2, ApiVersion.Version3]),
       headers: {},
     };
-    client
-      .config()
-      .should.be.eql(defaultConfig, 'default config does not match');
-    client.config(config).should.be.eql(client, 'client instance not returned');
-    client.config().should.be.eql(config, 'config should match new value');
+    expect(client.config()).toEqual(defaultConfig);
+    expect(client.config(config)).toEqual(client);
+    expect(client.config()).toEqual(config);
   });
   it('should call /available-languages when run is called', async () => {
     const transportArguments = {
@@ -90,8 +84,6 @@ describe('Available Languages Client', () => {
       body: null,
     };
     await client.run();
-    transportSpy
-      .calledOnceWith(transportArguments)
-      .should.be.equal(true, 'transport arguments do not match');
+    expect(transportSpy.calledOnceWith(transportArguments)).toEqual(true);
   });
 });

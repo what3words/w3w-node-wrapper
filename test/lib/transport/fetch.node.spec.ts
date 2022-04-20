@@ -1,4 +1,3 @@
-import 'should';
 import nock from 'nock';
 import { Chance } from 'chance';
 import { fetchTransport, HEADERS, searchParams } from '../../../src';
@@ -45,12 +44,15 @@ describe('Fetch Transport - Node', () => {
       .reply(200, response, {
         'Content-Type': 'application/json;charset=utf-8',
       });
-    (await fetchTransport()(request)).should.be.eql({
+    const actual = await fetchTransport()(request);
+    const expected = {
       status: 200,
       statusText: 'OK',
       body: response,
       headers: { 'content-type': 'application/json;charset=utf-8' },
-    });
+    };
+
+    expect(actual).toEqual(expected);
   });
 
   it('should make a request given a ClientRequest and return string', async () => {
@@ -58,24 +60,30 @@ describe('Fetch Transport - Node', () => {
     nock(host)
       [method](`${url}?${searchParams(request.query)}`)
       .reply(200, response);
-    (await fetchTransport()(request)).should.be.eql({
+    const actual = await fetchTransport()(request);
+    const expected = {
       status: 200,
       statusText: 'OK',
       body: response,
       headers: {},
-    });
+    };
+
+    expect(actual).toEqual(expected);
   });
 
   it('should make a request given a ClientRequest (no query params)', async () => {
     const response = CHANCE.sentence();
     delete request.query;
     nock(host)[method](url).reply(200, response);
-    (await fetchTransport()(request)).should.be.eql({
+    const actual = await fetchTransport()(request);
+    const expected = {
       status: 200,
       statusText: 'OK',
       body: response,
       headers: {},
-    });
+    };
+
+    expect(actual).toEqual(expected);
   });
 
   describe('Errors', () => {
@@ -96,11 +104,13 @@ describe('Fetch Transport - Node', () => {
           .reply(status, MOCK_ERROR_RESPONSE);
 
         try {
-          (await fetchTransport()(request)).should.be.eql(MOCK_ERROR_RESPONSE);
+          const actual = await fetchTransport()(request);
+          expect(actual).toEqual(MOCK_ERROR_RESPONSE);
         } catch (err) {
-          err.should.have.properties(['message', 'status']);
-          err.message.should.be.equal(message);
-          err.status.should.be.equal(status);
+          expect(err).toHaveProperty('message');
+          expect(err).toHaveProperty('status');
+          expect(err.message).toEqual(message);
+          expect(err.status).toEqual(status);
         }
       });
     });

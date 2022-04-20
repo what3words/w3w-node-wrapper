@@ -1,4 +1,3 @@
-import 'should';
 import nock from 'nock';
 import { Chance } from 'chance';
 import { axiosTransport, HEADERS, searchParams } from '../../../src';
@@ -45,12 +44,15 @@ describe('Axios Transport', () => {
       .reply(200, MOCK_RESPONSE, {
         'Content-Type': 'application/json;charset=utf-8',
       });
-    (await axiosTransport()(request)).should.be.eql({
+    const actual = await axiosTransport()(request);
+    const expected = {
       status: 200,
       statusText: null,
       headers: { 'content-type': 'application/json;charset=utf-8' },
       body: MOCK_RESPONSE,
-    });
+    };
+
+    expect(actual).toEqual(expected);
   });
 
   describe('Errors', () => {
@@ -71,11 +73,13 @@ describe('Axios Transport', () => {
           .reply(status, MOCK_ERROR_RESPONSE);
 
         try {
-          (await axiosTransport()(request)).should.be.eql(MOCK_ERROR_RESPONSE);
+          const actual = await axiosTransport()(request);
+          expect(actual).toEqual(MOCK_ERROR_RESPONSE);
         } catch (err) {
-          err.should.have.properties(['message', 'status']);
-          err.message.should.be.equal(message);
-          err.status.should.be.equal(status);
+          expect(err).toHaveProperty('message');
+          expect(err).toHaveProperty('status');
+          expect(err.message).toEqual(message);
+          expect(err.status).toEqual(status);
         }
       });
     });

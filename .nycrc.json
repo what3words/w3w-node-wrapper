@@ -1,6 +1,0 @@
-{
-  "extends": "@istanbuljs/nyc-config-typescript",
-  "all": false,
-  "check-coverage": true,
-  "reporter": ["text", "html"]
-}

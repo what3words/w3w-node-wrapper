@@ -1,4 +1,3 @@
-import 'should';
 import { spy, SinonSpy } from 'sinon';
 import { Chance } from 'chance';
 import {
@@ -29,44 +28,41 @@ describe('Grid Section Client', () => {
     transportSpy = spy();
     transport = async (...args) => {
       transportSpy(...args);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return { status: 200, body: {} as any };
+      return { status: 200, body: {} as never };
     };
     client = GridSectionClient.init(apiKey, config, transport);
   });
 
   it('should return instantiate an Grid Section Client instance', () => {
-    client.should.be.instanceOf(GridSectionClient);
-    client.should.have.properties([
+    expect(client).toBeInstanceOf(GridSectionClient);
+    const properties = [
       '_apiKey',
       'apiKey',
       '_config',
       'config',
       'run',
       'transport',
-    ]);
-    client['_apiKey'].should.be
-      .String()
-      .and.equal(apiKey, 'api key does not match');
-    client['_config'].should.be
-      .Object()
-      .and.eql(config, 'config does not match');
-    client.apiKey.should.be.Function();
-    client.config.should.be.Function();
+    ];
+    properties.forEach(property => expect(client).toHaveProperty(property));
+    expect(typeof client['_apiKey']).toBe('string');
+    expect(client['_apiKey']).toEqual(apiKey);
+    expect(typeof client['_config']).toBe('object');
+    expect(client['_config']).toEqual(config);
+    expect(typeof client.apiKey).toBe('function');
+    expect(typeof client.config).toBe('function');
   });
   it('should return the api key when apiKey function is called with no parameter', () => {
-    client.apiKey().should.be.equal(apiKey, 'api key does not match');
+    expect(client.apiKey()).toEqual(apiKey);
   });
   it('should set the api key when apiKey function is called with value', () => {
     const _apiKey = CHANCE.string({ length: 8 });
-    client
-      .apiKey()
-      .should.be.equal(apiKey, 'initial api key should match new value');
-    client.apiKey(_apiKey).should.be.equal(client, 'api key does not match');
-    client.apiKey().should.be.equal(_apiKey, 'api key should match new value');
+
+    expect(client.apiKey()).toEqual(apiKey);
+    expect(client.apiKey(_apiKey)).toEqual(client);
+    expect(client.apiKey()).toEqual(_apiKey);
   });
   it('should return the config when config function is called with no parameter', () => {
-    client.config().should.be.eql(config, 'config does not match');
+    expect(client.config()).toEqual(config);
   });
   it('should set the config when config function is called with value', () => {
     const defaultConfig = { host, apiVersion };
@@ -75,11 +71,10 @@ describe('Grid Section Client', () => {
       apiVersion: CHANCE.pickone([ApiVersion.Version2, ApiVersion.Version3]),
       headers: {},
     };
-    client
-      .config()
-      .should.be.eql(defaultConfig, 'default config does not match');
-    client.config(config).should.be.eql(client, 'client instance not returned');
-    client.config().should.be.eql(config, 'config should match new value');
+
+    expect(client.config()).toEqual(defaultConfig);
+    expect(client.config(config)).toEqual(client);
+    expect(client.config()).toEqual(config);
   });
   it('should call /grid-section when run is called', async () => {
     const boundingBox = {
@@ -99,21 +94,16 @@ describe('Grid Section Client', () => {
       body: null,
     };
     await client.run({ boundingBox });
-    transportSpy
-      .calledOnceWith(transportArguments)
-      .should.be.equal(true, 'transport arguments do not match');
+    const actual = transportSpy.calledOnceWith(transportArguments);
+    expect(actual).toEqual(true);
   });
   it('should throw error if no bounding box is specified', async () => {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await client.run(undefined as any);
+      await client.run(undefined as never);
     } catch (err) {
-      err.message.should.be.equal('No bounding box specified');
+      expect(err.message).toEqual('No bounding box specified');
     } finally {
-      transportSpy.notCalled.should.be.equal(
-        true,
-        'transport should not be called'
-      );
+      expect(transportSpy.notCalled).toEqual(true);
     }
   });
   it('should throw error if bounding box latitudes are invalid', async () => {
@@ -124,14 +114,11 @@ describe('Grid Section Client', () => {
     try {
       await client.run({ boundingBox });
     } catch (err) {
-      err.message.should.be.equal(
+      expect(err.message).toEqual(
         'Invalid latitude provided. Latitude must be >= -90 and <= 90'
       );
     } finally {
-      transportSpy.notCalled.should.be.equal(
-        true,
-        'transport should not be called'
-      );
+      expect(transportSpy.notCalled).toEqual(true);
     }
   });
 });
