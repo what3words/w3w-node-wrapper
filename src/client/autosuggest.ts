@@ -55,6 +55,10 @@ export class AutosuggestClient extends ApiClient<
     return new AutosuggestClient(apiKey, config, transport);
   }
 
+  public startSession() {
+    return this.makeClientRequest('post', '/autosuggest-session');
+  }
+
   protected query(options: AutosuggestOptions) {
     this.lastReqOpts = options;
     return {

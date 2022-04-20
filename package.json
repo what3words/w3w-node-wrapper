@@ -1,6 +1,10 @@
 {
   "private": false,
   "name": "@what3words/api",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/what3words/w3w-node-wrapper.git"
+  },
   "version": "4.0.6",
   "description": "what3words JavaScript API",
   "homepage": "https://github.com/what3words/w3w-node-wrapper#readme",
@@ -19,6 +23,7 @@
     "clean": "gts clean",
     "compile": "tsc",
     "fix": "gts fix",
+    "pact:publish": "pact-broker publish pact --consumer-app-version $npm_package_version --auto-detect-version-properties --broker-base-url=$BROKER_BASE_URL",
     "precoverage": "rm -rf .nyc_output coverage",
     "precompile": "npm rum clean",
     "posttest": "npm run lint"
@@ -37,6 +42,7 @@
   },
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
+    "@pact-foundation/pact": "^9.17.3",
     "@testing-library/react": "^12.1.3",
     "@types/chance": "^1.1.3",
     "@types/jsdom": "^16.2.14",
@@ -77,5 +83,8 @@
     "geo",
     "maps",
     "geolocation"
-  ]
+  ],
+  "config": {
+		"pact_do_not_track": true
+	}
 }
