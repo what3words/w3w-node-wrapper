@@ -1,6 +1,20 @@
-import { Pact, Matchers } from '@pact-foundation/pact';
+import {
+  Matchers,
+  Pact,
+  RequestOptions,
+  ResponseOptions,
+} from '@pact-foundation/pact';
 import * as path from 'path';
 import { ApiVersion, AutosuggestClient } from '../../src';
+import {
+  NotFoundError,
+  BadRequestError,
+  InternalServerError,
+  ForbiddenError,
+  BadGatewayError,
+  ServiceUnavailableError,
+  GatewayTimeoutError,
+} from '../../src/lib/transport/error';
 
 describe('Autosuggest Session Pact', () => {
   const apiVersion = ApiVersion.Version1;
@@ -41,8 +55,8 @@ describe('Autosuggest Session Pact', () => {
   afterAll(() => provider.finalize());
 
   describe('When I do not have a current autosuggest session', () => {
-    describe('And there is a request to start a session', () => {
-      const MOCK_REQUEST = {
+    describe('And there is a sucessful request to start a session', () => {
+      const MOCK_REQUEST: RequestOptions = {
         method: 'POST' as const,
         path: `/${apiVersion}/autosuggest-session`,
         query: {
@@ -58,7 +72,7 @@ describe('Autosuggest Session Pact', () => {
           variant,
         },
       };
-      const MOCK_RESPONSE = {
+      const MOCK_RESPONSE: ResponseOptions = {
         status: 200,
         headers: {
           'Content-Type': 'application/json',
@@ -74,7 +88,7 @@ describe('Autosuggest Session Pact', () => {
         provider.addInteraction({
           // The 'state' field specifies a "Provider State"
           state: 'I do not have a current autosuggest session',
-          uponReceiving: 'a request for an autosuggest session',
+          uponReceiving: 'a successful request for an autosuggest session',
           withRequest: MOCK_REQUEST,
           willRespondWith: MOCK_RESPONSE,
         })
@@ -96,11 +110,78 @@ describe('Autosuggest Session Pact', () => {
         expect(res.body).toHaveProperty('version', version);
       });
     });
+
+    describe('And there is a failed request to start a session', () => {
+      const MOCK_REQUEST: RequestOptions = {
+        method: 'POST' as const,
+        path: `/${apiVersion}/autosuggest-session`,
+        query: {
+          key: apiKey,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Correlation-ID': correlationId,
+        },
+        body: {
+          return_coordinates: returnCoordinates,
+          typehead_delay: typeheadDelay,
+          variant,
+        },
+      };
+
+      const errors = [
+        new BadRequestError(),
+        new ForbiddenError(),
+        new NotFoundError(),
+        new InternalServerError(),
+        new BadGatewayError(),
+        new ServiceUnavailableError(),
+        new GatewayTimeoutError(),
+      ];
+
+      errors.forEach(err => {
+        // Write your test(s)
+        it(`should return a ${err.status} error`, async () => {
+          const MOCK_RESPONSE: ResponseOptions = {
+            status: err.status,
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Correlation-ID': correlationId,
+            },
+            body: {
+              status: err.status,
+              message: err.message,
+            },
+          };
+          // Add interactions to the Mock Server, as many as required
+          await provider.addInteraction({
+            // The 'state' field specifies a "Provider State"
+            state: 'I do not have a current autosuggest session',
+            uponReceiving: `a ${err.status} failed request for an autosuggest session`,
+            withRequest: MOCK_REQUEST,
+            willRespondWith: MOCK_RESPONSE,
+          });
+          const client = new AutosuggestClient(apiKey, config);
+          try {
+            await client.startSession({
+              apiKey,
+              correlationId,
+              returnCoordinates,
+              typeheadDelay,
+              variant,
+            });
+          } catch (error) {
+            expect(error).toHaveProperty('status', err.status);
+            expect(error.message.trim()).toBe(err.message);
+          }
+        });
+      });
+    });
   });
 
-  describe('When I already have a current autosuggest session', () => {
+  describe('When I have a current autosuggest session', () => {
     describe('And there is a request to update the session', () => {
-      const MOCK_REQUEST = {
+      const MOCK_REQUEST: RequestOptions = {
         method: 'PUT' as const,
         path: `/${apiVersion}/autosuggest-session`,
         query: {
@@ -116,7 +197,7 @@ describe('Autosuggest Session Pact', () => {
           variant,
         },
       };
-      const MOCK_RESPONSE = {
+      const MOCK_RESPONSE: ResponseOptions = {
         status: 200,
         headers: {
           'Content-Type': 'application/json',
@@ -150,6 +231,73 @@ describe('Autosuggest Session Pact', () => {
         expect(res.headers).toHaveProperty('content-type', 'application/json');
         expect(res.headers).toHaveProperty('x-correlation-id', correlationId);
         expect(res.body).toHaveProperty('version', version);
+      });
+    });
+
+    describe('And there is a failed request to update the session', () => {
+      const MOCK_REQUEST: RequestOptions = {
+        method: 'PUT' as const,
+        path: `/${apiVersion}/autosuggest-session`,
+        query: {
+          key: apiKey,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Correlation-ID': correlationId,
+        },
+        body: {
+          return_coordinates: returnCoordinates,
+          typehead_delay: typeheadDelay,
+          variant,
+        },
+      };
+
+      const errors = [
+        new BadRequestError(),
+        new ForbiddenError(),
+        new NotFoundError(),
+        new InternalServerError(),
+        new BadGatewayError(),
+        new ServiceUnavailableError(),
+        new GatewayTimeoutError(),
+      ];
+
+      errors.forEach(err => {
+        // Write your test(s)
+        it(`should return a ${err.status} error`, async () => {
+          const MOCK_RESPONSE: ResponseOptions = {
+            status: err.status,
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Correlation-ID': correlationId,
+            },
+            body: {
+              status: err.status,
+              message: err.message,
+            },
+          };
+          // Add interactions to the Mock Server, as many as required
+          await provider.addInteraction({
+            // The 'state' field specifies a "Provider State"
+            state: 'I do not have a current autosuggest session',
+            uponReceiving: `a ${err.status} failed request to update the session`,
+            withRequest: MOCK_REQUEST,
+            willRespondWith: MOCK_RESPONSE,
+          });
+          const client = new AutosuggestClient(apiKey, config);
+          try {
+            await client.updateSession({
+              apiKey,
+              correlationId,
+              returnCoordinates,
+              typeheadDelay,
+              variant,
+            });
+          } catch (error) {
+            expect(error).toHaveProperty('status', err.status);
+            expect(error.message.trim()).toBe(err.message);
+          }
+        });
       });
     });
   });
