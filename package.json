@@ -20,7 +20,8 @@
     "pact_do_not_track": true
   },
   "scripts": {
-    "pact:publish": "pact-broker publish pacts --consumer-app-version=\"$npm_package_version-$(git rev-parse --short HEAD)\" --auto-detect-version-properties --broker-base-url=${PACT_BROKER_BASE_URL}",
+    "pact:publish-dev": "pact-broker publish pacts --consumer-app-version=\"$npm_package_version-$(git rev-parse --short HEAD)\" --auto-detect-version-properties --broker-base-url=${PACT_BROKER_BASE_URL}",
+    "pact:publish-prod": "pact-broker publish pacts --consumer-app-version=\"$npm_package_version\" --auto-detect-version-properties --broker-base-url=${PACT_BROKER_BASE_URL}",
     "test": "jest",
     "test:watch": "jest --watch",
     "coverage": "jest --coverage",

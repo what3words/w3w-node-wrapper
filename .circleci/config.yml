@@ -100,16 +100,35 @@ jobs:
             - ./package.json
       # - jobstatus
 
-  publish:
+  pact-publish-dev:
+    executor: build-executor
+    steps:
+      - checkout
+      - setup_environment
+      - node/install-packages
+      - run:
+          name: Publish development pacts to broker
+          command: npm run pact:publish-dev
+      # - jobstatus
+
+  pact-publish-prod:
+    executor: build-executor
+    steps:
+      - checkout
+      - setup_environment
+      - node/install-packages
+      - run:
+          name: Publish production pacts to broker
+          command: npm run pact:publish-prod
+      # - jobstatus
+
+  npm-publish:
     executor: build-executor
     steps:
       - attach_workspace:
           at: /tmp/workspace
       - setup_environment:
           version_path: /tmp/workspace
-      - run:
-          name: Publish pacts to broker
-          command: npm run pact:publish
       - run:
           name: Publish package to NPM
           command: cd /tmp/workspace && npm publish
@@ -134,7 +153,16 @@ workflows:
   build-and-deploy:
     jobs:
       - build_test
-      - publish:
+      - pact-publish-dev:
+          context: 
+            - org-global
+            - w3w-pact
+          requires:
+            - build_test
+          filters:
+            branches:
+              ignore: master
+      - pact-publish-prod:
           context: 
             - org-global
             - w3w-pact
@@ -143,7 +171,15 @@ workflows:
           filters:
             branches:
               only: master
+      - npm-publish:
+          context: 
+            - org-global
+          requires:
+            - build_test
+          filters:
+            branches:
+              only: master
       - tag:
           requires:
-            - publish
+            - npm-publish
 
