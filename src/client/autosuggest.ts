@@ -1,10 +1,10 @@
+import type { ApiClientConfiguration, Transport } from '../lib';
 import {
   ApiClient,
   arrayToString,
   boundsToString,
   coordinatesToString,
 } from '../lib';
-import type { ApiClientConfiguration, Transport } from '../lib';
 import { Bounds, Coordinates } from './response.model';
 
 export interface AutosuggestSuggestion {
@@ -45,6 +45,7 @@ type SessionOptions = {
   returnCoordinates: boolean;
   typeheadDelay: number;
   variant: 'default' | '';
+  version: string;
 };
 
 export class AutosuggestClient extends ApiClient<
@@ -72,12 +73,13 @@ export class AutosuggestClient extends ApiClient<
   }
 
   /**
-   * Initialise a new autosuggest session to track its usage
+   * Initialise a new autosuggest session with properties to track its usage
    * @param {string} opts.apiKey The SDK api key
    * @param {string} opts.correlationId The unique identifier for an autosuggest session
    * @param {boolean} opts.returnCoordinates Does the autosuggest component return coordinates?
    * @param {number} opts.typeheadDelay The delay before the autosuggest search query is run in of milliseconds
-   * @param {string} opts.variant The autosuggest variant
+   * @param {string} opts.variant The autosuggest component variant
+   * @param {string} opts.version The autosuggest component version
    */
   public async startSession(opts: SessionOptions) {
     return this.makeClientRequest<{ version: string }>(
@@ -95,6 +97,7 @@ export class AutosuggestClient extends ApiClient<
           return_coordinates: opts.returnCoordinates,
           typehead_delay: opts.typeheadDelay,
           variant: opts.variant,
+          version: opts.version,
         },
       }
     );
@@ -106,7 +109,8 @@ export class AutosuggestClient extends ApiClient<
    * @param {string} opts.correlationId The unique identifier for an autosuggest session
    * @param {boolean} opts.returnCoordinates Does the autosuggest component return coordinates?
    * @param {number} opts.typeheadDelay The delay before the autosuggest search query is run in of milliseconds
-   * @param {string} opts.variant The autosuggest variant
+   * @param {string} opts.variant The autosuggest component variant
+   * @param {string} opts.version The autosuggest component version
    */
   public async updateSession(opts: SessionOptions) {
     return this.makeClientRequest<{ version: string }>(
@@ -124,6 +128,7 @@ export class AutosuggestClient extends ApiClient<
           return_coordinates: opts.returnCoordinates,
           typehead_delay: opts.typeheadDelay,
           variant: opts.variant,
+          version: opts.version,
         },
       }
     );
