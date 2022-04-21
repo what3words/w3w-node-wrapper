@@ -80,14 +80,15 @@ jobs:
       - checkout
       - setup_environment
       - node/install-packages
-      - run: npm run coverage
       - run:
-          name: Publish Pacts to Broker
-          command: npm run pact:publish
+          name: Run test coverage
+          command: npm run coverage
       - run:
           name: Inject version constant
           command: sed -ie "s/__VERSION__/${VERSION}/g" src/lib/constants.ts
-      - run: npm run compile
+      - run: 
+          name: Compile project
+          command: npm run compile
       - store_test_results:
           path: ./coverage
       - persist_to_workspace:
@@ -107,7 +108,10 @@ jobs:
       - setup_environment:
           version_path: /tmp/workspace
       - run:
-          name: "publish npm"
+          name: Publish pacts to broker
+          command: npm run pact:publish
+      - run:
+          name: Publish package to NPM
           command: cd /tmp/workspace && npm publish
       # - jobstatus
 
@@ -129,10 +133,11 @@ workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - build_test:
-          context: w3w-pact
+      - build_test
       - publish:
-          context: org-global
+          context: 
+            - org-global
+            - w3w-pact
           requires:
             - build_test
           filters:
