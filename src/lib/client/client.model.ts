@@ -8,8 +8,10 @@ export interface ApiClientConfiguration {
   host?: string;
   headers?: { [key: string]: string };
 }
+export type HttpMethod = 'get' | 'post' | 'put';
+
 export interface ClientRequest {
-  method: 'get' | 'post';
+  method: HttpMethod;
   host: string;
   url: string;
   query?: { [key: string]: string };
@@ -18,8 +20,9 @@ export interface ClientRequest {
   body?: { [key: string]: any } | null;
   format?: 'json' | 'geojson';
 }
+
 export type ExecFnResponse = [
-  'get' | 'post',
+  HttpMethod,
   string,
   {
     headers?: { [key: string]: string };

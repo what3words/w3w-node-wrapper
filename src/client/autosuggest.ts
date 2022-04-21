@@ -39,6 +39,14 @@ export interface AutosuggestOptions {
   preferLand?: boolean;
 }
 
+type SessionOptions = {
+  apiKey: string;
+  correlationId: string;
+  returnCoordinates: boolean;
+  typeheadDelay: number;
+  variant: 'default' | '';
+};
+
 export class AutosuggestClient extends ApiClient<
   AutosuggestResponse,
   AutosuggestOptions
@@ -61,6 +69,64 @@ export class AutosuggestClient extends ApiClient<
       ...this.autosuggestOptionsToQuery(options),
       input: options.input,
     };
+  }
+
+  /**
+   * Initialise a new autosuggest session to track its usage
+   * @param {string} opts.apiKey The SDK api key
+   * @param {string} opts.correlationId The unique identifier for an autosuggest session
+   * @param {boolean} opts.returnCoordinates Does the autosuggest component return coordinates?
+   * @param {number} opts.typeheadDelay The delay before the autosuggest search query is run in of milliseconds
+   * @param {string} opts.variant The autosuggest variant
+   */
+  public async startSession(opts: SessionOptions) {
+    return this.makeClientRequest<{ version: string }>(
+      'post',
+      '/autosuggest-session',
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Correlation-ID': opts.correlationId,
+        },
+        query: {
+          key: opts.apiKey,
+        },
+        body: {
+          return_coordinates: opts.returnCoordinates,
+          typehead_delay: opts.typeheadDelay,
+          variant: opts.variant,
+        },
+      }
+    );
+  }
+
+  /**
+   * Update a current autosuggest session with new properties
+   * @param {string} opts.apiKey The SDK api key
+   * @param {string} opts.correlationId The unique identifier for an autosuggest session
+   * @param {boolean} opts.returnCoordinates Does the autosuggest component return coordinates?
+   * @param {number} opts.typeheadDelay The delay before the autosuggest search query is run in of milliseconds
+   * @param {string} opts.variant The autosuggest variant
+   */
+  public async updateSession(opts: SessionOptions) {
+    return this.makeClientRequest<{ version: string }>(
+      'put',
+      '/autosuggest-session',
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Correlation-ID': opts.correlationId,
+        },
+        query: {
+          key: opts.apiKey,
+        },
+        body: {
+          return_coordinates: opts.returnCoordinates,
+          typehead_delay: opts.typeheadDelay,
+          variant: opts.variant,
+        },
+      }
+    );
   }
 
   protected async validate(options: AutosuggestOptions) {

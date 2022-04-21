@@ -1,0 +1,71 @@
+{
+  "consumer": {
+    "name": "w3w-node-wrapper"
+  },
+  "provider": {
+    "name": "api-server"
+  },
+  "interactions": [
+    {
+      "description": "a request for an autosuggest session",
+      "providerState": "I do not have a current autosuggest session",
+      "request": {
+        "method": "POST",
+        "path": "/v1/autosuggest-session",
+        "query": "key=ce118b6e-d8e1-11e7-9296-cec278b6b50a",
+        "headers": {
+          "Content-Type": "application/json",
+          "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
+        },
+        "body": {
+          "return_coordinates": true,
+          "typehead_delay": 400,
+          "variant": "default"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json",
+          "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
+        },
+        "body": {
+          "version": "1.2.3"
+        }
+      }
+    },
+    {
+      "description": "a request to update the session",
+      "providerState": "I already have a current autosuggest session",
+      "request": {
+        "method": "PUT",
+        "path": "/v1/autosuggest-session",
+        "query": "key=ce118b6e-d8e1-11e7-9296-cec278b6b50a",
+        "headers": {
+          "Content-Type": "application/json",
+          "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
+        },
+        "body": {
+          "return_coordinates": true,
+          "typehead_delay": 400,
+          "variant": "default"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json",
+          "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
+        },
+        "body": {
+          "version": "1.2.3"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

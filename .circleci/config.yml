@@ -82,6 +82,9 @@ jobs:
       - node/install-packages
       - run: npm run coverage
       - run:
+          name: Publish Pacts to Broker
+          command: npm run pact:publish
+      - run:
           name: Inject version constant
           command: sed -ie "s/__VERSION__/${VERSION}/g" src/lib/constants.ts
       - run: npm run compile
@@ -126,7 +129,8 @@ workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - build_test
+      - build_test:
+          context: w3w-pact
       - publish:
           context: org-global
           requires:

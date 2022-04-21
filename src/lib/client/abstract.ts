@@ -1,4 +1,4 @@
-import { ApiClientConfiguration, ApiVersion } from './client.model';
+import { ApiClientConfiguration, ApiVersion, HttpMethod } from './client.model';
 import {
   errorHandler,
   fetchTransport,
@@ -9,7 +9,7 @@ import { HEADERS } from '../constants';
 
 export abstract class ApiClient<Response, Params = undefined> {
   protected abstract url: string;
-  protected abstract method: 'get' | 'post';
+  protected abstract method: HttpMethod;
   private static DEFAULT_CONFIG = {
     host: 'https://api.what3words.com',
     apiVersion: ApiVersion.Version3,
@@ -67,7 +67,7 @@ export abstract class ApiClient<Response, Params = undefined> {
   }
 
   protected async makeClientRequest<T>(
-    method: 'get' | 'post',
+    method: HttpMethod,
     url: string,
     params?: {
       headers?: { [key: string]: string };
@@ -83,7 +83,7 @@ export abstract class ApiClient<Response, Params = undefined> {
   }
 
   protected getClientRequest(
-    method: 'get' | 'post',
+    method: 'get' | 'post' | 'put',
     url: string,
     params?: {
       headers?: { [key: string]: string };
