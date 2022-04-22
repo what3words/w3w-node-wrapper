@@ -107,6 +107,8 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp/workspace
+      - setup_environment:
+          version_path: /tmp/workspace
       - run:
           name: Publish development pacts to broker
           command: cd /tmp/workspace && npx pact-broker publish pacts --consumer-app-version="$VERSION-$(echo $CIRCLE_SHA1 | cut -c -7)" --auto-detect-version-properties --broker-base-url=${PACT_BROKER_BASE_URL}
@@ -117,6 +119,8 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp/workspace
+      - setup_environment:
+          version_path: /tmp/workspace
       - run:
           name: Publish production pacts to broker
           command: cd /tmp/workspace && npx pact-broker publish pacts --consumer-app-version=$VERSION --auto-detect-version-properties --broker-base-url=${PACT_BROKER_BASE_URL}
