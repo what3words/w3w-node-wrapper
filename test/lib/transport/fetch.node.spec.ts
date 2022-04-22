@@ -107,10 +107,8 @@ describe('Fetch Transport - Node', () => {
           const actual = await fetchTransport()(request);
           expect(actual).toEqual(MOCK_ERROR_RESPONSE);
         } catch (err) {
-          expect(err).toHaveProperty('message');
-          expect(err).toHaveProperty('status');
-          expect(err.message).toEqual(message);
-          expect(err.status).toEqual(status);
+          expect(err).toHaveProperty('message', message);
+          expect(err).toHaveProperty('status', status);
         }
       });
     });
