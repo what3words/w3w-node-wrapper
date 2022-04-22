@@ -19,22 +19,6 @@ import {
 const chance = new Chance();
 
 describe('Autosuggest Session Pact', () => {
-  const apiVersion = ApiVersion.Version3;
-  const port = 9000;
-  const host = `http://localhost:${port}`;
-  const config = { host, apiVersion, headers: {} };
-
-  // Create the Pact object to represent your provider
-  const provider = new Pact({
-    consumer: 'w3w-node-wrapper',
-    provider: 'api-server',
-    port,
-    log: path.resolve(process.cwd(), 'logs', 'pact.log'),
-    dir: path.resolve(process.cwd(), 'pacts'),
-    logLevel: 'info',
-    pactfileWriteMode: 'overwrite',
-  });
-
   const randomApiKey = chance.string({
     length: 8,
     alpha: true,
@@ -72,6 +56,22 @@ describe('Autosuggest Session Pact', () => {
   const variant = Matchers.like(
     chance.pickone(['default', 'inherit'])
   ).getValue() as never;
+
+  const apiVersion = ApiVersion.Version3;
+  const port = 9000;
+  const host = `http://localhost:${port}`;
+  const client = new AutosuggestClient(apiKey, { host, apiVersion, headers: {} });
+
+  // Create the Pact object to represent your provider
+  const provider = new Pact({
+    consumer: 'w3w-node-wrapper',
+    provider: 'api-server',
+    port,
+    log: path.resolve(process.cwd(), 'logs', 'pact.log'),
+    dir: path.resolve(process.cwd(), 'pacts'),
+    logLevel: 'info',
+    pactfileWriteMode: 'overwrite',
+  });
 
   // Start the mock server
   beforeAll(() => provider.setup());
@@ -131,7 +131,6 @@ describe('Autosuggest Session Pact', () => {
 
       // Write your test(s)
       it('should start a session and returns the autosuggest sdk version', async () => {
-        const client = new AutosuggestClient(apiKey, config);
         const res = await client.startSession({
           apiKey,
           correlationId,
@@ -198,7 +197,6 @@ describe('Autosuggest Session Pact', () => {
             withRequest: MOCK_REQUEST,
             willRespondWith: MOCK_RESPONSE,
           });
-          const client = new AutosuggestClient(apiKey, config);
           try {
             await client.startSession({
               apiKey,
@@ -251,10 +249,9 @@ describe('Autosuggest Session Pact', () => {
           withRequest: MOCK_REQUEST,
           willRespondWith: MOCK_RESPONSE,
         });
-        const client = new AutosuggestClient(apiKey, config);
         try {
           await client.startSession({
-            apiKey: undefined,
+            apiKey: undefined as never,
             correlationId,
             returnCoordinates,
             typeheadDelay,
@@ -302,12 +299,11 @@ describe('Autosuggest Session Pact', () => {
           withRequest: MOCK_REQUEST,
           willRespondWith: MOCK_RESPONSE,
         });
-        const client = new AutosuggestClient(apiKey, config);
         try {
           await client.startSession({
             apiKey,
             correlationId,
-            returnCoordinates: undefined,
+            returnCoordinates: undefined as never,
             typeheadDelay,
             variant,
             version,
@@ -351,13 +347,12 @@ describe('Autosuggest Session Pact', () => {
           withRequest: MOCK_REQUEST,
           willRespondWith: MOCK_RESPONSE,
         });
-        const client = new AutosuggestClient(apiKey, config);
         try {
           await client.startSession({
             apiKey,
             correlationId,
             returnCoordinates,
-            typeheadDelay: undefined,
+            typeheadDelay: undefined as never,
             variant,
             version,
           });
@@ -409,8 +404,7 @@ describe('Autosuggest Session Pact', () => {
         })
       );
 
-      it('should udpate the session and returns the autosuggest sdk version', async () => {
-        const client = new AutosuggestClient(apiKey, config);
+      it('should update the session and returns the autosuggest sdk version', async () => {
         const res = await client.updateSession({
           apiKey,
           correlationId,
@@ -461,10 +455,9 @@ describe('Autosuggest Session Pact', () => {
           withRequest: MOCK_REQUEST,
           willRespondWith: MOCK_RESPONSE,
         });
-        const client = new AutosuggestClient(apiKey, config);
         try {
           await client.updateSession({
-            apiKey: undefined,
+            apiKey: undefined as never,
             correlationId,
             returnCoordinates,
             typeheadDelay,
@@ -512,12 +505,11 @@ describe('Autosuggest Session Pact', () => {
           withRequest: MOCK_REQUEST,
           willRespondWith: MOCK_RESPONSE,
         });
-        const client = new AutosuggestClient(apiKey, config);
         try {
           await client.updateSession({
             apiKey,
             correlationId,
-            returnCoordinates: undefined,
+            returnCoordinates: undefined as never,
             typeheadDelay,
             variant,
             version,
@@ -561,13 +553,12 @@ describe('Autosuggest Session Pact', () => {
           withRequest: MOCK_REQUEST,
           willRespondWith: MOCK_RESPONSE,
         });
-        const client = new AutosuggestClient(apiKey, config);
         try {
           await client.updateSession({
             apiKey,
             correlationId,
             returnCoordinates,
-            typeheadDelay: undefined,
+            typeheadDelay: undefined as never,
             variant,
             version,
           });
@@ -628,7 +619,6 @@ describe('Autosuggest Session Pact', () => {
             withRequest: MOCK_REQUEST,
             willRespondWith: MOCK_RESPONSE,
           });
-          const client = new AutosuggestClient(apiKey, config);
           try {
             await client.updateSession({
               apiKey,

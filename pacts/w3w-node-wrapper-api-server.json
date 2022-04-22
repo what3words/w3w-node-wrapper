@@ -12,16 +12,16 @@
       "request": {
         "method": "POST",
         "path": "/v3/autosuggest-session",
-        "query": "key=XAZ2WNML",
+        "query": "key=995JKAL5",
         "headers": {
           "Content-Type": "application/json",
           "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "body": {
-          "return_coordinates": true,
-          "typehead_delay": 216,
-          "variant": "default",
-          "version": "3.4.9"
+          "return_coordinates": false,
+          "typehead_delay": 210,
+          "variant": "inherit",
+          "version": "1.3.6"
         }
       },
       "response": {
@@ -42,16 +42,16 @@
       "request": {
         "method": "POST",
         "path": "/v3/autosuggest-session",
-        "query": "key=XAZ2WNML",
+        "query": "key=995JKAL5",
         "headers": {
           "Content-Type": "application/json",
           "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "body": {
-          "return_coordinates": true,
-          "typehead_delay": 216,
-          "variant": "default",
-          "version": "3.4.9"
+          "return_coordinates": false,
+          "typehead_delay": 210,
+          "variant": "inherit",
+          "version": "1.3.6"
         }
       },
       "response": {
@@ -72,16 +72,16 @@
       "request": {
         "method": "POST",
         "path": "/v3/autosuggest-session",
-        "query": "key=XAZ2WNML",
+        "query": "key=995JKAL5",
         "headers": {
           "Content-Type": "application/json",
           "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "body": {
-          "return_coordinates": true,
-          "typehead_delay": 216,
-          "variant": "default",
-          "version": "3.4.9"
+          "return_coordinates": false,
+          "typehead_delay": 210,
+          "variant": "inherit",
+          "version": "1.3.6"
         }
       },
       "response": {
@@ -102,16 +102,16 @@
       "request": {
         "method": "POST",
         "path": "/v3/autosuggest-session",
-        "query": "key=XAZ2WNML",
+        "query": "key=995JKAL5",
         "headers": {
           "Content-Type": "application/json",
           "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "body": {
-          "return_coordinates": true,
-          "typehead_delay": 216,
-          "variant": "default",
-          "version": "3.4.9"
+          "return_coordinates": false,
+          "typehead_delay": 210,
+          "variant": "inherit",
+          "version": "1.3.6"
         }
       },
       "response": {
@@ -132,16 +132,16 @@
       "request": {
         "method": "POST",
         "path": "/v3/autosuggest-session",
-        "query": "key=XAZ2WNML",
+        "query": "key=995JKAL5",
         "headers": {
           "Content-Type": "application/json",
           "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "body": {
-          "return_coordinates": true,
-          "typehead_delay": 216,
-          "variant": "default",
-          "version": "3.4.9"
+          "return_coordinates": false,
+          "typehead_delay": 210,
+          "variant": "inherit",
+          "version": "1.3.6"
         }
       },
       "response": {
@@ -162,16 +162,16 @@
       "request": {
         "method": "POST",
         "path": "/v3/autosuggest-session",
-        "query": "key=XAZ2WNML",
+        "query": "key=995JKAL5",
         "headers": {
           "Content-Type": "application/json",
           "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "body": {
-          "return_coordinates": true,
-          "typehead_delay": 216,
-          "variant": "default",
-          "version": "3.4.9"
+          "return_coordinates": false,
+          "typehead_delay": 210,
+          "variant": "inherit",
+          "version": "1.3.6"
         }
       },
       "response": {
@@ -192,16 +192,16 @@
       "request": {
         "method": "POST",
         "path": "/v3/autosuggest-session",
-        "query": "key=XAZ2WNML",
+        "query": "key=995JKAL5",
         "headers": {
           "Content-Type": "application/json",
           "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "body": {
-          "return_coordinates": true,
-          "typehead_delay": 216,
-          "variant": "default",
-          "version": "3.4.9"
+          "return_coordinates": false,
+          "typehead_delay": 210,
+          "variant": "inherit",
+          "version": "1.3.6"
         }
       },
       "response": {
@@ -227,10 +227,10 @@
           "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "body": {
-          "return_coordinates": true,
-          "typehead_delay": 216,
-          "variant": "default",
-          "version": "3.4.9"
+          "return_coordinates": false,
+          "typehead_delay": 210,
+          "variant": "inherit",
+          "version": "1.3.6"
         }
       },
       "response": {
@@ -256,9 +256,9 @@
           "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "body": {
-          "typehead_delay": 216,
-          "variant": "default",
-          "version": "3.4.9"
+          "typehead_delay": 210,
+          "variant": "inherit",
+          "version": "1.3.6"
         }
       },
       "response": {
@@ -284,9 +284,9 @@
           "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "body": {
-          "return_coordinates": true,
-          "variant": "default",
-          "version": "3.4.9"
+          "return_coordinates": false,
+          "variant": "inherit",
+          "version": "1.3.6"
         }
       },
       "response": {
@@ -307,16 +307,16 @@
       "request": {
         "method": "PUT",
         "path": "/v3/autosuggest-session",
-        "query": "key=XAZ2WNML",
+        "query": "key=995JKAL5",
         "headers": {
           "Content-Type": "application/json",
           "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "body": {
-          "return_coordinates": true,
-          "typehead_delay": 216,
-          "variant": "default",
-          "version": "3.4.9"
+          "return_coordinates": false,
+          "typehead_delay": 210,
+          "variant": "inherit",
+          "version": "1.3.6"
         }
       },
       "response": {
@@ -341,10 +341,10 @@
           "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "body": {
-          "return_coordinates": true,
-          "typehead_delay": 216,
-          "variant": "default",
-          "version": "3.4.9"
+          "return_coordinates": false,
+          "typehead_delay": 210,
+          "variant": "inherit",
+          "version": "1.3.6"
         }
       },
       "response": {
@@ -370,9 +370,9 @@
           "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "body": {
-          "typehead_delay": 216,
-          "variant": "default",
-          "version": "3.4.9"
+          "typehead_delay": 210,
+          "variant": "inherit",
+          "version": "1.3.6"
         }
       },
       "response": {
@@ -398,9 +398,9 @@
           "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "body": {
-          "return_coordinates": true,
-          "variant": "default",
-          "version": "3.4.9"
+          "return_coordinates": false,
+          "variant": "inherit",
+          "version": "1.3.6"
         }
       },
       "response": {
@@ -421,16 +421,16 @@
       "request": {
         "method": "PUT",
         "path": "/v3/autosuggest-session",
-        "query": "key=XAZ2WNML",
+        "query": "key=995JKAL5",
         "headers": {
           "Content-Type": "application/json",
           "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "body": {
-          "return_coordinates": true,
-          "typehead_delay": 216,
-          "variant": "default",
-          "version": "3.4.9"
+          "return_coordinates": false,
+          "typehead_delay": 210,
+          "variant": "inherit",
+          "version": "1.3.6"
         }
       },
       "response": {
@@ -451,16 +451,16 @@
       "request": {
         "method": "PUT",
         "path": "/v3/autosuggest-session",
-        "query": "key=XAZ2WNML",
+        "query": "key=995JKAL5",
         "headers": {
           "Content-Type": "application/json",
           "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "body": {
-          "return_coordinates": true,
-          "typehead_delay": 216,
-          "variant": "default",
-          "version": "3.4.9"
+          "return_coordinates": false,
+          "typehead_delay": 210,
+          "variant": "inherit",
+          "version": "1.3.6"
         }
       },
       "response": {
@@ -481,16 +481,16 @@
       "request": {
         "method": "PUT",
         "path": "/v3/autosuggest-session",
-        "query": "key=XAZ2WNML",
+        "query": "key=995JKAL5",
         "headers": {
           "Content-Type": "application/json",
           "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "body": {
-          "return_coordinates": true,
-          "typehead_delay": 216,
-          "variant": "default",
-          "version": "3.4.9"
+          "return_coordinates": false,
+          "typehead_delay": 210,
+          "variant": "inherit",
+          "version": "1.3.6"
         }
       },
       "response": {
@@ -511,16 +511,16 @@
       "request": {
         "method": "PUT",
         "path": "/v3/autosuggest-session",
-        "query": "key=XAZ2WNML",
+        "query": "key=995JKAL5",
         "headers": {
           "Content-Type": "application/json",
           "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "body": {
-          "return_coordinates": true,
-          "typehead_delay": 216,
-          "variant": "default",
-          "version": "3.4.9"
+          "return_coordinates": false,
+          "typehead_delay": 210,
+          "variant": "inherit",
+          "version": "1.3.6"
         }
       },
       "response": {
@@ -541,16 +541,16 @@
       "request": {
         "method": "PUT",
         "path": "/v3/autosuggest-session",
-        "query": "key=XAZ2WNML",
+        "query": "key=995JKAL5",
         "headers": {
           "Content-Type": "application/json",
           "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "body": {
-          "return_coordinates": true,
-          "typehead_delay": 216,
-          "variant": "default",
-          "version": "3.4.9"
+          "return_coordinates": false,
+          "typehead_delay": 210,
+          "variant": "inherit",
+          "version": "1.3.6"
         }
       },
       "response": {
@@ -571,16 +571,16 @@
       "request": {
         "method": "PUT",
         "path": "/v3/autosuggest-session",
-        "query": "key=XAZ2WNML",
+        "query": "key=995JKAL5",
         "headers": {
           "Content-Type": "application/json",
           "X-Correlation-ID": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "body": {
-          "return_coordinates": true,
-          "typehead_delay": 216,
-          "variant": "default",
-          "version": "3.4.9"
+          "return_coordinates": false,
+          "typehead_delay": 210,
+          "variant": "inherit",
+          "version": "1.3.6"
         }
       },
       "response": {
