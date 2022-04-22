@@ -1,4 +1,9 @@
-import type { ApiClientConfiguration, Transport } from '../lib';
+import {
+  ApiClientConfiguration,
+  BadRequestError,
+  Transport,
+  UnauthorizedError,
+} from '../lib';
 import {
   ApiClient,
   arrayToString,
@@ -39,13 +44,13 @@ export interface AutosuggestOptions {
   preferLand?: boolean;
 }
 
-type SessionOptions = {
-  apiKey: string;
-  correlationId: string;
-  returnCoordinates: boolean;
-  typeheadDelay: number;
-  variant: 'default' | '';
-  version: string;
+type SessionBody = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+  return_coordinates: boolean;
+  typehead_delay: number;
+  variant: string;
+  component_version: string;
 };
 
 export class AutosuggestClient extends ApiClient<
@@ -55,6 +60,7 @@ export class AutosuggestClient extends ApiClient<
   private lastReqOpts: AutosuggestOptions = { input: '' };
   protected readonly url = '/autosuggest';
   protected readonly method = 'get';
+  private correlationId: string | null = null;
 
   public static init(
     apiKey?: string,
@@ -64,74 +70,58 @@ export class AutosuggestClient extends ApiClient<
     return new AutosuggestClient(apiKey, config, transport);
   }
 
+  /**
+   * Initialise a new autosuggest session with properties to track its usage
+   * @param {string} correlationId The unique identifier for an autosuggest session
+   * @param {SessionBody} [body] Session related information
+   */
+  public async startSession(correlationId: string, body?: SessionBody) {
+    const key = this.apiKey() as string;
+    this.correlationId = correlationId;
+
+    if (!key) throw new UnauthorizedError();
+    if (!correlationId) throw new BadRequestError();
+
+    return this.makeClientRequest<null>('post', '/autosuggest-session', {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Correlation-ID': correlationId,
+      },
+      query: {
+        key,
+      },
+      body,
+    });
+  }
+
+  /**
+   * Update a current autosuggest session with new properties
+   * @param {SessionBody} [body] Updated session related information
+   */
+  public async updateSession(body?: SessionBody) {
+    const key = this.apiKey() as string;
+
+    if (!key) throw new UnauthorizedError();
+    if (!this.correlationId) throw new BadRequestError();
+
+    return this.makeClientRequest<null>('put', '/autosuggest-session', {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Correlation-ID': this.correlationId,
+      },
+      query: {
+        key,
+      },
+      body,
+    });
+  }
+
   protected query(options: AutosuggestOptions) {
     this.lastReqOpts = options;
     return {
       ...this.autosuggestOptionsToQuery(options),
       input: options.input,
     };
-  }
-
-  /**
-   * Initialise a new autosuggest session with properties to track its usage
-   * @param {string} opts.apiKey The SDK api key
-   * @param {string} opts.correlationId The unique identifier for an autosuggest session
-   * @param {boolean} opts.returnCoordinates Does the autosuggest component return coordinates?
-   * @param {number} opts.typeheadDelay The delay before the autosuggest search query is run in of milliseconds
-   * @param {string} opts.variant The autosuggest component variant
-   * @param {string} opts.version The autosuggest component version
-   */
-  public async startSession(opts: SessionOptions) {
-    return this.makeClientRequest<{ version: string }>(
-      'post',
-      '/autosuggest-session',
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Correlation-ID': opts.correlationId,
-        },
-        query: {
-          key: opts.apiKey,
-        },
-        body: {
-          return_coordinates: opts.returnCoordinates,
-          typehead_delay: opts.typeheadDelay,
-          variant: opts.variant,
-          version: opts.version,
-        },
-      }
-    );
-  }
-
-  /**
-   * Update a current autosuggest session with new properties
-   * @param {string} opts.apiKey The SDK api key
-   * @param {string} opts.correlationId The unique identifier for an autosuggest session
-   * @param {boolean} opts.returnCoordinates Does the autosuggest component return coordinates?
-   * @param {number} opts.typeheadDelay The delay before the autosuggest search query is run in of milliseconds
-   * @param {string} opts.variant The autosuggest component variant
-   * @param {string} opts.version The autosuggest component version
-   */
-  public async updateSession(opts: SessionOptions) {
-    return this.makeClientRequest<{ version: string }>(
-      'put',
-      '/autosuggest-session',
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Correlation-ID': opts.correlationId,
-        },
-        query: {
-          key: opts.apiKey,
-        },
-        body: {
-          return_coordinates: opts.returnCoordinates,
-          typehead_delay: opts.typeheadDelay,
-          variant: opts.variant,
-          version: opts.version,
-        },
-      }
-    );
   }
 
   protected async validate(options: AutosuggestOptions) {

@@ -1,8 +1,9 @@
-import { Chance } from 'chance';
+import 'should';
 import nock from 'nock';
+import { Chance } from 'chance';
 import { useEffect } from 'react';
-import { fetchTransport, HEADERS, searchParams } from '../../../src';
 import { renderComponent, setup } from '../../setup';
+import { fetchTransport, HEADERS, searchParams } from '../../../src';
 
 const CHANCE = new Chance();
 
@@ -56,15 +57,12 @@ describe('Fetch Transport - Browser ', () => {
       }, []);
     });
 
-    const actual = window.result;
-    const expected = {
+    window.result.should.be.eql({
       status: 200,
       statusText: 'OK',
       body: response,
       headers: { 'content-type': 'application/json;charset=utf-8' },
-    };
-
-    expect(actual).toEqual(expected);
+    });
   });
 
   it('should make a request given a ClientRequest and return string', async () => {
@@ -82,15 +80,12 @@ describe('Fetch Transport - Browser ', () => {
       }, []);
     });
 
-    const actual = window.result;
-    const expected = {
+    window.result.should.be.eql({
       status: 200,
       statusText: 'OK',
       body: response,
       headers: {},
-    };
-
-    expect(actual).toEqual(expected);
+    });
   });
 
   it('should make a request given a ClientRequest (no query params)', async () => {
@@ -107,15 +102,12 @@ describe('Fetch Transport - Browser ', () => {
       }, []);
     });
 
-    const actual = window.result;
-    const expected = {
+    window.result.should.be.eql({
       status: 200,
       statusText: 'OK',
       body: response,
       headers: {},
-    };
-
-    expect(actual).toEqual(expected);
+    });
   });
 
   describe('Errors', () => {
@@ -147,10 +139,7 @@ describe('Fetch Transport - Browser ', () => {
           }, []);
         });
 
-        const actual = window.result;
-        const expected = { status, message };
-
-        expect(actual).toEqual(expected);
+        window.result.should.be.eql({ status, message });
       });
     });
   });

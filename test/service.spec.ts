@@ -1,3 +1,4 @@
+import 'should';
 import nock from 'nock';
 import { Chance } from 'chance';
 import what3words, {
@@ -42,7 +43,7 @@ describe('what3words', () => {
     });
 
     it('should instantiate the what3words service instance', () => {
-      const properties = [
+      service.should.have.properties([
         'clients',
         'setApiKey',
         'setConfig',
@@ -52,44 +53,41 @@ describe('what3words', () => {
         'convertTo3wa',
         'convertToCoordinates',
         'gridSection',
-      ];
-      properties.forEach(property => expect(service).toHaveProperty(property));
-      expect(typeof service.clients).toBe('object');
-      const clientProperties = [
-        'autosuggest',
-        'availableLanguages',
-        'convertTo3wa',
-        'convertToCoordinates',
-        'gridSection',
-      ];
-      clientProperties.forEach(property =>
-        expect(service.clients).toHaveProperty(property)
-      );
-      expect(typeof service.setApiKey).toBe('function');
-      expect(typeof service.setConfig).toBe('function');
-      expect(typeof service.autosuggest).toBe('function');
-      expect(typeof service.autosuggestSelection).toBe('function');
-      expect(typeof service.availableLanguages).toBe('function');
-      expect(typeof service.convertTo3wa).toBe('function');
-      expect(typeof service.convertToCoordinates).toBe('function');
-      expect(typeof service.gridSection).toBe('function');
+      ]);
+      service.clients.should.be
+        .Object()
+        .and.have.properties([
+          'autosuggest',
+          'availableLanguages',
+          'convertTo3wa',
+          'convertToCoordinates',
+          'gridSection',
+        ]);
+      service.setApiKey.should.be.Function();
+      service.setConfig.should.be.Function();
+      service.autosuggest.should.be.Function();
+      service.autosuggestSelection.should.be.Function();
+      service.availableLanguages.should.be.Function();
+      service.convertTo3wa.should.be.Function();
+      service.convertToCoordinates.should.be.Function();
+      service.gridSection.should.be.Function();
     });
     it('should set the api key for all clients', () => {
       const newApiKey = CHANCE.string({ length: 8 });
 
-      expect(service.clients.autosuggest.apiKey()).toEqual(apiKey);
-      expect(service.clients.availableLanguages.apiKey()).toEqual(apiKey);
-      expect(service.clients.convertTo3wa.apiKey()).toEqual(apiKey);
-      expect(service.clients.convertToCoordinates.apiKey()).toEqual(apiKey);
-      expect(service.clients.gridSection.apiKey()).toEqual(apiKey);
+      service.clients.autosuggest.apiKey().should.be.equal(apiKey);
+      service.clients.availableLanguages.apiKey().should.be.equal(apiKey);
+      service.clients.convertTo3wa.apiKey().should.be.equal(apiKey);
+      service.clients.convertToCoordinates.apiKey().should.be.equal(apiKey);
+      service.clients.gridSection.apiKey().should.be.equal(apiKey);
 
       service.setApiKey(newApiKey);
 
-      expect(service.clients.autosuggest.apiKey()).toEqual(newApiKey);
-      expect(service.clients.availableLanguages.apiKey()).toEqual(newApiKey);
-      expect(service.clients.convertTo3wa.apiKey()).toEqual(newApiKey);
-      expect(service.clients.convertToCoordinates.apiKey()).toEqual(newApiKey);
-      expect(service.clients.gridSection.apiKey()).toEqual(newApiKey);
+      service.clients.autosuggest.apiKey().should.be.equal(newApiKey);
+      service.clients.availableLanguages.apiKey().should.be.equal(newApiKey);
+      service.clients.convertTo3wa.apiKey().should.be.equal(newApiKey);
+      service.clients.convertToCoordinates.apiKey().should.be.equal(newApiKey);
+      service.clients.gridSection.apiKey().should.be.equal(newApiKey);
     });
     it('should set the config for all clients', () => {
       const newConfig = {
@@ -104,19 +102,19 @@ describe('what3words', () => {
         headers: {},
       };
 
-      expect(service.clients.autosuggest.config()).toEqual(config);
-      expect(service.clients.availableLanguages.config()).toEqual(config);
-      expect(service.clients.convertTo3wa.config()).toEqual(config);
-      expect(service.clients.convertToCoordinates.config()).toEqual(config);
-      expect(service.clients.gridSection.config()).toEqual(config);
+      service.clients.autosuggest.config().should.be.eql(config);
+      service.clients.availableLanguages.config().should.be.eql(config);
+      service.clients.convertTo3wa.config().should.be.eql(config);
+      service.clients.convertToCoordinates.config().should.be.eql(config);
+      service.clients.gridSection.config().should.be.eql(config);
 
       service.setConfig(newConfig);
 
-      expect(service.clients.autosuggest.config()).toEqual(newConfig);
-      expect(service.clients.availableLanguages.config()).toEqual(newConfig);
-      expect(service.clients.convertTo3wa.config()).toEqual(newConfig);
-      expect(service.clients.convertToCoordinates.config()).toEqual(newConfig);
-      expect(service.clients.gridSection.config()).toEqual(newConfig);
+      service.clients.autosuggest.config().should.be.eql(newConfig);
+      service.clients.availableLanguages.config().should.be.eql(newConfig);
+      service.clients.convertTo3wa.config().should.be.eql(newConfig);
+      service.clients.convertToCoordinates.config().should.be.eql(newConfig);
+      service.clients.gridSection.config().should.be.eql(newConfig);
     });
   });
 
@@ -143,25 +141,25 @@ describe('what3words', () => {
     });
 
     it('should use the axios transport', () => {
-      expect(service.clients.autosuggest['transport'].name).toEqual(
+      service.clients.autosuggest['transport'].name.should.be.eql(
         'axiosTransport'
       );
-      expect(service.clients.availableLanguages['transport'].name).toEqual(
+      service.clients.availableLanguages['transport'].name.should.be.eql(
         'axiosTransport'
       );
-      expect(service.clients.convertTo3wa['transport'].name).toEqual(
+      service.clients.convertTo3wa['transport'].name.should.be.eql(
         'axiosTransport'
       );
-      expect(service.clients.convertToCoordinates['transport'].name).toEqual(
+      service.clients.convertToCoordinates['transport'].name.should.be.eql(
         'axiosTransport'
       );
-      expect(service.clients.gridSection['transport'].name).toEqual(
+      service.clients.gridSection['transport'].name.should.be.eql(
         'axiosTransport'
       );
     });
     it('should use the axios transport to make autosuggest requests', async () => {
       const response = await service.autosuggest({ input });
-      expect(response).toEqual(MOCK_AUTOSUGGEST_RESPONSE);
+      response.should.be.eql(MOCK_AUTOSUGGEST_RESPONSE);
     });
   });
 });

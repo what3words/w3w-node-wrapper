@@ -16,3 +16,13 @@ export function generateAutosuggestSuggestion() {
 export function generateCoordinate() {
   return { lat: CHANCE.latitude(), lng: CHANCE.longitude() };
 }
+
+export function generateRandomDigit() {
+  return CHANCE.string({
+    length: 1,
+    alpha: false,
+    numeric: true,
+    symbols: false,
+    casing: 'lower',
+  });
+}

@@ -83,7 +83,7 @@ export abstract class ApiClient<Response, Params = undefined> {
   }
 
   protected getClientRequest(
-    method: 'get' | 'post' | 'put',
+    method: HttpMethod,
     url: string,
     params?: {
       headers?: { [key: string]: string };

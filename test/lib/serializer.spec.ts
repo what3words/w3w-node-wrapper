@@ -1,3 +1,4 @@
+import 'should';
 import { Chance } from 'chance';
 import {
   searchParams,
@@ -17,12 +18,9 @@ describe('searchParams()', () => {
       bar: CHANCE.bool(),
       x: CHANCE.natural(),
     };
-    const actual = searchParams(params);
-    const expected = `foo=${encodeURIComponent(params.foo)}&bar=${
-      params.bar
-    }&x=${params.x}`;
-
-    expect(actual).toEqual(expected);
+    searchParams(params).should.be.equal(
+      `foo=${encodeURIComponent(params.foo)}&bar=${params.bar}&x=${params.x}`
+    );
   });
 });
 
@@ -30,58 +28,51 @@ describe('coordinateToString()', () => {
   it('should serialize coordinates to a string (ordered)', () => {
     const coordinates = generateCoordinate();
     const ordered = true;
-    const actual = coordinatesToString(coordinates, ordered);
-    const expected =
+    coordinatesToString(coordinates, ordered).should.be.equal(
       coordinates.lat < coordinates.lng
         ? `${coordinates.lng},${coordinates.lat}`
-        : `${coordinates.lat},${coordinates.lng}`;
-
-    expect(actual).toEqual(expected);
+        : `${coordinates.lat},${coordinates.lng}`
+    );
   });
   it('should serialize coordinates to a string (ordered) lat < lng', () => {
     const coordinates = { lat: 1, lng: 10 };
     const ordered = true;
-    const actual = coordinatesToString(coordinates, ordered);
-    const expected = `${coordinates.lng},${coordinates.lat}`;
-
-    expect(actual).toEqual(expected);
+    coordinatesToString(coordinates, ordered).should.be.equal(
+      `${coordinates.lng},${coordinates.lat}`
+    );
   });
   it('should serialize coordinates to a string (unordered)', () => {
     const coordinates = generateCoordinate();
     const ordered = false;
-    const actual = coordinatesToString(coordinates, ordered);
-    const expected = `${coordinates.lat},${coordinates.lng}`;
-
-    expect(actual).toEqual(expected);
+    coordinatesToString(coordinates, ordered).should.be.equal(
+      `${coordinates.lat},${coordinates.lng}`
+    );
   });
 });
 
 describe('arrayToString()', () => {
   it('should serialize an array to string', () => {
     const array = [CHANCE.word(), CHANCE.letter(), CHANCE.natural()];
-    const actual = arrayToString(array);
-    const expected = `${array[0]},${array[1]},${array[2]}`;
-
-    expect(actual).toEqual(expected);
+    arrayToString(array).should.be.equal(`${array[0]},${array[1]},${array[2]}`);
   });
 });
 
 describe('getPlatform()', () => {
   it('should serialize platform for darwin', () => {
     const platform = 'darwin';
-    expect(getPlatform(platform)).toEqual('Mac OS X');
+    getPlatform(platform).should.be.equal('Mac OS X');
   });
   it('should serialize platform for win32', () => {
     const platform = 'win32';
-    expect(getPlatform(platform)).toEqual('Windows');
+    getPlatform(platform).should.be.equal('Windows');
   });
   it('should serialize platform for linux', () => {
     const platform = 'linux';
-    expect(getPlatform(platform)).toEqual('Linux');
+    getPlatform(platform).should.be.equal('Linux');
   });
   it('should serialize platform for non-matched value', () => {
     const platform = CHANCE.word();
-    expect(getPlatform(platform)).toEqual('');
+    getPlatform(platform).should.be.equal('');
   });
 });
 
@@ -92,10 +83,9 @@ describe('boundsToString()', () => {
       northeast: generateCoordinate(),
     };
     const ordered = false;
-    const actual = boundsToString(bounds, ordered);
-    const expected = `${bounds.southwest.lat},${bounds.southwest.lng},${bounds.northeast.lat},${bounds.northeast.lng}`;
-
-    expect(actual).toEqual(expected);
+    boundsToString(bounds, ordered).should.be.equal(
+      `${bounds.southwest.lat},${bounds.southwest.lng},${bounds.northeast.lat},${bounds.northeast.lng}`
+    );
   });
   it('should serialize a bound to string (ordered)', () => {
     const bounds = {
@@ -103,9 +93,8 @@ describe('boundsToString()', () => {
       northeast: { lat: 12, lng: 4 },
     };
     const ordered = true;
-    const actual = boundsToString(bounds, ordered);
-    const expected = `${bounds.southwest.lng},${bounds.southwest.lat},${bounds.northeast.lat},${bounds.northeast.lng}`;
-
-    expect(actual).toEqual(expected);
+    boundsToString(bounds, ordered).should.be.equal(
+      `${bounds.southwest.lng},${bounds.southwest.lat},${bounds.northeast.lat},${bounds.northeast.lng}`
+    );
   });
 });

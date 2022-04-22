@@ -1,9 +1,12 @@
+import 'should';
+import { spy, SinonSpy } from 'sinon';
 import { Chance } from 'chance';
 import {
   ApiClientConfiguration,
   ApiVersion,
   GridSectionClient,
   HEADERS,
+  Transport,
 } from '../../src';
 import { generateCoordinate } from '../fixtures';
 
@@ -14,7 +17,8 @@ describe('Grid Section Client', () => {
   let apiVersion: ApiVersion;
   let host: string;
   let config: ApiClientConfiguration;
-  let transportSpy: jest.Mock<Promise<{ status: number; body: never }>, never>;
+  let transportSpy: SinonSpy;
+  let transport: Transport;
   let client: GridSectionClient;
 
   beforeEach(() => {
@@ -22,46 +26,47 @@ describe('Grid Section Client', () => {
     apiVersion = ApiVersion.Version1;
     host = CHANCE.url({ path: '' });
     config = { host, apiVersion };
-    transportSpy = jest.fn(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      async (..._args: never): Promise<{ status: number; body: never }> => ({
-        status: 200,
-        body: {} as never,
-      })
-    );
-    client = GridSectionClient.init(apiKey, config, transportSpy);
+    transportSpy = spy();
+    transport = async (...args) => {
+      transportSpy(...args);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return { status: 200, body: {} as any };
+    };
+    client = GridSectionClient.init(apiKey, config, transport);
   });
 
   it('should return instantiate an Grid Section Client instance', () => {
-    expect(client).toBeInstanceOf(GridSectionClient);
-    const properties = [
+    client.should.be.instanceOf(GridSectionClient);
+    client.should.have.properties([
       '_apiKey',
       'apiKey',
       '_config',
       'config',
       'run',
       'transport',
-    ];
-    properties.forEach(property => expect(client).toHaveProperty(property));
-    expect(typeof client['_apiKey']).toBe('string');
-    expect(client['_apiKey']).toEqual(apiKey);
-    expect(typeof client['_config']).toBe('object');
-    expect(client['_config']).toEqual(config);
-    expect(typeof client.apiKey).toBe('function');
-    expect(typeof client.config).toBe('function');
+    ]);
+    client['_apiKey'].should.be
+      .String()
+      .and.equal(apiKey, 'api key does not match');
+    client['_config'].should.be
+      .Object()
+      .and.eql(config, 'config does not match');
+    client.apiKey.should.be.Function();
+    client.config.should.be.Function();
   });
   it('should return the api key when apiKey function is called with no parameter', () => {
-    expect(client.apiKey()).toEqual(apiKey);
+    client.apiKey().should.be.equal(apiKey, 'api key does not match');
   });
   it('should set the api key when apiKey function is called with value', () => {
     const _apiKey = CHANCE.string({ length: 8 });
-
-    expect(client.apiKey()).toEqual(apiKey);
-    expect(client.apiKey(_apiKey)).toEqual(client);
-    expect(client.apiKey()).toEqual(_apiKey);
+    client
+      .apiKey()
+      .should.be.equal(apiKey, 'initial api key should match new value');
+    client.apiKey(_apiKey).should.be.equal(client, 'api key does not match');
+    client.apiKey().should.be.equal(_apiKey, 'api key should match new value');
   });
   it('should return the config when config function is called with no parameter', () => {
-    expect(client.config()).toEqual(config);
+    client.config().should.be.eql(config, 'config does not match');
   });
   it('should set the config when config function is called with value', () => {
     const defaultConfig = { host, apiVersion };
@@ -70,10 +75,11 @@ describe('Grid Section Client', () => {
       apiVersion: CHANCE.pickone([ApiVersion.Version2, ApiVersion.Version3]),
       headers: {},
     };
-
-    expect(client.config()).toEqual(defaultConfig);
-    expect(client.config(config)).toEqual(client);
-    expect(client.config()).toEqual(config);
+    client
+      .config()
+      .should.be.eql(defaultConfig, 'default config does not match');
+    client.config(config).should.be.eql(client, 'client instance not returned');
+    client.config().should.be.eql(config, 'config should match new value');
   });
   it('should call /grid-section when run is called', async () => {
     const boundingBox = {
@@ -93,16 +99,21 @@ describe('Grid Section Client', () => {
       body: null,
     };
     await client.run({ boundingBox });
-
-    expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
+    transportSpy
+      .calledOnceWith(transportArguments)
+      .should.be.equal(true, 'transport arguments do not match');
   });
   it('should throw error if no bounding box is specified', async () => {
     try {
-      await client.run(undefined as never);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await client.run(undefined as any);
     } catch (err) {
-      expect(err.message).toEqual('No bounding box specified');
+      err.message.should.be.equal('No bounding box specified');
     } finally {
-      expect(transportSpy).not.toHaveBeenCalled();
+      transportSpy.notCalled.should.be.equal(
+        true,
+        'transport should not be called'
+      );
     }
   });
   it('should throw error if bounding box latitudes are invalid', async () => {
@@ -113,11 +124,14 @@ describe('Grid Section Client', () => {
     try {
       await client.run({ boundingBox });
     } catch (err) {
-      expect(err.message).toEqual(
+      err.message.should.be.equal(
         'Invalid latitude provided. Latitude must be >= -90 and <= 90'
       );
     } finally {
-      expect(transportSpy).not.toHaveBeenCalledWith();
+      transportSpy.notCalled.should.be.equal(
+        true,
+        'transport should not be called'
+      );
     }
   });
 });
