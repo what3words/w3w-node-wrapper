@@ -210,3 +210,4 @@ $RECYCLE.BIN/
 
 # Snyk cacke
 .dccache
+pacts
