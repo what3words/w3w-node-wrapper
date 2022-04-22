@@ -153,9 +153,6 @@ describe('Autosuggest Session Pact', () => {
       };
       const MOCK_RESPONSE: ResponseOptions = {
         status: 401,
-        headers: {
-          'X-Correlation-ID': correlationId,
-        },
       };
 
       beforeEach(() =>
@@ -203,9 +200,6 @@ describe('Autosuggest Session Pact', () => {
         };
         const MOCK_RESPONSE: ResponseOptions = {
           status: 400,
-          headers: {
-            'X-Correlation-ID': correlationId,
-          },
         };
 
         await provider.addInteraction({
@@ -246,9 +240,6 @@ describe('Autosuggest Session Pact', () => {
         };
         const MOCK_RESPONSE: ResponseOptions = {
           status: 400,
-          headers: {
-            'X-Correlation-ID': correlationId,
-          },
         };
 
         await provider.addInteraction({
@@ -372,9 +363,6 @@ describe('Autosuggest Session Pact', () => {
       };
       const MOCK_RESPONSE: ResponseOptions = {
         status: 401,
-        headers: {
-          'X-Correlation-ID': correlationId,
-        },
       };
 
       beforeEach(() =>
@@ -422,9 +410,6 @@ describe('Autosuggest Session Pact', () => {
         };
         const MOCK_RESPONSE: ResponseOptions = {
           status: 400,
-          headers: {
-            'X-Correlation-ID': correlationId,
-          },
         };
 
         await provider.addInteraction({
@@ -465,9 +450,6 @@ describe('Autosuggest Session Pact', () => {
         };
         const MOCK_RESPONSE: ResponseOptions = {
           status: 400,
-          headers: {
-            'X-Correlation-ID': correlationId,
-          },
         };
 
         await provider.addInteraction({
