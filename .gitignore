@@ -210,3 +210,6 @@ $RECYCLE.BIN/
 
 # Snyk cacke
 .dccache
+
+# VSCode
+.idea
