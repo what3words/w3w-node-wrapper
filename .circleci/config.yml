@@ -108,7 +108,7 @@ jobs:
           at: /tmp/workspace
       - run:
           name: Publish development pacts to broker
-          command: cd /tmp/workspace && npm run pact:publish-dev
+          command: cd /tmp/workspace && npx pact-broker publish pacts --consumer-app-version="$VERSION-$(echo $CIRCLE_SHA1 | cut -c -7)" --auto-detect-version-properties --broker-base-url=${PACT_BROKER_BASE_URL}
       # - jobstatus
 
   pact-publish-prod:
@@ -118,7 +118,7 @@ jobs:
           at: /tmp/workspace
       - run:
           name: Publish production pacts to broker
-          command: cd /tmp/workspace && npm run pact:publish-prod
+          command: cd /tmp/workspace && npx pact-broker publish pacts --consumer-app-version=$VERSION --auto-detect-version-properties --broker-base-url=${PACT_BROKER_BASE_URL}
       # - jobstatus
 
   npm-publish:
