@@ -8,14 +8,6 @@ import {
 import { Chance } from 'chance';
 import * as path from 'path';
 import { ApiVersion, AutosuggestClient } from '../../src';
-import {
-  BadGatewayError,
-  ForbiddenError,
-  GatewayTimeoutError,
-  InternalServerError,
-  NotFoundError,
-  ServiceUnavailableError,
-} from '../../src/lib/transport/error';
 import { generateRandomDigit } from '../fixtures';
 
 const chance = new Chance();
