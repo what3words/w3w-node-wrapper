@@ -94,6 +94,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
+            - ./pacts
             - .npmrc
             - ./dist
             - ./package-lock.json
@@ -103,23 +104,21 @@ jobs:
   pact-publish-dev:
     executor: build-executor
     steps:
-      - checkout
-      - setup_environment
-      - node/install-packages
+      - attach_workspace:
+          at: /tmp/workspace
       - run:
           name: Publish development pacts to broker
-          command: npm run pact:publish-dev
+          command: cd /tmp/workspace && npm run pact:publish-dev
       # - jobstatus
 
   pact-publish-prod:
     executor: build-executor
     steps:
-      - checkout
-      - setup_environment
-      - node/install-packages
+      - attach_workspace:
+          at: /tmp/workspace
       - run:
           name: Publish production pacts to broker
-          command: npm run pact:publish-prod
+          command: cd /tmp/workspace && npm run pact:publish-prod
       # - jobstatus
 
   npm-publish:
