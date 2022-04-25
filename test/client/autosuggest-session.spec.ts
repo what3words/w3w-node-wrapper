@@ -7,7 +7,7 @@ import {
 import { Chance } from 'chance';
 import * as path from 'path';
 import should from 'should';
-import { spy } from 'sinon';
+import { assert, createSandbox, SinonSandbox } from 'sinon';
 import { ApiVersion, AutosuggestClient } from '../../src';
 import { generateRandomDigit } from '../fixtures';
 
@@ -263,49 +263,6 @@ describe('Autosuggest Session Pact', () => {
         }
       });
     });
-
-    describe('And there is a request for an autosuggest session with a private DNS', () => {
-      it('should not request the endpoint with www.what3words.com as a host', async () => {
-        const transportSpy = spy();
-        const client = AutosuggestClient.init(
-          apiKey,
-          {
-            apiVersion,
-            host: 'www.what3words.com',
-          },
-          transportSpy
-        );
-
-        await client.startSession(correlationId, {
-          return_coordinates,
-          typehead_delay,
-          variant,
-          component_version,
-        });
-
-        should(transportSpy.notCalled).be.true();
-      });
-      it('should not request the endpoint with london.dev.w3w.io as a host', async () => {
-        const transportSpy = spy();
-        const client = AutosuggestClient.init(
-          apiKey,
-          {
-            apiVersion,
-            host: 'london.dev.w3w.io',
-          },
-          transportSpy
-        );
-
-        await client.startSession(correlationId, {
-          return_coordinates,
-          typehead_delay,
-          variant,
-          component_version,
-        });
-
-        should(transportSpy.notCalled).be.true();
-      });
-    });
   });
 
   describe('When I have a current autosuggest session', () => {
@@ -514,18 +471,35 @@ describe('Autosuggest Session Pact', () => {
       });
     });
 
-    describe('And there is a request to update an autosuggest session with a private DNS', () => {
-      it('should not request the endpoint with www.what3words.com as a host', async () => {
-        const transportSpy = spy();
+    describe('And there is a request to update an autosuggest session with a w3w DNS', () => {
+      let sandbox: SinonSandbox;
+
+      beforeEach(() => {
+        sandbox = createSandbox();
+      });
+
+      afterEach(() => {
+        sandbox.reset();
+      });
+
+      it('should make a request to endpoint with www.what3words.com as a host', async () => {
+        const transport = sandbox.spy();
         const client = AutosuggestClient.init(
           apiKey,
           {
             apiVersion,
             host: 'www.what3words.com',
           },
-          transportSpy
+          transport
         );
+        const correlationId = chance.guid();
 
+        await client.startSession(correlationId, {
+          return_coordinates,
+          typehead_delay,
+          variant,
+          component_version,
+        });
         await client.updateSession({
           return_coordinates,
           typehead_delay,
@@ -533,19 +507,27 @@ describe('Autosuggest Session Pact', () => {
           component_version,
         });
 
-        should(transportSpy.notCalled).be.true();
+        assert.calledTwice(transport);
       });
-      it('should not request the endpoint with london.dev.w3w.io as a host', async () => {
-        const transportSpy = spy();
+
+      it('should make a request to endpoint with london.dev.w3w.io as a host', async () => {
+        const transport = sandbox.spy();
         const client = AutosuggestClient.init(
           apiKey,
           {
             apiVersion,
             host: 'london.dev.w3w.io',
           },
-          transportSpy
+          transport
         );
+        const correlationId = chance.guid();
 
+        await client.startSession(correlationId, {
+          return_coordinates,
+          typehead_delay,
+          variant,
+          component_version,
+        });
         await client.updateSession({
           return_coordinates,
           typehead_delay,
@@ -553,7 +535,77 @@ describe('Autosuggest Session Pact', () => {
           component_version,
         });
 
-        should(transportSpy.notCalled).be.true();
+        assert.calledTwice(transport);
+      });
+
+      it('should make a request to endpoint with localhost as a host', async () => {
+        const transport = sandbox.spy();
+        const client = AutosuggestClient.init(
+          apiKey,
+          {
+            apiVersion,
+            host: 'localhost:9999',
+          },
+          transport
+        );
+        const correlationId = chance.guid();
+
+        await client.startSession(correlationId, {
+          return_coordinates,
+          typehead_delay,
+          variant,
+          component_version,
+        });
+        await client.updateSession({
+          return_coordinates,
+          typehead_delay,
+          variant,
+          component_version,
+        });
+
+        assert.calledTwice(transport);
+      });
+    });
+
+    describe('And there is a request to update an autosuggest session with a private DNS', () => {
+      let sandbox: SinonSandbox;
+      let host: string;
+
+      beforeEach(() => {
+        sandbox = createSandbox();
+        host = chance.domain();
+      });
+
+      afterEach(() => {
+        sandbox.reset();
+      });
+
+      it('should not make a request', async () => {
+        const transport = sandbox.spy();
+        const client = AutosuggestClient.init(
+          apiKey,
+          {
+            apiVersion,
+            host,
+          },
+          transport
+        );
+        const correlationId = chance.guid();
+
+        await client.startSession(correlationId, {
+          return_coordinates,
+          typehead_delay,
+          variant,
+          component_version,
+        });
+        await client.updateSession({
+          return_coordinates,
+          typehead_delay,
+          variant,
+          component_version,
+        });
+
+        assert.notCalled(transport);
       });
     });
   });

@@ -34,9 +34,7 @@ export abstract class ApiClient<Response, Params = undefined> {
     return this._apiKey;
   }
 
-  public set config(
-    config: ApiClientConfiguration
-  ) {
+  public set config(config: ApiClientConfiguration) {
     this._config = Object.assign({}, this._config, config);
   }
 

@@ -34,7 +34,7 @@ describe('Available Languages Client', () => {
     client = AvailableLanguagesClient.init(apiKey, config, transport);
   });
 
-  it('should return instantiate an Available Languages Client instance', () => {
+  it('should instantiate an Available Languages Client instance', () => {
     client.should.be.instanceOf(AvailableLanguagesClient);
     client.should.have.properties([
       '_apiKey',
@@ -51,7 +51,7 @@ describe('Available Languages Client', () => {
       .Object()
       .and.eql(config, 'config does not match');
     client.apiKey.should.be.Function();
-    client.config.should.be.Function();
+    client.config.should.be.Object();
   });
   it('should return the api key when apiKey function is called with no parameter', () => {
     client.apiKey().should.be.equal(apiKey, 'api key does not match');
@@ -65,7 +65,7 @@ describe('Available Languages Client', () => {
     client.apiKey().should.be.equal(_apiKey, 'api key should match new value');
   });
   it('should return the config when config function is called with no parameter', () => {
-    client.config().should.be.eql(config, 'config does not match');
+    client.config.should.be.eql(config, 'config does not match');
   });
   it('should set the config when config function is called with value', () => {
     const defaultConfig = { host, apiVersion };
@@ -74,11 +74,9 @@ describe('Available Languages Client', () => {
       apiVersion: CHANCE.pickone([ApiVersion.Version2, ApiVersion.Version3]),
       headers: {},
     };
-    client
-      .config()
-      .should.be.eql(defaultConfig, 'default config does not match');
-    client.config(config).should.be.eql(client, 'client instance not returned');
-    client.config().should.be.eql(config, 'config should match new value');
+    client.config.should.be.eql(defaultConfig, 'default config does not match');
+    client.config = config;
+    client.config.should.be.eql(config, 'config should match new value');
   });
   it('should call /available-languages when run is called', async () => {
     const transportArguments = {

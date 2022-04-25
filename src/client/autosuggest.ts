@@ -77,10 +77,9 @@ export class AutosuggestClient extends ApiClient<
   public async startSession(correlationId: string, body?: SessionBody) {
     const key = this.apiKey() as string;
     const config = this.config;
-    const isPrivateHost = config?.host?.match(W3W_DNS_REGEXP);
     this.correlationId = correlationId;
 
-    if (isPrivateHost) return;
+    if (!W3W_DNS_REGEXP.test(config?.host || '')) return;
     if (!key) throw new UnauthorizedError();
     if (!this.correlationId) throw new BadRequestError();
 
@@ -103,9 +102,8 @@ export class AutosuggestClient extends ApiClient<
   public async updateSession(body: SessionBody) {
     const key = this.apiKey() as string;
     const config = this.config;
-    const isPrivateHost = config?.host?.match(W3W_DNS_REGEXP);
 
-    if (isPrivateHost) return null;
+    if (!W3W_DNS_REGEXP.test(config?.host || '')) return null;
     if (!key) throw new UnauthorizedError();
     if (!this.correlationId) throw new BadRequestError();
 

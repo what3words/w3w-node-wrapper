@@ -80,11 +80,11 @@ export function what3words(
       gridSectionClient.apiKey(apiKey);
     },
     setConfig: (config: ApiClientConfiguration) => {
-      autosuggestClient.config(config);
-      availableLanguagesClient.config(config);
-      convertTo3waClient.config(config);
-      convertToCoordinatesClient.config(config);
-      gridSectionClient.config(config);
+      autosuggestClient.config = config;
+      availableLanguagesClient.config = config;
+      convertTo3waClient.config = config;
+      convertToCoordinatesClient.config = config;
+      gridSectionClient.config = config;
     },
     autosuggest: autosuggestClient.run.bind(autosuggestClient),
     autosuggestSelection: autosuggestClient.onSelected.bind(autosuggestClient),

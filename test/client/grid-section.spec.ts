@@ -52,7 +52,7 @@ describe('Grid Section Client', () => {
       .Object()
       .and.eql(config, 'config does not match');
     client.apiKey.should.be.Function();
-    client.config.should.be.Function();
+    client.config.should.be.Object();
   });
   it('should return the api key when apiKey function is called with no parameter', () => {
     client.apiKey().should.be.equal(apiKey, 'api key does not match');
@@ -66,7 +66,7 @@ describe('Grid Section Client', () => {
     client.apiKey().should.be.equal(_apiKey, 'api key should match new value');
   });
   it('should return the config when config function is called with no parameter', () => {
-    client.config().should.be.eql(config, 'config does not match');
+    client.config.should.be.eql(config, 'config does not match');
   });
   it('should set the config when config function is called with value', () => {
     const defaultConfig = { host, apiVersion };
@@ -75,11 +75,9 @@ describe('Grid Section Client', () => {
       apiVersion: CHANCE.pickone([ApiVersion.Version2, ApiVersion.Version3]),
       headers: {},
     };
-    client
-      .config()
-      .should.be.eql(defaultConfig, 'default config does not match');
-    client.config(config).should.be.eql(client, 'client instance not returned');
-    client.config().should.be.eql(config, 'config should match new value');
+    client.config.should.be.eql(defaultConfig, 'default config does not match');
+    client.config = config;
+    client.config.should.be.eql(config, 'config should match new value');
   });
   it('should call /grid-section when run is called', async () => {
     const boundingBox = {

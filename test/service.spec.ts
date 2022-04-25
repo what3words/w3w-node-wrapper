@@ -102,19 +102,19 @@ describe('what3words', () => {
         headers: {},
       };
 
-      service.clients.autosuggest.config().should.be.eql(config);
-      service.clients.availableLanguages.config().should.be.eql(config);
-      service.clients.convertTo3wa.config().should.be.eql(config);
-      service.clients.convertToCoordinates.config().should.be.eql(config);
-      service.clients.gridSection.config().should.be.eql(config);
+      service.clients.autosuggest.config.should.be.eql(config);
+      service.clients.availableLanguages.config.should.be.eql(config);
+      service.clients.convertTo3wa.config.should.be.eql(config);
+      service.clients.convertToCoordinates.config.should.be.eql(config);
+      service.clients.gridSection.config.should.be.eql(config);
 
       service.setConfig(newConfig);
 
-      service.clients.autosuggest.config().should.be.eql(newConfig);
-      service.clients.availableLanguages.config().should.be.eql(newConfig);
-      service.clients.convertTo3wa.config().should.be.eql(newConfig);
-      service.clients.convertToCoordinates.config().should.be.eql(newConfig);
-      service.clients.gridSection.config().should.be.eql(newConfig);
+      service.clients.autosuggest.config.should.be.eql(newConfig);
+      service.clients.availableLanguages.config.should.be.eql(newConfig);
+      service.clients.convertTo3wa.config.should.be.eql(newConfig);
+      service.clients.convertToCoordinates.config.should.be.eql(newConfig);
+      service.clients.gridSection.config.should.be.eql(newConfig);
     });
   });
 
