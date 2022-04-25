@@ -77,8 +77,10 @@ export class AutosuggestClient extends ApiClient<
    */
   public async startSession(correlationId: string, body?: SessionBody) {
     const key = this.apiKey() as string;
+    const config = this.config;
     this.correlationId = correlationId;
 
+    if (/\w+.(w3w.io|what3words.com)/i.test(config.host || '')) return;
     if (!key) throw new UnauthorizedError();
     if (!correlationId) throw new BadRequestError();
 
@@ -100,7 +102,9 @@ export class AutosuggestClient extends ApiClient<
    */
   public async updateSession(body?: SessionBody) {
     const key = this.apiKey() as string;
+    const config = this.config;
 
+    if (/\w+.(w3w.io|what3words.com)/i.test(config.host || '')) return;
     if (!key) throw new UnauthorizedError();
     if (!this.correlationId) throw new BadRequestError();
 

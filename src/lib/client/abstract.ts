@@ -34,13 +34,13 @@ export abstract class ApiClient<Response, Params = undefined> {
     return this._apiKey;
   }
 
-  public config(
-    config?: ApiClientConfiguration
-  ): this | ApiClientConfiguration {
-    if (config !== undefined) {
-      this._config = Object.assign({}, this._config, config);
-      return this;
-    }
+  public set config(
+    config: ApiClientConfiguration
+  ) {
+    this._config = Object.assign({}, this._config, config);
+  }
+
+  public get config(): ApiClientConfiguration {
     return this._config;
   }
 
