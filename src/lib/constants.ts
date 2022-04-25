@@ -7,3 +7,4 @@ export const HEADERS = {
       ? `what3words-JavaScript/${VERSION}`
       : `what3words-Node/${VERSION}`,
 };
+export const W3W_DNS_REGEXP = /(w3w\.io|what3words\.com)$/;

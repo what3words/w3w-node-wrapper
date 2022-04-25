@@ -3,6 +3,7 @@ import {
   BadRequestError,
   Transport,
   UnauthorizedError,
+  W3W_DNS_REGEXP,
 } from '../lib';
 import {
   ApiClient,
@@ -44,13 +45,11 @@ export interface AutosuggestOptions {
   preferLand?: boolean;
 }
 
-type SessionBody = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-  return_coordinates: boolean;
-  typehead_delay: number;
-  variant: string;
-  component_version: string;
+type SessionBody = Record<string, unknown> & {
+  return_coordinates?: boolean;
+  typehead_delay?: number;
+  variant?: string;
+  component_version?: string;
 };
 
 export class AutosuggestClient extends ApiClient<
@@ -78,11 +77,12 @@ export class AutosuggestClient extends ApiClient<
   public async startSession(correlationId: string, body?: SessionBody) {
     const key = this.apiKey() as string;
     const config = this.config;
+    const isPrivateHost = config?.host?.match(W3W_DNS_REGEXP);
     this.correlationId = correlationId;
 
-    if (/\w+.(w3w.io|what3words.com)/i.test(config.host || '')) return;
+    if (isPrivateHost) return;
     if (!key) throw new UnauthorizedError();
-    if (!correlationId) throw new BadRequestError();
+    if (!this.correlationId) throw new BadRequestError();
 
     return this.makeClientRequest<null>('post', '/autosuggest-session', {
       headers: {
@@ -100,11 +100,12 @@ export class AutosuggestClient extends ApiClient<
    * Update a current autosuggest session with new properties
    * @param {SessionBody} [body] Updated session related information
    */
-  public async updateSession(body?: SessionBody) {
+  public async updateSession(body: SessionBody) {
     const key = this.apiKey() as string;
     const config = this.config;
+    const isPrivateHost = config?.host?.match(W3W_DNS_REGEXP);
 
-    if (/\w+.(w3w.io|what3words.com)/i.test(config.host || '')) return;
+    if (isPrivateHost) return null;
     if (!key) throw new UnauthorizedError();
     if (!this.correlationId) throw new BadRequestError();
 
