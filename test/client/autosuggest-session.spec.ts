@@ -36,7 +36,7 @@ describe('Autosuggest Session Pact', () => {
     generate: randomVersion,
   }).getValue();
   const return_coordinates = Matchers.boolean(chance.bool()).getValue();
-  const typehead_delay = Matchers.like(
+  const typeahead_delay = Matchers.like(
     chance.integer({ min: 0, max: 500 })
   ).getValue();
   const variant = Matchers.like(
@@ -80,7 +80,7 @@ describe('Autosuggest Session Pact', () => {
         },
         body: {
           return_coordinates,
-          typehead_delay,
+          typeahead_delay,
           variant,
           component_version,
         },
@@ -105,7 +105,7 @@ describe('Autosuggest Session Pact', () => {
       it('should start a session and returns 202 response', async () => {
         const res = await client.startSession(correlationId, {
           return_coordinates,
-          typehead_delay,
+          typeahead_delay,
           variant,
           component_version,
         });
@@ -124,7 +124,7 @@ describe('Autosuggest Session Pact', () => {
         try {
           await client.updateSession({
             return_coordinates,
-            typehead_delay,
+            typeahead_delay,
             variant,
             component_version,
           });
@@ -147,7 +147,7 @@ describe('Autosuggest Session Pact', () => {
         },
         body: {
           return_coordinates,
-          typehead_delay,
+          typeahead_delay,
           variant,
           component_version,
         },
@@ -172,7 +172,7 @@ describe('Autosuggest Session Pact', () => {
         try {
           await client.startSession(correlationId, {
             return_coordinates,
-            typehead_delay,
+            typeahead_delay,
             variant,
             component_version,
           });
@@ -194,7 +194,7 @@ describe('Autosuggest Session Pact', () => {
             'X-Correlation-ID': correlationId,
           },
           body: {
-            typehead_delay: typehead_delay,
+            typeahead_delay: typeahead_delay,
             variant,
             component_version,
           },
@@ -213,7 +213,7 @@ describe('Autosuggest Session Pact', () => {
 
         try {
           await client.startSession(correlationId, {
-            typehead_delay,
+            typeahead_delay,
             variant,
             component_version,
           });
@@ -224,7 +224,7 @@ describe('Autosuggest Session Pact', () => {
         }
       });
 
-      it('should return a 400 error when typehead_delay is missing', async () => {
+      it('should return a 400 error when typeahead_delay is missing', async () => {
         const MOCK_REQUEST: RequestOptions = {
           method: 'POST',
           path: `/${apiVersion}/autosuggest-session`,
@@ -245,7 +245,7 @@ describe('Autosuggest Session Pact', () => {
         await provider.addInteraction({
           // The 'state' field specifies a "Provider State"
           state: 'I do not have a current autosuggest session',
-          uponReceiving: 'And there is bad request without typehead_delay',
+          uponReceiving: 'And there is bad request without typeahead_delay',
           withRequest: MOCK_REQUEST,
           willRespondWith: MOCK_RESPONSE,
         });
@@ -308,7 +308,7 @@ describe('Autosuggest Session Pact', () => {
         },
         body: {
           return_coordinates,
-          typehead_delay,
+          typeahead_delay,
           variant,
           component_version,
         },
@@ -333,7 +333,7 @@ describe('Autosuggest Session Pact', () => {
       it('should update the session and returns 202 response', async () => {
         const res = await client.updateSession({
           return_coordinates,
-          typehead_delay,
+          typeahead_delay,
           variant,
           component_version,
         });
@@ -355,7 +355,7 @@ describe('Autosuggest Session Pact', () => {
         },
         body: {
           return_coordinates,
-          typehead_delay,
+          typeahead_delay,
           variant,
           component_version,
         },
@@ -380,7 +380,7 @@ describe('Autosuggest Session Pact', () => {
         try {
           await client.updateSession({
             return_coordinates,
-            typehead_delay,
+            typeahead_delay,
             variant,
             component_version,
           });
@@ -402,7 +402,7 @@ describe('Autosuggest Session Pact', () => {
             'X-Correlation-ID': correlationId,
           },
           body: {
-            typehead_delay,
+            typeahead_delay,
             variant,
             component_version,
           },
@@ -421,7 +421,7 @@ describe('Autosuggest Session Pact', () => {
 
         try {
           await client.updateSession({
-            typehead_delay,
+            typeahead_delay,
             variant,
             component_version,
           });
@@ -432,7 +432,7 @@ describe('Autosuggest Session Pact', () => {
         }
       });
 
-      it('should return a 400 error when typehead_delay is missing', async () => {
+      it('should return a 400 error when typeahead_delay is missing', async () => {
         const MOCK_REQUEST: RequestOptions = {
           method: 'PUT',
           path: `/${apiVersion}/autosuggest-session`,
@@ -453,7 +453,7 @@ describe('Autosuggest Session Pact', () => {
         await provider.addInteraction({
           // The 'state' field specifies a "Provider State"
           state: 'I have a current autosuggest session',
-          uponReceiving: 'And there is bad request without typehead_delay',
+          uponReceiving: 'And there is bad request without typeahead_delay',
           withRequest: MOCK_REQUEST,
           willRespondWith: MOCK_RESPONSE,
         });
@@ -496,13 +496,13 @@ describe('Autosuggest Session Pact', () => {
 
         await client.startSession(correlationId, {
           return_coordinates,
-          typehead_delay,
+          typeahead_delay,
           variant,
           component_version,
         });
         await client.updateSession({
           return_coordinates,
-          typehead_delay,
+          typeahead_delay,
           variant,
           component_version,
         });
@@ -524,13 +524,13 @@ describe('Autosuggest Session Pact', () => {
 
         await client.startSession(correlationId, {
           return_coordinates,
-          typehead_delay,
+          typeahead_delay,
           variant,
           component_version,
         });
         await client.updateSession({
           return_coordinates,
-          typehead_delay,
+          typeahead_delay,
           variant,
           component_version,
         });
@@ -552,13 +552,13 @@ describe('Autosuggest Session Pact', () => {
 
         await client.startSession(correlationId, {
           return_coordinates,
-          typehead_delay,
+          typeahead_delay,
           variant,
           component_version,
         });
         await client.updateSession({
           return_coordinates,
-          typehead_delay,
+          typeahead_delay,
           variant,
           component_version,
         });
@@ -594,13 +594,13 @@ describe('Autosuggest Session Pact', () => {
 
         await client.startSession(correlationId, {
           return_coordinates,
-          typehead_delay,
+          typeahead_delay,
           variant,
           component_version,
         });
         await client.updateSession({
           return_coordinates,
-          typehead_delay,
+          typeahead_delay,
           variant,
           component_version,
         });
