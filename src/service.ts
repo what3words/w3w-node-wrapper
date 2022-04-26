@@ -46,11 +46,14 @@ export type What3wordsService = {
 };
 
 export function what3words(
-  apiKey?: string,
-  config?: ApiClientConfiguration,
-  opts?: { transport: Transport }
+  apiKey: string,
+  opts: {
+    transport: Transport;
+    config?: ApiClientConfiguration;
+  }
 ): What3wordsService {
-  const transport = opts?.transport || require('./lib').fetchTransport();
+  const transport = opts.transport;
+  const config = opts.config;
   const autosuggestClient = new AutosuggestClient(apiKey, config, transport);
   const availableLanguagesClient = new AvailableLanguagesClient(
     apiKey,

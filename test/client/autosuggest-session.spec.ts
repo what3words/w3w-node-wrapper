@@ -8,7 +8,7 @@ import { Chance } from 'chance';
 import * as path from 'path';
 import should from 'should';
 import { assert, createSandbox, SinonSandbox } from 'sinon';
-import { ApiVersion, AutosuggestClient } from '../../src';
+import { ApiVersion, AutosuggestClient, fetchTransport } from '../../src';
 import { generateRandomDigit } from '../fixtures';
 
 const chance = new Chance();
@@ -59,7 +59,11 @@ describe('Autosuggest Session Pact', () => {
   before(() => provider.setup());
 
   beforeEach(() => {
-    client = new AutosuggestClient(apiKey, { host, apiVersion });
+    client = new AutosuggestClient(
+      apiKey,
+      { host, apiVersion },
+      fetchTransport()
+    );
   });
 
   afterEach(() => provider.verify());

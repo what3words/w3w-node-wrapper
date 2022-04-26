@@ -6,6 +6,7 @@ import what3words, {
   ApiVersion,
   searchParams,
   axiosTransport,
+  voidTransport,
 } from '../src';
 import { What3wordsService } from '../src/service';
 
@@ -39,7 +40,7 @@ describe('what3words', () => {
 
   describe('Service', () => {
     beforeEach(() => {
-      service = what3words(apiKey, config);
+      service = what3words(apiKey, { config, transport: voidTransport() });
     });
 
     it('should instantiate the what3words service instance', () => {
@@ -121,7 +122,7 @@ describe('what3words', () => {
   describe('Axios Transport', () => {
     let input: string;
     beforeEach(() => {
-      service = what3words(apiKey, config, { transport: axiosTransport() });
+      service = what3words(apiKey, { transport: axiosTransport(), config });
       input = CHANCE.string();
       nock(`${config.host!}/${config.apiVersion}`)
         .get(`/autosuggest?${searchParams({ input, key: apiKey })}`)

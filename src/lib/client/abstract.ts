@@ -1,9 +1,9 @@
 import { ApiClientConfiguration, ApiVersion, HttpMethod } from './client.model';
 import {
   errorHandler,
-  fetchTransport,
   Transport,
   TransportResponse,
+  voidTransport,
 } from '../transport';
 import { HEADERS } from '../constants';
 
@@ -15,15 +15,13 @@ export abstract class ApiClient<Response, Params = undefined> {
     apiVersion: ApiVersion.Version3,
   };
   private _config: ApiClientConfiguration;
-  private transport: Transport;
 
   constructor(
     private _apiKey: string = '',
     config: ApiClientConfiguration = {},
-    transport: Transport = fetchTransport()
+    public transport: Transport = voidTransport()
   ) {
     this._config = Object.assign({}, ApiClient.DEFAULT_CONFIG, config);
-    this.transport = transport;
   }
 
   public apiKey(apiKey?: string): this | string {
