@@ -7,13 +7,14 @@ import {
 } from '../transport';
 import { HEADERS } from '../constants';
 
+const DEFAULT_CONFIG = {
+  host: 'https://api.what3words.com',
+  apiVersion: ApiVersion.Version3,
+};
+
 export abstract class ApiClient<Response, Params = undefined> {
   protected abstract url: string;
   protected abstract method: HttpMethod;
-  private static DEFAULT_CONFIG = {
-    host: 'https://api.what3words.com',
-    apiVersion: ApiVersion.Version3,
-  };
   private _config: ApiClientConfiguration;
 
   constructor(
@@ -21,7 +22,7 @@ export abstract class ApiClient<Response, Params = undefined> {
     config: ApiClientConfiguration = {},
     public transport: Transport = voidTransport()
   ) {
-    this._config = Object.assign({}, ApiClient.DEFAULT_CONFIG, config);
+    this._config = Object.assign({}, DEFAULT_CONFIG, config);
   }
 
   public apiKey(apiKey?: string): this | string {
