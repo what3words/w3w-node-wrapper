@@ -38,18 +38,18 @@ describe('Autosuggest Session Pact', () => {
     chance.pickone(['default', 'inherit'])
   ).getValue() as never;
   const apiVersion = ApiVersion.Version3;
-  const port = 9000;
-  const host = `http://localhost:${port}`;
   const provider = PactUtils.createPact({
     consumer: 'w3w-node-wrapper',
     provider: 'api-server',
-    port,
   });
+
   let client: AutosuggestClient;
 
   before(() => provider.setup());
 
   beforeEach(() => {
+    const { port } = provider.opts;
+    const host = `http://localhost:${port}`;
     client = new AutosuggestClient(
       apiKey,
       { host, apiVersion },

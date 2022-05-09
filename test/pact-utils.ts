@@ -11,6 +11,7 @@ function createPact(opts: PactOptions) {
     dir: path.resolve(process.cwd(), 'pacts'),
     logLevel: 'info',
     pactfileWriteMode: 'overwrite',
+    port: 9000,
     ...opts,
   });
 }
