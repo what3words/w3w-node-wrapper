@@ -1,0 +1,38 @@
+import { Pact, RequestOptions, ResponseOptions } from '@pact-foundation/pact';
+import { PactOptions } from '@pact-foundation/pact/src/dsl/options';
+import path from 'path';
+
+/**
+ * Create a pre-configured Pact provider
+ */
+function createPact(opts: PactOptions) {
+  return new Pact({
+    log: path.resolve(process.cwd(), 'logs', 'pact.log'),
+    dir: path.resolve(process.cwd(), 'pacts'),
+    logLevel: 'info',
+    pactfileWriteMode: 'overwrite',
+    ...opts,
+  });
+}
+
+/**
+ * Create a mock request for a Pact interaction (`withRequest` property)
+ */
+function createMockRequest(opts: RequestOptions): RequestOptions {
+  return opts;
+}
+
+/**
+ * Create a mock response for a Pact interaction (`willRespondWith` property)
+ */
+function createMockResponse(opts: ResponseOptions): ResponseOptions {
+  return opts;
+}
+
+const PactUtils = {
+  createPact,
+  createMockRequest,
+  createMockResponse,
+};
+
+export default PactUtils;

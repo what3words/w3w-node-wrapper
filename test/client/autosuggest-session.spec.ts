@@ -1,15 +1,10 @@
-import {
-  Matchers,
-  Pact,
-  RequestOptions,
-  ResponseOptions,
-} from '@pact-foundation/pact';
+import { Matchers } from '@pact-foundation/pact';
 import { Chance } from 'chance';
-import * as path from 'path';
 import should from 'should';
 import { assert, createSandbox, SinonSandbox } from 'sinon';
 import { ApiVersion, AutosuggestClient, fetchTransport } from '../../src';
 import { generateRandomDigit } from '../fixtures';
+import PactUtils from '../pact-utils';
 
 const chance = new Chance();
 
@@ -45,14 +40,10 @@ describe('Autosuggest Session Pact', () => {
   const apiVersion = ApiVersion.Version3;
   const port = 9000;
   const host = `http://localhost:${port}`;
-  const provider = new Pact({
+  const provider = PactUtils.createPact({
     consumer: 'w3w-node-wrapper',
     provider: 'api-server',
     port,
-    log: path.resolve(process.cwd(), 'logs', 'pact.log'),
-    dir: path.resolve(process.cwd(), 'pacts'),
-    logLevel: 'info',
-    pactfileWriteMode: 'overwrite',
   });
   let client: AutosuggestClient;
 
@@ -72,7 +63,7 @@ describe('Autosuggest Session Pact', () => {
 
   describe('When I do not have a current autosuggest session', () => {
     describe('And there is a successful request to start a session', () => {
-      const MOCK_REQUEST: RequestOptions = {
+      const MOCK_REQUEST = PactUtils.createMockRequest({
         method: 'POST',
         path: `/${apiVersion}/autosuggest-session`,
         query: {
@@ -88,13 +79,13 @@ describe('Autosuggest Session Pact', () => {
           variant,
           component_version,
         },
-      };
-      const MOCK_RESPONSE: ResponseOptions = {
+      });
+      const MOCK_RESPONSE = PactUtils.createMockResponse({
         status: 202,
         headers: {
           'X-Correlation-ID': correlationId,
         },
-      };
+      });
 
       beforeEach(() =>
         provider.addInteraction({
@@ -142,7 +133,7 @@ describe('Autosuggest Session Pact', () => {
     });
 
     describe('And there is an unauthorized request', () => {
-      const MOCK_REQUEST: RequestOptions = {
+      const MOCK_REQUEST = PactUtils.createMockRequest({
         method: 'POST',
         path: `/${apiVersion}/autosuggest-session`,
         headers: {
@@ -155,10 +146,11 @@ describe('Autosuggest Session Pact', () => {
           variant,
           component_version,
         },
-      };
-      const MOCK_RESPONSE: ResponseOptions = {
+      });
+
+      const MOCK_RESPONSE = PactUtils.createMockResponse({
         status: 401,
-      };
+      });
 
       beforeEach(() =>
         provider.addInteraction({
@@ -190,7 +182,7 @@ describe('Autosuggest Session Pact', () => {
 
     describe('And there is bad request ', () => {
       it('should return a 400 error when return_coordinates is missing', async () => {
-        const MOCK_REQUEST: RequestOptions = {
+        const MOCK_REQUEST = PactUtils.createMockRequest({
           method: 'POST',
           path: `/${apiVersion}/autosuggest-session`,
           headers: {
@@ -202,10 +194,10 @@ describe('Autosuggest Session Pact', () => {
             variant,
             component_version,
           },
-        };
-        const MOCK_RESPONSE: ResponseOptions = {
+        });
+        const MOCK_RESPONSE = PactUtils.createMockResponse({
           status: 400,
-        };
+        });
 
         await provider.addInteraction({
           // The 'state' field specifies a "Provider State"
@@ -229,7 +221,7 @@ describe('Autosuggest Session Pact', () => {
       });
 
       it('should return a 400 error when typeahead_delay is missing', async () => {
-        const MOCK_REQUEST: RequestOptions = {
+        const MOCK_REQUEST = PactUtils.createMockRequest({
           method: 'POST',
           path: `/${apiVersion}/autosuggest-session`,
           headers: {
@@ -241,10 +233,10 @@ describe('Autosuggest Session Pact', () => {
             variant,
             component_version,
           },
-        };
-        const MOCK_RESPONSE: ResponseOptions = {
+        });
+        const MOCK_RESPONSE = PactUtils.createMockResponse({
           status: 400,
-        };
+        });
 
         await provider.addInteraction({
           // The 'state' field specifies a "Provider State"
@@ -270,7 +262,7 @@ describe('Autosuggest Session Pact', () => {
   });
 
   describe('When I have a current autosuggest session', () => {
-    const SESSION_MOCK_REQUEST: RequestOptions = {
+    const SESSION_MOCK_REQUEST = PactUtils.createMockRequest({
       method: 'POST',
       path: `/${apiVersion}/autosuggest-session`,
       query: {
@@ -280,13 +272,13 @@ describe('Autosuggest Session Pact', () => {
         'Content-Type': 'application/json',
         'X-Correlation-ID': correlationId,
       },
-    };
-    const SESSION_MOCK_RESPONSE: ResponseOptions = {
+    });
+    const SESSION_MOCK_RESPONSE = PactUtils.createMockResponse({
       status: 202,
       headers: {
         'X-Correlation-ID': correlationId,
       },
-    };
+    });
 
     beforeEach(async () => {
       await provider.addInteraction({
@@ -300,7 +292,7 @@ describe('Autosuggest Session Pact', () => {
     });
 
     describe('And there is a request to update the session', () => {
-      const MOCK_REQUEST: RequestOptions = {
+      const MOCK_REQUEST = PactUtils.createMockRequest({
         method: 'PUT',
         path: `/${apiVersion}/autosuggest-session`,
         query: {
@@ -316,13 +308,13 @@ describe('Autosuggest Session Pact', () => {
           variant,
           component_version,
         },
-      };
-      const MOCK_RESPONSE: ResponseOptions = {
+      });
+      const MOCK_RESPONSE = PactUtils.createMockResponse({
         status: 202,
         headers: {
           'X-Correlation-ID': correlationId,
         },
-      };
+      });
 
       beforeEach(() =>
         provider.addInteraction({
@@ -350,7 +342,7 @@ describe('Autosuggest Session Pact', () => {
     });
 
     describe('And there is an unauthorized request', () => {
-      const MOCK_REQUEST: RequestOptions = {
+      const MOCK_REQUEST = PactUtils.createMockRequest({
         method: 'PUT',
         path: `/${apiVersion}/autosuggest-session`,
         headers: {
@@ -363,10 +355,10 @@ describe('Autosuggest Session Pact', () => {
           variant,
           component_version,
         },
-      };
-      const MOCK_RESPONSE: ResponseOptions = {
+      });
+      const MOCK_RESPONSE = PactUtils.createMockResponse({
         status: 401,
-      };
+      });
 
       beforeEach(() =>
         provider.addInteraction({
@@ -398,7 +390,7 @@ describe('Autosuggest Session Pact', () => {
 
     describe('And there is bad request ', () => {
       it('should return a 400 error when return_coordinates is missing', async () => {
-        const MOCK_REQUEST: RequestOptions = {
+        const MOCK_REQUEST = PactUtils.createMockRequest({
           method: 'PUT',
           path: `/${apiVersion}/autosuggest-session`,
           headers: {
@@ -410,10 +402,10 @@ describe('Autosuggest Session Pact', () => {
             variant,
             component_version,
           },
-        };
-        const MOCK_RESPONSE: ResponseOptions = {
+        });
+        const MOCK_RESPONSE = PactUtils.createMockResponse({
           status: 400,
-        };
+        });
 
         await provider.addInteraction({
           // The 'state' field specifies a "Provider State"
@@ -437,7 +429,7 @@ describe('Autosuggest Session Pact', () => {
       });
 
       it('should return a 400 error when typeahead_delay is missing', async () => {
-        const MOCK_REQUEST: RequestOptions = {
+        const MOCK_REQUEST = PactUtils.createMockRequest({
           method: 'PUT',
           path: `/${apiVersion}/autosuggest-session`,
           headers: {
@@ -449,10 +441,10 @@ describe('Autosuggest Session Pact', () => {
             variant,
             component_version,
           },
-        };
-        const MOCK_RESPONSE: ResponseOptions = {
+        });
+        const MOCK_RESPONSE = PactUtils.createMockResponse({
           status: 400,
-        };
+        });
 
         await provider.addInteraction({
           // The 'state' field specifies a "Provider State"
