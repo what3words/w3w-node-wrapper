@@ -39,7 +39,6 @@ describe('Autosuggest Session Pact', () => {
   ).getValue() as never;
   const apiVersion = ApiVersion.Version3;
   const provider = PactUtils.createPact({
-    consumer: 'w3w-node-wrapper',
     provider: 'api-server',
   });
 

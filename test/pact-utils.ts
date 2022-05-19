@@ -1,17 +1,18 @@
 import { Pact, RequestOptions, ResponseOptions } from '@pact-foundation/pact';
 import { PactOptions } from '@pact-foundation/pact/src/dsl/options';
-import path from 'path';
+import * as path from 'path';
 
 /**
  * Create a pre-configured Pact provider
  */
-function createPact(opts: PactOptions) {
+function createPact(opts: Omit<PactOptions, 'consumer'>) {
   return new Pact({
     log: path.resolve(process.cwd(), 'logs', 'pact.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
     logLevel: 'info',
     pactfileWriteMode: 'overwrite',
     port: 9000,
+    consumer: 'w3w-node-wrapper',
     ...opts,
   });
 }
