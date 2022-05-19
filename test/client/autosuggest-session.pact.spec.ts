@@ -4,7 +4,7 @@ import should from 'should';
 import { assert, createSandbox, SinonSandbox } from 'sinon';
 import { ApiVersion, AutosuggestClient, fetchTransport } from '../../src';
 import { generateRandomDigit } from '../fixtures';
-import PactUtils from '../pact-utils';
+import PactUtils from '@what3words/pact-utils';
 
 const chance = new Chance();
 
@@ -39,6 +39,7 @@ describe('Autosuggest Session Pact', () => {
   ).getValue() as never;
   const apiVersion = ApiVersion.Version3;
   const provider = PactUtils.createPact({
+    consumer: 'w3w-node-wrapper',
     provider: 'api-server',
   });
 
