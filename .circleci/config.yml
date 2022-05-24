@@ -86,7 +86,7 @@ jobs:
       - run:
           name: Inject version constant
           command: sed -ie "s/__VERSION__/${VERSION}/g" src/lib/constants.ts
-      - run: 
+      - run:
           name: Compile project
           command: npm run compile
       - store_test_results:
@@ -130,8 +130,8 @@ jobs:
             --auto-detect-version-properties \
             --broker-base-url=${PACT_BROKER_BASE_URL}
       # - jobstatus
-  
-  pact-can-i-use:
+
+  pact-can-i-deploy:
     executor: build-executor
     steps:
       - attach_workspace:
@@ -147,7 +147,25 @@ jobs:
             --broker-username ${PACT_BROKER_USERNAME} \
             --broker-password ${PACT_BROKER_PASSWORD} \
             --broker-base-url ${PACT_BROKER_BASE_URL} \
-            --latest
+            --version $VERSION \
+            --to-environment production
+      # - jobstatus
+
+  pact-record-deployment:
+    executor: build-executor
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_environment:
+          version_path: /tmp/workspace
+      - run:
+          name: Record Pact Deployment
+          command: |
+            cd /tmp/workspace && \
+            npx pact-broker record-deployment \
+            --pacticipant w3w-node-wrapper \
+            --version $VERSION \
+            --environment production
       # - jobstatus
 
   npm-publish:
@@ -182,7 +200,7 @@ workflows:
     jobs:
       - build_test
       - pact-publish-dev:
-          context: 
+          context:
             - org-global
             - w3w-pact
           requires:
@@ -191,7 +209,7 @@ workflows:
             branches:
               ignore: master
       - pact-publish-prod:
-          context: 
+          context:
             - org-global
             - w3w-pact
           requires:
@@ -199,8 +217,8 @@ workflows:
           filters:
             branches:
               only: master
-      - pact-can-i-use:
-          context: 
+      - pact-can-i-deploy:
+          context:
             - org-global
             - w3w-pact
           requires:
@@ -209,14 +227,17 @@ workflows:
             branches:
               only: master
       - npm-publish:
-          context: 
+          context:
             - org-global
           requires:
-            - pact-can-i-use
+            - pact-can-i-deploy
           filters:
             branches:
               only: master
       - tag:
           requires:
             - npm-publish
+      - pact-record-deployment:
+          requires:
+            - tag
 
