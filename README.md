@@ -53,14 +53,14 @@ If you wish to use the built-in transports you will also need to install the pee
 ### JavaScript
 
 ```javascript
-const what3words = require("@what3words/api");
+const what3words, { fetchTransport } = require("@what3words/api");
 
 const apiKey = '<YOUR_API_KEY>';
 const config = {
   host: 'https://api.what3words.com',
   apiVersion: 'v3',
 }
-const transport = 'fetch'; // or you can use 'axios'
+const transport = fetchTransport(); // or you can import 'axiosTransport' instead
 const w3wService = what3words(apiKey, config, { transport });
 
 // you can uncomment the following lines to set your api key and config after instantiation of the w3w service
@@ -71,7 +71,7 @@ const w3wService = what3words(apiKey, config, { transport });
 ### Typescript
 
 ```typescript
-import what3words, { ApiVersion, What3wordsService } from '@what3words/api';
+import what3words, { ApiVersion, Transport, What3wordsService, axiosTransport } from '@what3words/api';
 
 const apiKey: string = '<YOUR_API_KEY>';
 const config: {
@@ -81,7 +81,7 @@ const config: {
   host: 'https://api.what3words.com',
   apiVersion: ApiVersion.Version3,
 };
-const transport: 'axios' | 'fetch' = 'fetch';
+const transport: Transport = axiosTransport();
 const w3wService: What3wordsService = what3words(apiKey, config, { transport });
 
 // code continues...
