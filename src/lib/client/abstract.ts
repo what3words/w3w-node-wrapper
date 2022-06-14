@@ -7,14 +7,18 @@ import {
 } from '../transport';
 import { HEADERS } from '../constants';
 
-export abstract class ApiClient<Response, Params = undefined> {
+export abstract class ApiClient<
+  JsonResponse,
+  Params = undefined,
+  GeoJsonResponse = JsonResponse
+> {
   protected abstract url: string;
   protected abstract method: 'get' | 'post';
+  protected _config: ApiClientConfiguration;
   private static DEFAULT_CONFIG = {
     host: 'https://api.what3words.com',
     apiVersion: ApiVersion.Version3,
   };
-  private _config: ApiClientConfiguration;
   private transport: Transport;
 
   constructor(
@@ -44,7 +48,13 @@ export abstract class ApiClient<Response, Params = undefined> {
     return this._config;
   }
 
-  public async run(options?: Params): Promise<Response> {
+  public async run(
+    options?: Params & { format: 'geojson' }
+  ): Promise<GeoJsonResponse>;
+  public async run(
+    options?: Params & { format?: 'json' }
+  ): Promise<JsonResponse>;
+  public async run(options?: Params): Promise<JsonResponse | GeoJsonResponse> {
     const validation = await this.validate(options);
     if (!validation.valid) {
       throw new Error(
@@ -57,11 +67,9 @@ export abstract class ApiClient<Response, Params = undefined> {
       body: this.body(options),
       query: this.query(options),
     };
-    const response = await this.makeClientRequest<Response>(
-      this.method,
-      this.url,
-      params
-    );
+    const response = await this.makeClientRequest<
+      JsonResponse | GeoJsonResponse
+    >(this.method, this.url, params);
     if (!response.body) throw new Error('No response body set');
     return response.body;
   }

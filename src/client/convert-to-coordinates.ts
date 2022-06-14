@@ -1,6 +1,7 @@
 import { ApiClient } from '../lib';
 import type { ApiClientConfiguration, Transport } from '../lib';
 import type {
+  FeatureCollectionResponse,
   LocationGeoJsonResponse,
   LocationJsonResponse,
 } from './response.model';
@@ -11,8 +12,9 @@ export type ConvertToCoordinatesOptions = {
 };
 
 export class ConvertToCoordinatesClient extends ApiClient<
-  LocationJsonResponse | LocationGeoJsonResponse,
-  ConvertToCoordinatesOptions
+  LocationJsonResponse,
+  ConvertToCoordinatesOptions,
+  FeatureCollectionResponse<LocationGeoJsonResponse>
 > {
   protected readonly method = 'get';
   protected readonly url = '/convert-to-coordinates';

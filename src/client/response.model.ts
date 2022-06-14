@@ -36,3 +36,8 @@ export interface LocationGeoJsonResponse {
 export interface RequestOptions {
   [x: string]: string;
 }
+
+export interface FeatureCollectionResponse<LocationResponse> {
+  features: LocationResponse[];
+  type: 'FeatureCollection';
+}

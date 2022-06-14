@@ -1,6 +1,6 @@
 import { ApiClient, boundsToString } from '../lib';
 import type { ApiClientConfiguration, Transport } from '../lib';
-import type { Coordinates } from './response.model';
+import type { Coordinates, FeatureCollectionResponse } from './response.model';
 
 export interface GridSectionJsonResponse {
   lines: {
@@ -23,8 +23,9 @@ export type GridSectionOptions = {
 };
 
 export class GridSectionClient extends ApiClient<
-  GridSectionJsonResponse | GridSectionGeoJsonResponse,
-  GridSectionOptions
+  GridSectionJsonResponse,
+  GridSectionOptions,
+  FeatureCollectionResponse<GridSectionGeoJsonResponse>
 > {
   protected readonly method = 'get';
   protected readonly url = '/grid-section';

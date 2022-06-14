@@ -3,6 +3,7 @@ import {
   AvailableLanguagesClient,
   ConvertTo3waClient,
   ConvertToCoordinatesClient,
+  FeatureCollectionResponse,
   GridSectionClient,
 } from './client';
 import type {
@@ -34,15 +35,27 @@ export type What3wordsService = {
   autosuggest: (options: AutosuggestOptions) => Promise<AutosuggestResponse>;
   autosuggestSelection: (options: AutosuggestSuggestion) => Promise<void>;
   availableLanguages: () => Promise<AvailableLanguagesResponse>;
-  convertTo3wa: (
-    options: ConvertTo3waOptions
-  ) => Promise<LocationGeoJsonResponse | LocationJsonResponse>;
-  convertToCoordinates: (
-    options: ConvertToCoordinatesOptions
-  ) => Promise<LocationJsonResponse | LocationGeoJsonResponse>;
-  gridSection: (
-    options: GridSectionOptions
-  ) => Promise<GridSectionJsonResponse | GridSectionGeoJsonResponse>;
+  convertTo3wa:
+    | ((
+        options: ConvertTo3waOptions & { format?: 'json' }
+      ) => Promise<LocationJsonResponse>)
+    | ((
+        options: ConvertTo3waOptions & { format: 'geojson' }
+      ) => Promise<FeatureCollectionResponse<LocationGeoJsonResponse>>);
+  convertToCoordinates:
+    | ((
+        options: ConvertToCoordinatesOptions & { format?: 'json' }
+      ) => Promise<LocationJsonResponse>)
+    | ((
+        options: ConvertToCoordinatesOptions & { format: 'geojson' }
+      ) => Promise<FeatureCollectionResponse<LocationGeoJsonResponse>>);
+  gridSection:
+    | ((
+        options: GridSectionOptions & { format?: 'json' }
+      ) => Promise<GridSectionJsonResponse>)
+    | ((
+        options: GridSectionOptions & { format: 'geojson' }
+      ) => Promise<FeatureCollectionResponse<GridSectionGeoJsonResponse>>);
 };
 
 export function what3words(
