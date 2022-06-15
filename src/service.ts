@@ -22,7 +22,7 @@ import type {
 import { ApiClientConfiguration } from './lib';
 import type { Transport } from './lib';
 
-export type What3wordsService = {
+export interface What3wordsService {
   clients: {
     autosuggest: AutosuggestClient;
     availableLanguages: AvailableLanguagesClient;
@@ -30,33 +30,30 @@ export type What3wordsService = {
     convertToCoordinates: ConvertToCoordinatesClient;
     gridSection: GridSectionClient;
   };
-  setApiKey: (key: string) => void;
-  setConfig: (config: ApiClientConfiguration) => void;
-  autosuggest: (options: AutosuggestOptions) => Promise<AutosuggestResponse>;
-  autosuggestSelection: (options: AutosuggestSuggestion) => Promise<void>;
-  availableLanguages: () => Promise<AvailableLanguagesResponse>;
-  convertTo3wa:
-    | ((
-        options: ConvertTo3waOptions & { format?: 'json' }
-      ) => Promise<LocationJsonResponse>)
-    | ((
-        options: ConvertTo3waOptions & { format: 'geojson' }
-      ) => Promise<FeatureCollectionResponse<LocationGeoJsonResponse>>);
-  convertToCoordinates:
-    | ((
-        options: ConvertToCoordinatesOptions & { format?: 'json' }
-      ) => Promise<LocationJsonResponse>)
-    | ((
-        options: ConvertToCoordinatesOptions & { format: 'geojson' }
-      ) => Promise<FeatureCollectionResponse<LocationGeoJsonResponse>>);
-  gridSection:
-    | ((
-        options: GridSectionOptions & { format?: 'json' }
-      ) => Promise<GridSectionJsonResponse>)
-    | ((
-        options: GridSectionOptions & { format: 'geojson' }
-      ) => Promise<FeatureCollectionResponse<GridSectionGeoJsonResponse>>);
-};
+  setApiKey(key: string): void;
+  setConfig(config: ApiClientConfiguration): void;
+  autosuggest(options: AutosuggestOptions): Promise<AutosuggestResponse>;
+  autosuggestSelection(options: AutosuggestSuggestion): Promise<void>;
+  availableLanguages(): Promise<AvailableLanguagesResponse>;
+  convertTo3wa(
+    options: ConvertTo3waOptions & { format?: 'json' }
+  ): Promise<LocationJsonResponse>;
+  convertTo3wa(
+    options: ConvertTo3waOptions & { format: 'geojson' }
+  ): Promise<FeatureCollectionResponse<LocationGeoJsonResponse>>;
+  convertToCoordinates(
+    options: ConvertToCoordinatesOptions & { format?: 'json' }
+  ): Promise<LocationJsonResponse>;
+  convertToCoordinates(
+    options: ConvertToCoordinatesOptions & { format: 'geojson' }
+  ): Promise<FeatureCollectionResponse<LocationGeoJsonResponse>>;
+  gridSection(
+    options: GridSectionOptions & { format?: 'json' }
+  ): Promise<GridSectionJsonResponse>;
+  gridSection(
+    options: GridSectionOptions & { format: 'geojson' }
+  ): Promise<FeatureCollectionResponse<GridSectionGeoJsonResponse>>;
+}
 
 export function what3words(
   apiKey?: string,
