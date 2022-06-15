@@ -35,6 +35,7 @@ export interface What3wordsService {
   autosuggest(options: AutosuggestOptions): Promise<AutosuggestResponse>;
   autosuggestSelection(options: AutosuggestSuggestion): Promise<void>;
   availableLanguages(): Promise<AvailableLanguagesResponse>;
+  convertTo3wa(options: ConvertTo3waOptions): Promise<LocationJsonResponse>;
   convertTo3wa(
     options: ConvertTo3waOptions & { format?: 'json' }
   ): Promise<LocationJsonResponse>;
@@ -42,11 +43,15 @@ export interface What3wordsService {
     options: ConvertTo3waOptions & { format: 'geojson' }
   ): Promise<FeatureCollectionResponse<LocationGeoJsonResponse>>;
   convertToCoordinates(
+    options: ConvertToCoordinatesOptions
+  ): Promise<LocationJsonResponse>;
+  convertToCoordinates(
     options: ConvertToCoordinatesOptions & { format?: 'json' }
   ): Promise<LocationJsonResponse>;
   convertToCoordinates(
     options: ConvertToCoordinatesOptions & { format: 'geojson' }
   ): Promise<FeatureCollectionResponse<LocationGeoJsonResponse>>;
+  gridSection(options: GridSectionOptions): Promise<GridSectionJsonResponse>;
   gridSection(
     options: GridSectionOptions & { format?: 'json' }
   ): Promise<GridSectionJsonResponse>;

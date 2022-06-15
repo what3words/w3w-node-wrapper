@@ -48,6 +48,7 @@ export abstract class ApiClient<
     return this._config;
   }
 
+  public async run(options?: Params): Promise<JsonResponse>;
   public async run(
     options?: Params & { format?: 'json' }
   ): Promise<JsonResponse>;
