@@ -2,6 +2,7 @@ import { ApiClient } from '../lib';
 import type { ApiClientConfiguration, Transport } from '../lib';
 import type {
   Coordinates,
+  FeatureCollectionResponse,
   LocationGeoJsonResponse,
   LocationJsonResponse,
 } from './response.model';
@@ -13,8 +14,9 @@ export type ConvertTo3waOptions = {
 };
 
 export class ConvertTo3waClient extends ApiClient<
-  LocationGeoJsonResponse | LocationJsonResponse,
-  ConvertTo3waOptions
+  LocationJsonResponse,
+  ConvertTo3waOptions,
+  FeatureCollectionResponse<LocationGeoJsonResponse>
 > {
   protected readonly method = 'get';
   protected readonly url = '/convert-to-3wa';
