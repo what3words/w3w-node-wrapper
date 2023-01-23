@@ -106,9 +106,7 @@ describe('Custom Transport', () => {
     nock(host, { allowUnmocked: false })
       [method](url)
       .query(request.query)
-      .reply(500, MOCK_ERROR_RESPONSE, {
-        // 'Content-Type': 'application/json;charset=utf-8',
-      });
+      .reply(500, MOCK_ERROR_RESPONSE);
 
     (await customTransport(request)).should.be.eql({
       status: 500,
