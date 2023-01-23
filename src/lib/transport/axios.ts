@@ -26,6 +26,7 @@ export function axiosTransport(): Transport {
         });
         return response;
       })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .catch((err: any) => {
         if (err.isAxiosError)
           errorHandler<T>({

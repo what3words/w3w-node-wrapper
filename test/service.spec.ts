@@ -1,13 +1,11 @@
 import 'should';
 import nock from 'nock';
 import { Chance } from 'chance';
-import { SinonSpy, spy } from 'sinon';
 import what3words, {
   ApiClientConfiguration,
   ApiVersion,
   searchParams,
   axiosTransport,
-  Transport,
 } from '../src';
 import { What3wordsService } from '../src/service';
 
@@ -24,8 +22,6 @@ describe('what3words', () => {
   let apiVersion: ApiVersion;
   let apiKey: string;
   let config: ApiClientConfiguration;
-  let transportSpy: SinonSpy;
-  let transport: Transport;
 
   beforeEach(() => {
     apiKey = CHANCE.string({ length: 8 });
@@ -38,15 +34,6 @@ describe('what3words', () => {
       host: CHANCE.url(),
       apiVersion,
       headers: {},
-    };
-    transportSpy = spy();
-    transport = async (...args) => {
-      transportSpy(...args);
-      return {
-        status: 200,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        body: {} as any,
-      };
     };
   });
 

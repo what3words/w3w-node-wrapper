@@ -53,13 +53,14 @@ If you wish to use the built-in transports you will also need to install the pee
 ### JavaScript
 
 ```javascript
-const what3words, { fetchTransport } = require("@what3words/api");
+const what3words,
+  { fetchTransport } = require('@what3words/api');
 
 const apiKey = '<YOUR_API_KEY>';
 const config = {
   host: 'https://api.what3words.com',
   apiVersion: 'v3',
-}
+};
 const transport = fetchTransport(); // or you can import 'axiosTransport' instead
 const w3wService = what3words(apiKey, config, { transport });
 
@@ -71,12 +72,17 @@ const w3wService = what3words(apiKey, config, { transport });
 ### Typescript
 
 ```typescript
-import what3words, { ApiVersion, Transport, What3wordsService, axiosTransport } from '@what3words/api';
+import what3words, {
+  ApiVersion,
+  Transport,
+  What3wordsService,
+  axiosTransport,
+} from '@what3words/api';
 
-const apiKey: string = '<YOUR_API_KEY>';
+const apiKey = '<YOUR_API_KEY>';
 const config: {
-  host: string,
-  apiVersion: ApiVersion,
+  host: string;
+  apiVersion: ApiVersion;
 } = {
   host: 'https://api.what3words.com',
   apiVersion: ApiVersion.Version3,
@@ -179,95 +185,180 @@ import what3words, { ClientRequest, TransportResponse } from '@what3words/api';
 import superagent from 'superagent';
 
 const API_KEY = '<YOUR_API_KEY>';
-const config = {} // This will ensure we do not override the defaults
+const config = {}; // This will ensure we do not override the defaults
 
-async function customTransport(request: ClientRequest): Promise<TransportResponse> {
-  const { method, host, url, query = {}, headers = {}, body = {}, format } = request;
-  return superagent[method](`${host}${url}`)
-    .query({ ...query, format })
-    .send(body)
-    .set(headers)
-    .end((err, res) => {
-      if (err) throw err;
-      const reponse: TransportResponse = {
-        status: res.status,
-        statusText: res.
-        headers: res.headers,
-        body: res.body,
-      };
-      return response;
-    })
+function customTransport<ResponseType>(
+  request: ClientRequest
+): Promise<TransportResponse<ResponseType>> {
+  const {
+    method,
+    host,
+    url,
+    query = {},
+    headers = {},
+    body = {},
+    format,
+  } = request;
+  return new Promise(resolve =>
+    superagent[method](`${host}${url}`)
+      .query({ ...query, format })
+      .send(body || {})
+      .set(headers)
+      .end((err, res) => {
+        if (err || !res)
+          return resolve({
+            status: err.status || 500,
+            statusText: err.response.text || 'Internal Server Error',
+            headers: err.headers || {},
+            body: err.response.text || null,
+          });
+        const response: TransportResponse<ResponseType> = {
+          status: res.status,
+          statusText: res.text,
+          headers: res.headers,
+          body: res.body,
+        };
+        resolve(response);
+      })
+  );
 }
 
 const service = what3words(API_KEY, config, { transport: customTransport });
-service.availableLanguages()
+service
+  .availableLanguages()
   .then(({ languages }) => console.log('Available languages', languages));
 ```
 
 ### Autosuggest
 
 ```typescript
-import { ApiVersion, AutosuggestClient, AutosuggestOptions, AutosuggestResponse } from '@what3words/api';
+import {
+  AutosuggestClient,
+  AutosuggestOptions,
+  AutosuggestResponse,
+} from '@what3words/api';
 
-const API_KEY: string = '<YOUR_API_KEY>';
+const API_KEY = '<YOUR_API_KEY>';
 const client: AutosuggestClient = AutosuggestClient.init(API_KEY);
 const options: AutosuggestOptions = {
   input: 'filled.count.s',
 };
-client.run(options)
+client
+  .run(options)
   .then((res: AutosuggestResponse) =>
-    console.log(`suggestions for "${autosuggestOptions.input}"`, res)
+    console.log(`suggestions for "${options.input}"`, res)
   );
 ```
 
 ### Convert to Coordinates
 
 ```typescript
-import { ConvertToCoordinatesClient, ConvertToCoordinatesOptions, ConvertToCoordinatesResponse } from '@what3words/api';
+import {
+  ConvertToCoordinatesClient,
+  ConvertToCoordinatesOptions,
+  FeatureCollectionResponse,
+  LocationGeoJsonResponse,
+  LocationJsonResponse,
+} from '@what3words/api';
 
 const API_KEY = '<YOUR_API_KEY>';
-const client: ConvertToCoordinatesClient = ConvertToCoordinatesClient.init(API_KEY)
+const client: ConvertToCoordinatesClient =
+  ConvertToCoordinatesClient.init(API_KEY);
 const options: ConvertToCoordinatesOptions = { words: 'filled.count.soap' };
-client.run(options)
-  .then((res: ConvertToCoordinatesResponse) => console.log('Convert to coordinates', res));
+
+// If you want to retrieve the JSON response from our API
+client
+  .run({ ...options, format: 'json' }) // { format: 'json' } is the default response
+  .then((res: LocationJsonResponse) =>
+    console.log('Convert to coordinates', res)
+  );
+
+// If you want to retrieve the GeoJsonResponse from our API
+client
+  .run({ ...options, format: 'geojson' })
+  .then((res: FeatureCollectionResponse<LocationGeoJsonResponse>) =>
+    console.log('Convert to coordinates', res)
+  );
 ```
 
 ### Convert to Three Word Address
 
 ```typescript
-import { ConvertTo3waClient, ConvertTo3waOptions, ConvertTo3waResponse } from '@what3words/api';
+import {
+  ConvertTo3waClient,
+  ConvertTo3waOptions,
+  FeatureCollectionResponse,
+  LocationGeoJsonResponse,
+  LocationJsonResponse,
+} from '@what3words/api';
 
 const API_KEY = '<YOUR_API_KEY>';
-const client: ConvertTo3waClient = ConvertTo3waClient.init(API_KEY)
-const options: ConvertTo3waOptions = { coordinates: { lat: 51.520847, lng: -0.195521 } };
-client.run(options)
-    .then((res: ConvertTo3waResponse) => console.log('Convert to 3wa', res));
+const client: ConvertTo3waClient = ConvertTo3waClient.init(API_KEY);
+const options: ConvertTo3waOptions = {
+  coordinates: { lat: 51.520847, lng: -0.195521 },
+};
+
+// If you want to retrieve the JSON response from our API
+client
+  .run({ ...options, format: 'json' }) // { format: 'json' } is the default response
+  .then((res: LocationJsonResponse) => console.log('Convert to 3wa', res));
+
+// If you want to retrieve the GeoJsonResponse from our API
+client
+  .run({ ...options, format: 'geojson' })
+  .then((res: FeatureCollectionResponse<LocationGeoJsonResponse>) =>
+    console.log('Convert to 3wa', res)
+  );
 ```
 
 ### Available Languages
 
 ```typescript
-import { AvailableLanguagesClient, AvailableLanguagesResponse } from '@what3words/api';
+import {
+  AvailableLanguagesClient,
+  AvailableLanguagesResponse,
+} from '@what3words/api';
 
 const API_KEY = '<YOUR_API_KEY>';
 const client: AvailableLanguagesClient = AvailableLanguagesClient.init(API_KEY);
-client.run()
-    .then((res: AvailableLanguagesResponse) => console.log('Available Languages', res));
+client
+  .run()
+  .then((res: AvailableLanguagesResponse) =>
+    console.log('Available Languages', res)
+  );
 ```
 
 ### Grid Section
 
 ```typescript
-import { GridSectionClient, GridSectionOptions, GridSectionResponse } from '@what3words/api';
+import {
+  GridSectionClient,
+  GridSectionOptions,
+  FeatureCollectionResponse,
+  GridSectionGeoJsonResponse,
+  GridSectionJsonResponse,
+} from '../src';
 
 const API_KEY = '<YOUR_API_KEY>';
-const client: AvailableLanguagesClient = AvailableLanguagesClient.init(API_KEY);
+const client: GridSectionClient = GridSectionClient.init(API_KEY);
 const options: GridSectionOptions = {
-  southwest: { lat: 52.208867, lng: 0.117540 },
-  northeast: { lat: 52.207988, lng: 0.116126 }
+  boundingBox: {
+    southwest: { lat: 52.208867, lng: 0.11754 },
+    northeast: { lat: 52.207988, lng: 0.116126 },
+  },
 };
-client.run(options)
-    .then((res: GridSectionResponse) => console.log('Grid Section', res));
+
+// If you want to retrieve the JSON response from our API
+client
+  .run({ ...options, format: 'json' }) // { format: 'json' } is the default response
+  .then((res: GridSectionJsonResponse) => console.log('Grid Section', res));
+
+// If you want to retrieve the JSON response from our API
+client
+  .run({ ...options, format: 'geojson' }) // { format: 'json' } is the default response
+  .then((res: FeatureCollectionResponse<GridSectionGeoJsonResponse>) =>
+    console.log('Grid Section', res)
+  );
 ```
 
 > __The requested box must not exceed 4km from corner to corner, or a BadBoundingBoxTooBig error will be returned. Latitudes must be >= -90 and <= 90, but longitudes are allowed to wrap around 180. To specify a bounding-box that crosses the anti-meridian, use longitude greater than 180.__

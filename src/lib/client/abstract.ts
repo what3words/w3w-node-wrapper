@@ -48,13 +48,13 @@ export abstract class ApiClient<
     return this._config;
   }
 
-  public async run(options?: Params): Promise<JsonResponse>;
   public async run(
-    options?: Params & { format?: 'json' }
+    options?: Params | (Params & { format?: 'json' })
   ): Promise<JsonResponse>;
   public async run(
-    options?: Params & { format: 'geojson' }
+    options: Params & { format: 'geojson' }
   ): Promise<GeoJsonResponse>;
+  // public async run(options?: Params): Promise<JsonResponse>;
   public async run(options?: Params): Promise<JsonResponse | GeoJsonResponse> {
     const validation = await this.validate(options);
     if (!validation.valid) {
