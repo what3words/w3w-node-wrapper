@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@what3words/api",
-  "version": "4.0.7",
+  "version": "4.0.8",
   "description": "what3words JavaScript API",
   "homepage": "https://github.com/what3words/w3w-node-wrapper#readme",
   "main": "dist/index.js",
@@ -45,6 +45,7 @@
     "@types/node": "^14.11.2",
     "@types/react": "^17.0.39",
     "@types/sinon": "^10.0.6",
+    "@types/superagent": "^4.1.16",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "chance": "^1.1.8",
     "eslint-plugin-prettier": "^4.0.0",
@@ -57,6 +58,7 @@
     "react-dom": "^17.0.2",
     "should": "^13.2.3",
     "sinon": "^12.0.1",
+    "superagent": "^8.0.8",
     "ts-node": "^10.4.0",
     "typescript": "^4.0.3"
   },
