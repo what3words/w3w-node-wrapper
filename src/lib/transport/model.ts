@@ -6,7 +6,7 @@ import {
   GridSectionJsonResponse,
   LocationGeoJsonResponse,
   LocationJsonResponse,
-} from 'client';
+} from '../../client';
 import { ClientRequest } from '../client';
 
 export type Transport = <
