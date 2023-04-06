@@ -21,8 +21,8 @@ export function axiosTransport(): Transport {
         const response = errorHandler({
           status: res.status,
           statusText: res.statusText,
-          headers: res.headers,
           body: res.data,
+          headers: res.headers as Record<string, string>,
         });
         return response;
       })
