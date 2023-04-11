@@ -127,7 +127,7 @@ describe('Convert to 3wa Client', () => {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await client.run(undefined as any);
-    } catch (err) {
+    } catch (err: any) {
       err.message.should.be.equal('No coordinates provided');
     } finally {
       transportSpy.notCalled.should.be.equal(

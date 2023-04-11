@@ -26,5 +26,5 @@ export interface TransportResponse<T> {
   status: number;
   statusText?: string;
   body?: T | null;
-  headers?: { [key: string]: string };
+  headers?: Record<string, string>;
 }

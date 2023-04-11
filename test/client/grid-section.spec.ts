@@ -107,7 +107,7 @@ describe('Grid Section Client', () => {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await client.run(undefined as any);
-    } catch (err) {
+    } catch (err: any) {
       err.message.should.be.equal('No bounding box specified');
     } finally {
       transportSpy.notCalled.should.be.equal(
@@ -123,7 +123,7 @@ describe('Grid Section Client', () => {
     };
     try {
       await client.run({ boundingBox });
-    } catch (err) {
+    } catch (err: any) {
       err.message.should.be.equal(
         'Invalid latitude provided. Latitude must be >= -90 and <= 90'
       );

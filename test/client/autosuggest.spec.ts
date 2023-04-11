@@ -201,7 +201,7 @@ describe('Autosuggest Client', () => {
         input,
         inputType,
       });
-    } catch (err) {
+    } catch (err: any) {
       err.message.should.be.equal(
         'You must provide language when using a speech input type'
       );
@@ -216,7 +216,7 @@ describe('Autosuggest Client', () => {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await client.run(undefined as any);
-    } catch (err) {
+    } catch (err: any) {
       err.message.should.be.equal('You must provide at least options.input');
     } finally {
       transportSpy.notCalled.should.be.equal(
@@ -230,7 +230,7 @@ describe('Autosuggest Client', () => {
 
     try {
       await client.run({ input });
-    } catch (err) {
+    } catch (err: any) {
       err.message.should.be.equal('You must specify an input value');
     } finally {
       transportSpy.notCalled.should.be.equal(
@@ -248,7 +248,7 @@ describe('Autosuggest Client', () => {
 
     try {
       await client.run({ input, clipToBoundingBox });
-    } catch (err) {
+    } catch (err: any) {
       err.message.should.be.equal(
         'Southwest lat must be less than or equal to northeast lat and southwest lng must be less than or equal to northeast lng'
       );
@@ -268,7 +268,7 @@ describe('Autosuggest Client', () => {
 
     try {
       await client.run({ input, clipToBoundingBox });
-    } catch (err) {
+    } catch (err: any) {
       err.message.should.be.equal(
         'Southwest lat must be less than or equal to northeast lat and southwest lng must be less than or equal to northeast lng'
       );
@@ -289,7 +289,7 @@ describe('Autosuggest Client', () => {
 
     try {
       await client.run({ input, clipToCountry });
-    } catch (err) {
+    } catch (err: any) {
       err.message.should.be.equal(
         'Invalid clip to country. All values must be an ISO 3166-1 alpha-2 country code'
       );
@@ -311,7 +311,7 @@ describe('Autosuggest Client', () => {
 
     try {
       await client.run({ input, clipToPolygon });
-    } catch (err) {
+    } catch (err: any) {
       err.message.should.be.equal(
         'Invalid clip to polygon value. Array must contain at least 4 coordinates and no more than 25'
       );
@@ -333,7 +333,7 @@ describe('Autosuggest Client', () => {
 
     try {
       await client.run({ input, clipToPolygon });
-    } catch (err) {
+    } catch (err: any) {
       err.message.should.be.equal(
         'Invalid clip to polygon value. The polygon bounds must be closed.'
       );
@@ -350,7 +350,7 @@ describe('Autosuggest Client', () => {
 
     try {
       await client.run({ input, inputType });
-    } catch (err) {
+    } catch (err: any) {
       err.message.should.be.equal(
         'Invalid input type provided. Must provide a valid input type.'
       );
@@ -372,7 +372,7 @@ describe('Autosuggest Client', () => {
 
       try {
         await client.run({ input, inputType });
-      } catch (err) {
+      } catch (err: any) {
         err.message.should.be.equal(
           'You must provide language when using a speech input type'
         );
@@ -390,7 +390,7 @@ describe('Autosuggest Client', () => {
 
     try {
       await client.run({ input, language });
-    } catch (err) {
+    } catch (err: any) {
       err.message.should.be.equal(
         'Invalid language code. It must be an ISO-639-1 2 letter code.'
       );

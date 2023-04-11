@@ -103,7 +103,7 @@ describe('Convert to Coordinates Client', () => {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await client.run(undefined as any);
-    } catch (err) {
+    } catch (err: any) {
       err.message.should.be.equal(
         'You must specify the words to convert to coordinates'
       );
