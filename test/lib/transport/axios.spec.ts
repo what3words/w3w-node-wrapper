@@ -2,6 +2,7 @@ import 'should';
 import nock from 'nock';
 import { Chance } from 'chance';
 import { axiosTransport, HEADERS, searchParams } from '../../../src';
+import { AxiosHeaders } from 'axios';
 
 const CHANCE = new Chance();
 const MOCK_RESPONSE = { foo: 'bar' };
@@ -48,7 +49,9 @@ describe('Axios Transport', () => {
     (await axiosTransport()(request)).should.be.eql({
       status: 200,
       statusText: null,
-      headers: { 'content-type': 'application/json;charset=utf-8' },
+      headers: new AxiosHeaders({
+        'content-type': 'application/json;charset=utf-8',
+      }),
       body: MOCK_RESPONSE,
     });
   });
@@ -72,7 +75,7 @@ describe('Axios Transport', () => {
 
         try {
           (await axiosTransport()(request)).should.be.eql(MOCK_ERROR_RESPONSE);
-        } catch (err) {
+        } catch (err: any) {
           err.should.have.properties(['message', 'status']);
           err.message.should.be.equal(message);
           err.status.should.be.equal(status);

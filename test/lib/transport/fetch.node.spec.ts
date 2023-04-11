@@ -97,7 +97,7 @@ describe('Fetch Transport - Node', () => {
 
         try {
           (await fetchTransport()(request)).should.be.eql(MOCK_ERROR_RESPONSE);
-        } catch (err) {
+        } catch (err: any) {
           err.should.have.properties(['message', 'status']);
           err.message.should.be.equal(message);
           err.status.should.be.equal(status);
