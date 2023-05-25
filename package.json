@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@what3words/api",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "what3words JavaScript API",
   "homepage": "https://github.com/what3words/w3w-node-wrapper#readme",
   "main": "dist/index.js",
