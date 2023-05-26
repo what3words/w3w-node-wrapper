@@ -19,6 +19,7 @@ A JavaScript library to make requests to the [what3words REST API][api]. __Now w
 * [Examples](#examples)
   * [CustomTransport](#custom-transport)
   * [Autosuggest](#autosuggest)
+  * [React Native Autosuggest](examples/react-native/autosuggest/readme.md)
   * [Convert to Coordinates](#convert-to-coordinates)
   * [Convert to Three Word Address](#convert-to-three-word-address)
   * [Available Languages](#available-languages)
