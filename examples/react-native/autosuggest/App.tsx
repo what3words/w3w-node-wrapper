@@ -7,7 +7,12 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { AutosuggestClient, AutosuggestSuggestion } from '@what3words/api';
+import {
+  AutosuggestClient,
+  AutosuggestInputType,
+  type AutosuggestOptions,
+  type AutosuggestSuggestion,
+} from '@what3words/api';
 import { useState } from 'react';
 
 const API_KEY = '<YOUR_API_KEY>';
@@ -43,13 +48,37 @@ export default function App() {
     // Cancel previous request before sending a new one
     if (timeoutId) clearTimeout(timeoutId);
 
-    timeoutId = setTimeout(async () => {
+    // Debounce the request to avoid sending too many requests while the user is typing
+    timeoutId = setTimeout(() => {
       try {
         setIsLoading(true);
         setError(null);
-        const options = { input: search };
-        const { suggestions } = await client.run(options);
-        setSuggestions(suggestions);
+        const options: AutosuggestOptions = {
+          input: search,
+          inputType: AutosuggestInputType.Text,
+          nResults: 3,
+          // Uncomment the following options to restrict the search
+          // focus: { lat: 51.521251, lng: -0.203586 },
+          // clipToCountry: ['GB'],
+          // clipToCircle: { center: { lat: 51.521, lng: -0.343 }, radius: 142 },
+          // clipToBoundingBox: {
+          //   southwest: { lat: 51.521, lng: -0.343 },
+          //   northeast: { lat: 52.6, lng: 2.3324 },
+          // },
+          // clipToPolygon: [
+          //   { lat: 51.521, lng: -0.343 },
+          //   { lat: 52.6, lng: 2.3324 },
+          //   { lat: 54.234, lng: 8.343 },
+          //   { lat: 51.521, lng: -0.343 },
+          // ],
+          // language: 'en',
+          // preferLand: true,
+        };
+        client
+          .run(options)
+          .then(({ suggestions }) => suggestions)
+          .then(setSuggestions)
+          .catch(console.error);
       } catch (error) {
         setError(error);
       } finally {
