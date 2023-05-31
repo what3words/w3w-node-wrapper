@@ -78,7 +78,6 @@ export default function App() {
           .run(options)
           .then(({ suggestions }) => suggestions)
           .then(setSuggestions)
-          .catch(console.error);
       } catch (error) {
         setError(error);
       } finally {
