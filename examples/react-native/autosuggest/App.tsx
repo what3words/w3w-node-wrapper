@@ -42,14 +42,14 @@ export default function App() {
   async function handleOnSearch(search: string): Promise<void> {
     setSearch(search);
 
-    // Don't search if the input is empty or too short
-    if (!search || search.length < 3) return;
-
     // Cancel previous request before sending a new one
     if (timeoutId) clearTimeout(timeoutId);
 
+    // Don't search if the input is empty
+    if (!search) return setSuggestions([]);
+
     // Debounce the request to avoid sending too many requests while the user is typing
-    timeoutId = setTimeout(() => {
+    timeoutId = setTimeout(async () => {
       try {
         setIsLoading(true);
         setError(null);
@@ -74,10 +74,14 @@ export default function App() {
           // language: 'en',
           // preferLand: true,
         };
-        client
-          .run(options)
-          .then(({ suggestions }) => suggestions)
-          .then(setSuggestions)
+
+        const { suggestions } = await client.run(options);
+
+        if (!suggestions.length) {
+          throw new Error('No valid 3 word address found.');
+        }
+
+        setSuggestions(suggestions);
       } catch (error) {
         setError(error);
       } finally {
