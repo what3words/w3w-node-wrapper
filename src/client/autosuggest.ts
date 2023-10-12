@@ -142,12 +142,12 @@ export class AutosuggestClient extends ApiClient<
     selected: AutosuggestSuggestion,
     initialRequestOptions: AutosuggestOptions = this.lastReqOpts
   ): Promise<void> {
-    await this.makeClientRequest('post', '/autosuggest-selection', {
-      body: {
+    await this.makeClientRequest('get', '/autosuggest-selection', {
+      query: {
         ...this.autosuggestOptionsToQuery(initialRequestOptions),
         'raw-input': initialRequestOptions.input,
         selection: selected.words,
-        rank: selected.rank,
+        rank: `${selected.rank}`,
         ...(!initialRequestOptions.inputType
           ? { 'source-api': 'text' }
           : {
