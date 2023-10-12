@@ -404,20 +404,22 @@ describe('Autosuggest Client', () => {
   it('should call /autosuggest-selection with selected suggestion', async () => {
     const selected = generateAutosuggestSuggestion();
     const transportArguments = {
-      method: 'post',
+      method: 'get',
       host: `${host.replace(/\/$/, '')}/${apiVersion}`,
       url: '/autosuggest-selection',
-      query: { key: apiKey },
-      headers: { 'X-Api-Key': apiKey, ...HEADERS },
-      body: {
+      query: {
         'raw-input': '',
         selection: selected.words,
-        rank: selected.rank,
+        rank: `${selected.rank}`,
         'source-api': 'text',
+        key: apiKey,
       },
+      headers: { 'X-Api-Key': apiKey, ...HEADERS },
+      body: null,
     };
 
     await client.onSelected(selected).should.resolvedWith(undefined);
+    console.log(transportSpy.args[0][0], transportArguments);
     transportSpy
       .calledOnceWith(transportArguments)
       .should.be.equal(true, 'transport arguments do not match');
@@ -454,15 +456,14 @@ describe('Autosuggest Client', () => {
 
       beforeEach(() => {
         transportArguments = {
-          method: 'post',
+          method: 'get',
           host: `${host.replace(/\/$/, '')}/${apiVersion}`,
           url: '/autosuggest-selection',
-          query: { key: apiKey },
-          headers: { 'X-Api-Key': apiKey, ...HEADERS },
-          body: {
+          query: {
+            key: apiKey,
             'raw-input': input,
             selection: selected.words,
-            rank: selected.rank,
+            rank: `${selected.rank}`,
             'n-results': `${nResults}`,
             focus: `${focus.lat},${focus.lng}`,
             'n-focus-results': `${nFocusResults}`,
@@ -475,13 +476,15 @@ describe('Autosuggest Client', () => {
             language,
             'prefer-land': `${preferLand}`,
           },
+          headers: { 'X-Api-Key': apiKey, ...HEADERS },
+          body: null,
         };
       });
 
       it('text input type', async () => {
         const inputType = AutosuggestInputType.Text;
-        transportArguments.body['input-type'] = inputType;
-        transportArguments.body['source-api'] = 'text';
+        transportArguments.query['input-type'] = inputType;
+        transportArguments.query['source-api'] = 'text';
 
         await client
           .onSelected(selected, {
@@ -504,8 +507,8 @@ describe('Autosuggest Client', () => {
       });
       it('voice input type', async () => {
         const inputType = AutosuggestInputType.GenericVoice;
-        transportArguments.body['input-type'] = inputType;
-        transportArguments.body['source-api'] = 'voice';
+        transportArguments.query['input-type'] = inputType;
+        transportArguments.query['source-api'] = 'voice';
 
         await client
           .onSelected(selected, {
