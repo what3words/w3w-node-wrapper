@@ -86,8 +86,7 @@ export abstract class ApiClient<
   ): Promise<TransportResponse<T>> {
     const clientRequest = this.getClientRequest(method, url, params);
     const response = await this.transport<T>(clientRequest);
-    const result = await errorHandler(response);
-    return result;
+    return errorHandler(response);
   }
 
   protected getClientRequest(
