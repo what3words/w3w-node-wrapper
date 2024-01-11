@@ -1,0 +1,5 @@
+{
+  "extends": "../../../../.eslintrc.json",
+  "plugins": ["plugin:node/recommended-module"]
+}
+  
