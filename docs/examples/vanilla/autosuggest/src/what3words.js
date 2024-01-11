@@ -88,9 +88,9 @@ function displaySuggestions(suggestions = []) {
 }
 
 /**
- * This script should be run after the w3w script tags have loaded
+ * Use an IIFE to load the app
  */
-(function loader() {
+(function init() {
   input = document.querySelector(INPUT_SELECTOR);
   component = document.querySelector(COMPONENT_SELECTOR);
 

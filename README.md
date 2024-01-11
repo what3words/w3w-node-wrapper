@@ -1,47 +1,53 @@
 [![what3words](https://what3words.com/assets/images/w3w_square_red.png)](https://developer.what3words.com)
+
 # what3words JavaScript API Wrapper
 
 [![CircleCI](https://circleci.com/gh/what3words/w3w-node-wrapper.svg?style=svg)](https://github.com/what3words/w3w-node-wrapper)
 
-A JavaScript library to make requests to the [what3words REST API][api]. __Now with better support for use within both browser and node based environments!__ See the what3words public API [documentation](apidocs) for more information about how to use our REST API.
+A JavaScript library to make requests to the [what3words REST API][api]. **Now with better support for use within both browser and node based environments!** See the what3words public API [documentation](apidocs) for more information about how to use our REST API.
 
 ## Table of Contents
 
-* [Overview](#overview)
-* [Install](#install)
-* [Usage](#usage)
-  * [JavaScript](#javascript)
-  * [Typescript](#typescript)
-* [Documentation](#documentation)
-  * [What3wordsService](#what3words-service)
-  * [Clients](#clients)
-  * [Transport](#transport)
-* [Examples](#examples)
-  * [CustomTransport](#custom-transport)
-  * [Autosuggest](#autosuggest)
-  * [Convert to Coordinates](#convert-to-coordinates)
-  * [Convert to Three Word Address](#convert-to-three-word-address)
-  * [Available Languages](#available-languages)
-  * [Grid Section](#grid-section)
+- [Overview](#overview)
+- [Install](#install)
+- [Usage](#usage)
+  - [JavaScript](#javascript)
+  - [Typescript](#typescript)
+- [Documentation](#documentation)
+  - [What3wordsService](#what3words-service)
+  - [Clients](#clients)
+  - [Transport](#transport)
+  - Examples
+    - [Vanilla Autosuggest](docs/examples/vanilla/autosuggest/README.md)
+    - [Vanilla Map](docs/examples/vanilla/map/README.md)
+- [Examples](#examples)
+  - [CustomTransport](#custom-transport)
+  - [Autosuggest](#autosuggest)
+  - [Convert to Coordinates](#convert-to-coordinates)
+  - [Convert to Three Word Address](#convert-to-three-word-address)
+  - [Available Languages](#available-languages)
+  - [Grid Section](#grid-section)
 
 ## Overview
 
 The what3words JavaScript wrapper gives you programmatic access to:
 
-* [Convert a 3 word address to coordinates](https://developer.what3words.com/public-api/docs#convert-to-coords)
-* [Convert coordinates to a 3 word address](https://developer.what3words.com/public-api/docs#convert-to-3wa)
-* [Autosuggest functionality which takes a slightly incorrect 3 word address, and suggests a list of valid 3 word addresses](https://developer.what3words.com/public-api/docs#autosuggest)
-* [Obtain a section of the 3m x 3m what3words grid for a bounding box.](https://developer.what3words.com/public-api/docs#grid-section)
-* [Determine the currently support 3 word address languages.](https://developer.what3words.com/public-api/docs#available-languages)
+- [Convert a 3 word address to coordinates](https://developer.what3words.com/public-api/docs#convert-to-coords)
+- [Convert coordinates to a 3 word address](https://developer.what3words.com/public-api/docs#convert-to-3wa)
+- [Autosuggest functionality which takes a slightly incorrect 3 word address, and suggests a list of valid 3 word addresses](https://developer.what3words.com/public-api/docs#autosuggest)
+- [Obtain a section of the 3m x 3m what3words grid for a bounding box.](https://developer.what3words.com/public-api/docs#grid-section)
+- [Determine the currently support 3 word address languages.](https://developer.what3words.com/public-api/docs#available-languages)
 
 ## Install
 
 [npm][]:
+
 ```sh
 npm install @what3words/api
 ```
 
 [yarn][]:
+
 ```sh
 yarn add @what3words/api
 ```
@@ -105,14 +111,13 @@ The what3words API clients in this library are used to validate request options,
 
 There is a specific client for each request and you can use them independently of the `What3wordsService`. This can be particularly useful if you want to extend the client behaviour, minimise your code or, in a more extreme example, use a custom transport to handle requests differently in each client.
 
-
 Every client accepts the following parameters:
 
-| Parameter   | Datatype          | Default value                |
-| ----------- | ----------------- | ---------------------------- |
-| apiKey      | string            | `''`                         |
-| config      | config.host       | `https://api.what3words.com` |
-|             | config.apiVersion | `v3`                         |
+| Parameter | Datatype          | Default value                |
+| --------- | ----------------- | ---------------------------- |
+| apiKey    | string            | `''`                         |
+| config    | config.host       | `https://api.what3words.com` |
+|           | config.apiVersion | `v3`                         |
 
 ### Transport
 
@@ -120,24 +125,24 @@ The transport is a function responsible for executing the request against the AP
 
 A `ClientRequest` consists of the following properties:
 
-| Property         | Datatype                             |
-| ---------------- | ------------------------------------ |
-| __host__*        | `string`                             |
-| __url__*         | `string`                             |
-| __method__*      | `get` or `post`                      |
-| __query__        | `object`                             |
-| __headers__      | `object`                             |
-| __body__         | `object`                             |
-| __format__*      | `json` or `geojson`. Default: `json` |
+| Property     | Datatype                             |
+| ------------ | ------------------------------------ |
+| **host**\*   | `string`                             |
+| **url**\*    | `string`                             |
+| **method**\* | `get` or `post`                      |
+| **query**    | `object`                             |
+| **headers**  | `object`                             |
+| **body**     | `object`                             |
+| **format**\* | `json` or `geojson`. Default: `json` |
 
 A `TransportResponse` consists of the following properties:
 
-| Property         | Datatype          |
-| ---------------- | ----------------- |
-| __status__*      | `number`          |
-| __statusText__*  | `string`          |
-| __body__*        | `any`             |
-| __headers__      | `object`          |
+| Property         | Datatype |
+| ---------------- | -------- |
+| **status**\*     | `number` |
+| **statusText**\* | `string` |
+| **body**\*       | `any`    |
+| **headers**      | `object` |
 
 There are two built-in transports available with this library that you can use; either [cross-fetch][] or [axios][]. By specifying which transport you would like to use on initialisation of the `What3wordsService` or a client, if you wish to instantiate a client for yourself.
 
@@ -145,25 +150,31 @@ There are two built-in transports available with this library that you can use; 
 
 There are two built-in transports available:
 
-* [Cross-fetch][cross-fetch]
-* [Axios][axios]
+- [Cross-fetch][cross-fetch]
+- [Axios][axios]
 
 In order to use either of these you will need install the peer dependency. By default [cross-fetch][cross-fetch] is assumed by the `What3wordsService` or any instantiated client where no override is provided.
 
 [npm][]:
+
 ```sh
 npm install cross-fetch
 ```
+
 or
+
 ```sh
 npm install axios
 ```
 
 [yarn][]:
+
 ```sh
 yarn add cross-fetch
 ```
+
 or
+
 ```sh
 yarn add axios
 ```
@@ -361,18 +372,13 @@ client
   );
 ```
 
-> __The requested box must not exceed 4km from corner to corner, or a BadBoundingBoxTooBig error will be returned. Latitudes must be >= -90 and <= 90, but longitudes are allowed to wrap around 180. To specify a bounding-box that crosses the anti-meridian, use longitude greater than 180.__
+> **The requested box must not exceed 4km from corner to corner, or a BadBoundingBoxTooBig error will be returned. Latitudes must be >= -90 and <= 90, but longitudes are allowed to wrap around 180. To specify a bounding-box that crosses the anti-meridian, use longitude greater than 180.**
 
 ##
 
 [npm]: https://www.npmjs.com/
-
 [yarn]: https://yarnpkg.com/
-
 [api]: https://developer.what3words.com/public-api/
-
 [apidocs]: https://developer.what3words.com/public-api/docs
-
 [cross-fetch]: https://www.npmjs.com/package/cross-fetch
-
 [axios]: https://www.npmjs.com/package/axios

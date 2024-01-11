@@ -1,15 +1,19 @@
 import what3words, { axiosTransport, ApiVersion } from '@what3words/api';
 import { initMap } from './google';
 
-const DEFAULT_MAP_CENTER = { lat: 51.52086, lng: -0.195499 };
-
 // SETUP
+const DEFAULT_MAP_CENTER = { lat: 51.52086, lng: -0.195499 };
+const GOOGLE_API_KEY = ''; //TODO: Add your Google Maps API key here
 const MAP_SELECTOR = 'div#w3w-map';
 const MAP_ZOOM = 20;
 const THREE_WORD_ADDRESS = 'filled.count.soap';
-const W3W_API_KEY = ''; //TODO: Add your what3words API key here
+const W3W_API_KEY = ''; //TODO: Add your What3words API key here
 
-// DECLARATIONS
+// Dynamically load google maps API - must attach to DOM after callback is defined
+const googleScript = document.createElement('script');
+googleScript.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_API_KEY}&callback=init`;
+googleScript.async = true;
+
 let address,
   div,
   input,
@@ -114,9 +118,9 @@ function plotGrid(newGrid) {
 }
 
 /**
- * This script should be run after the w3w script tags have loaded
+ * Make use of google maps script callback functionality to load the app
  */
-(function loader() {
+window.init = function () {
   window.what3words = what3words(
     W3W_API_KEY,
     { apiVersion: ApiVersion.Version3 },
@@ -153,4 +157,7 @@ function plotGrid(newGrid) {
       });
       map.addListener('click', onMapClick);
     });
-})();
+};
+
+// Append google script to head
+document.head.appendChild(googleScript);
