@@ -1,0 +1,20 @@
+{
+  "name": "autosuggest-using-sdk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node esbuild/build.mjs",
+    "dev": "rm -rf public/dist/** && node esbuild/serve.mjs"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@what3words/api": "^5.0.2"
+  },
+  "devDependencies": {
+    "esbuild": "^0.19.11",
+    "esbuild-plugin-polyfill-node": "^0.3.0"
+  }
+}
