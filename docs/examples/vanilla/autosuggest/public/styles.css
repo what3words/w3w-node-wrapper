@@ -1,0 +1,10 @@
+.component {
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 4px 10px 4px;
+}
