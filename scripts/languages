@@ -1,0 +1,105 @@
+#!/usr/bin/env node
+/* eslint-disable no-console */
+/* eslint-disable node/shebang */
+
+/**
+ * This script fetches all supported languages from the public API
+ * and generates a typescript file which can be used by the library
+ * to validate language codes without having to call the API every time.
+ */
+
+const { existsSync } = require('fs');
+const { writeFile } = require('fs/promises');
+const fetch = require('cross-fetch');
+
+const LIB_PATH = 'src/lib/languages';
+const GENERATED_FILE_COMMENT = '/** GENERATED FILE - DO NOT MODIFY */\n';
+const GENERATED_FILE_NAME = 'language-codes.ts';
+function tryPrettier(content) {
+  const moduleExists = module => {
+    try {
+      return existsSync(require.resolve(module));
+    } catch (error) {
+      return false;
+    }
+  };
+  // check if prettier is installed
+  if (moduleExists('prettier')) {
+    // default prettier config in case .prettierrc.js doesn't exist
+    let prettierConfig = {
+      bracketSpacing: false,
+      singleQuote: true,
+      trailingComma: 'es5',
+      arrowParens: 'avoid',
+    };
+    // override default prettier config if .prettierrc.js exists
+    if (moduleExists('../.prettierrc.js')) {
+      prettierConfig = require('../.prettierrc.js');
+      // remove deprecated property
+      if (Object.hasOwn(prettierConfig, 'jsxBracketSameLine')) {
+        delete prettierConfig.jsxBracketSameLine;
+      }
+    }
+    // eslint-disable-next-line node/no-extraneous-require
+    return require('prettier').format(content, {
+      ...prettierConfig,
+      parser: 'babel',
+    });
+  }
+  return content;
+}
+
+async function fetchSupportedLanguages() {
+  /**
+   * Fetch all supported language from the public API
+   */
+  try {
+    const api_key = process.env.W3W_API_KEY;
+    if (!api_key) {
+      throw new Error('W3W_API_KEY is not set');
+    }
+    const res = await fetch(
+      `https://api.what3words.com/v3/available-languages?key=${api_key}`
+    );
+    if (res.status >= 400) {
+      throw new Error('Bad response from server');
+    }
+    const { languages } = (await res.json()) || [];
+    return languages;
+  } catch (err) {
+    console.error(
+      `\x1b[1m\x1b[31mERROR\x1b[0m:\x1b[0m Failed to fetch supported languages from the Public API - \x1b[33m${err.message}\x1b[0m`
+    );
+    // eslint-disable-next-line no-process-exit
+    process.exit();
+  }
+}
+
+(async () => {
+  const languages = await fetchSupportedLanguages();
+  const languagesAndLocales = languages
+    .flatMap(lang =>
+      lang.locales
+        ? [`"${lang.code}"`, ...lang.locales.map(locale => `"${locale.code}"`)]
+        : [`"${lang.code}"`]
+    )
+    .sort()
+    .join(',');
+  const additionalComment =
+    '/** Supported languages and locales from the what3words public api. See: https://api.what3words.com/v3/available-languages\n * This allows validation of language codes without having to call the API every single time\n */\n';
+  const languageContent = await tryPrettier(
+    `${GENERATED_FILE_COMMENT}${additionalComment}export const languages = [${languagesAndLocales}];`
+  );
+  try {
+    await writeFile(`${LIB_PATH}/${GENERATED_FILE_NAME}`, languageContent);
+    console.log(
+      `\x1b[1m\x1b[32mSuccessfully\x1b[0m\x1b[0m generated \x1b[33m${GENERATED_FILE_NAME}\x1b[0m`
+    );
+  } catch (err) {
+    console.error(
+      `\x1b[1m\x1b[31mERROR\x1b[0m:\x1b[0m Failed to generate \x1b[32m${GENERATED_FILE_NAME}\x1b[0m - \x1b[33m${err.message}\x1b[0m`
+    );
+    // eslint-disable-next-line no-process-exit
+    process.exit();
+  }
+})();

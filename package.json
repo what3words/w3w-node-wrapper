@@ -20,7 +20,7 @@
     "compile": "tsc",
     "fix": "gts fix",
     "precoverage": "rm -rf .nyc_output coverage",
-    "precompile": "npm rum clean",
+    "precompile": "npm rum clean; scripts/languages",
     "posttest": "npm run lint"
   },
   "peerDependencies": {

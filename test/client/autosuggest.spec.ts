@@ -10,6 +10,7 @@ import {
   Transport,
 } from '../../src';
 import { generateAutosuggestSuggestion, generateCoordinate } from '../fixtures';
+import { languages } from '../../src/lib/languages/language-codes';
 
 const CHANCE = new Chance();
 
@@ -114,7 +115,7 @@ describe('Autosuggest Client', () => {
       generateCoordinate(),
       startEndCoordinate,
     ];
-    const language = CHANCE.locale();
+    const language = CHANCE.pickone(languages);
     const preferLand = CHANCE.bool();
     const transportArguments = {
       method: 'get',
@@ -164,7 +165,7 @@ describe('Autosuggest Client', () => {
       AutosuggestInputType.NMDP_ASR,
       AutosuggestInputType.GenericVoice,
     ]);
-    const language = CHANCE.locale();
+    const language = CHANCE.pickone(languages);
     const transportArguments = {
       method: 'get',
       host: `${host.replace(/\/$/, '')}/${apiVersion}`,
@@ -392,7 +393,7 @@ describe('Autosuggest Client', () => {
       await client.run({ input, language });
     } catch (err: any) {
       err.message.should.be.equal(
-        'Invalid language code. It must be an ISO-639-1 2 letter code.'
+        'This language is not supported. Refer to our API for supported languages.'
       );
     } finally {
       transportSpy.notCalled.should.be.equal(
