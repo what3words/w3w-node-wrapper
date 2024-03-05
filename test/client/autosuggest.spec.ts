@@ -393,7 +393,7 @@ describe('Autosuggest Client', () => {
       await client.run({ input, language });
     } catch (err: any) {
       err.message.should.be.equal(
-        'This language is not supported. Refer to our API for supported languages.'
+        `The language ${language} is not supported. Refer to our API for supported languages.`
       );
     } finally {
       transportSpy.notCalled.should.be.equal(

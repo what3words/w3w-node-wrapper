@@ -136,7 +136,7 @@ export class AutosuggestClient extends ApiClient<
     if (options.language && !validLanguage(options.language)) {
       valid = false;
       message =
-        'This language is not supported. Refer to our API for supported languages.';
+        `The language ${options.language} is not supported. Refer to our API for supported languages.`;
     }
     return { valid, message };
   }
