@@ -1,11 +1,13 @@
+import type { ApiClientConfiguration, Transport } from '../lib';
 import {
   ApiClient,
   arrayToString,
   boundsToString,
   coordinatesToString,
+  validLanguage,
 } from '../lib';
-import type { ApiClientConfiguration, Transport } from '../lib';
-import { Bounds, Coordinates } from './response.model';
+
+import type { Bounds, Coordinates } from './response.model';
 
 export interface AutosuggestSuggestion {
   country: string;
@@ -131,9 +133,9 @@ export class AutosuggestClient extends ApiClient<
         message = 'You must provide language when using a speech input type';
       }
     }
-    if (options.language && options.language.length !== 2) {
+    if (options.language && !validLanguage(options.language)) {
       valid = false;
-      message = 'Invalid language code. It must be an ISO-639-1 2 letter code.';
+      message = `The language ${options.language} is not supported. Refer to our API for supported languages.`;
     }
     return { valid, message };
   }

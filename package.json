@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@what3words/api",
-  "version": "5.0.2",
+  "version": "5.1.0",
   "description": "what3words JavaScript API",
   "homepage": "https://github.com/what3words/w3w-node-wrapper#readme",
   "main": "dist/index.js",
@@ -20,7 +20,7 @@
     "compile": "tsc",
     "fix": "gts fix",
     "precoverage": "rm -rf .nyc_output coverage",
-    "precompile": "npm rum clean",
+    "precompile": "npm rum clean; scripts/languages",
     "posttest": "npm run lint"
   },
   "peerDependencies": {
