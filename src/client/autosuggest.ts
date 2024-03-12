@@ -221,7 +221,7 @@ export class AutosuggestClient extends ApiClient<
    * Searches the string passed in for all substrings in the form of a three word address. This does not validate whther it is a real address as it will return x.x.x as a result
    * @param {string} text
    * @returns {string[]}
-   * @since 5.1.2
+   * @since 5.1.1
    */
   public findPossible3wa(text: string): string[] {
     return text.match(W3W_POSSIBLE_REGEX) || [];
@@ -231,7 +231,7 @@ export class AutosuggestClient extends ApiClient<
    * Determines of the string passed in is the form of a three word address. This does not validate whther it is a real address as it returns True for x.x.x
    * @param {string} text
    * @returns {boolean}
-   * @since 5.1.2
+   * @since 5.1.1
    */
   public isPossible3wa(text: string): boolean {
     return W3W_REGEX.test(text);
@@ -241,7 +241,7 @@ export class AutosuggestClient extends ApiClient<
    * Determines of the string passed in is a real three word address.  It calls the API to verify it refers to an actual plac eon earth.
    * @param {string} text
    * @returns {boolean}
-   * @since 5.1.2
+   * @since 5.1.1
    */
   public async isValid3wa(text: string): Promise<boolean> {
     if (this.isPossible3wa(text)) {
