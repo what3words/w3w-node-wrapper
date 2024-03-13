@@ -234,7 +234,7 @@ export class AutosuggestClient extends ApiClient<
    * @since 5.1.1
    */
   public isPossible3wa(text: string): boolean {
-    return W3W_POSSIBLE_REGEX.test(text);
+    return new RegExp(W3W_POSSIBLE_REGEX).test(text);
   }
 
   /**
