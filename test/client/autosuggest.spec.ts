@@ -529,73 +529,102 @@ describe('Autosuggest Client', () => {
         .should.be.equal(true, 'transport arguments do not match');
     });
   });
-  describe('findPossible3wa', () => {
-    it('should return an empty array if empty string is provided', async () => {
-      client.findPossible3wa('').should.be.empty();
+
+  describe.only('methods', () => {
+    const invalidStrings = [
+      // a
+      CHANCE.letter(),
+      // word
+      CHANCE.word(),
+      // 1
+      `${CHANCE.natural()}`,
+      // 1.2.3
+      `${CHANCE.natural()}.${CHANCE.natural()}.${CHANCE.natural()}`,
+      // word.a
+      `${CHANCE.word()}.${CHANCE.letter()}`,
+      // word.1
+      `${CHANCE.word()}.${CHANCE.natural()}`,
+      // word.word2.1
+      `${CHANCE.word()}.${CHANCE.word()}.${CHANCE.natural()}`,
+      // word;a
+      `${CHANCE.word()}${CHANCE.character({
+        symbols: true,
+      })}${CHANCE.letter()}`,
+      // word;1
+      `${CHANCE.word()}${CHANCE.character({
+        symbols: true,
+      })}${CHANCE.natural()}`,
+      // word?word2;1
+      `${CHANCE.word()}${CHANCE.character({
+        symbols: true,
+      })}${CHANCE.word()}${CHANCE.character({
+        symbols: true,
+      })}${CHANCE.natural()}`,
+    ];
+    const validStrings = [
+      // a.b.c
+      `${CHANCE.letter()}.${CHANCE.letter()}.${CHANCE.letter()}`,
+      // word.word2.word3
+      `${CHANCE.word()}.${CHANCE.word()}.${CHANCE.word()}`,
+    ];
+
+    describe('findPossible3wa', () => {
+      it('should return an empty array if empty string is provided', async () => {
+        client.findPossible3wa('').should.be.empty();
+      });
+
+      describe('invalid value', () => {
+        const invalidSubstrings = invalidStrings.map(
+          v => `text with invalid three word address: ${v}`
+        );
+
+        invalidStrings.forEach(invalidString => {
+          it(`should return an empty array if "${invalidString}" is provided`, async () => {
+            client.findPossible3wa(invalidString).should.be.empty();
+          });
+        });
+
+        invalidSubstrings.forEach(invalidSubstring => {
+          it(`should return an empty array if "${invalidSubstring}" is provided`, async () => {
+            client.findPossible3wa(invalidSubstring).should.be.empty();
+          });
+        });
+      });
+
+      describe('valid value', () => {
+        const validSubstrings = validStrings.map(
+          v => `text with valid three word address: ${v}`
+        );
+
+        validStrings.forEach(validString => {
+          it(`should return a match if "${validString}" is provided`, async () => {
+            client.findPossible3wa(validString).should.containEql(validString);
+          });
+        });
+
+        validSubstrings.forEach(substring => {
+          it(`should return a match if "${substring}" is provided`, async () => {
+            client
+              .findPossible3wa(substring)
+              .every(res => validStrings.includes(res))
+              .should.be.true();
+          });
+        });
+      });
     });
 
-    describe('invalid value', () => {
-      const invalidStrings = [
-        CHANCE.letter(),
-        CHANCE.word(),
-        `${CHANCE.integer()}`,
-        `${CHANCE.word()}.${CHANCE.letter()}`,
-        `${CHANCE.word()}.${CHANCE.integer()}`,
-        `${CHANCE.word()}.${CHANCE.word()}.${CHANCE.integer()}`,
-        // word;a
-        `${CHANCE.word()}${CHANCE.character({
-          symbols: true,
-        })}${CHANCE.letter()}`,
-        // word;1
-        `${CHANCE.word()}${CHANCE.character({
-          symbols: true,
-        })}${CHANCE.integer()}`,
-        // word?word2;1
-        `${CHANCE.word()}${CHANCE.character({
-          symbols: true,
-        })}${CHANCE.word()}${CHANCE.character({
-          symbols: true,
-        })}${CHANCE.integer()}`,
-      ];
-      const invalidSubstrings = invalidStrings.map(
-        v => `text with invalid three word address: ${v}`
-      );
-
+    describe('isPossible3wa', () => {
+      it('should return false if empty string is provided', async () => {
+        client.isPossible3wa('').should.be.false();
+      });
       invalidStrings.forEach(invalidString => {
-        it(`should return an empty array if "${invalidString}" is provided`, async () => {
-          client.findPossible3wa(invalidString).should.be.empty();
+        it(`should return false if "${invalidString}" is provided`, async () => {
+          client.isPossible3wa(invalidString).should.be.false();
         });
       });
-
-      invalidSubstrings.forEach(invalidSubstring => {
-        it(`should return an empty array if "${invalidSubstring}" is provided`, async () => {
-          client.findPossible3wa(invalidSubstring).should.be.empty();
-        });
-      });
-    });
-
-    describe('valid value', () => {
-      const validStrings = [
-        `${CHANCE.word()}.${CHANCE.word()}.${CHANCE.letter()}`,
-        `${CHANCE.word()}.${CHANCE.word()}.${CHANCE.letter()}`,
-        `${CHANCE.word()}.${CHANCE.word()}.${CHANCE.word()}`,
-      ];
-      const validSubstrings = validStrings.map(
-        v => `text with valid three word address: ${v}`
-      );
-
       validStrings.forEach(validString => {
-        it(`should return a match if "${validString}" is provided`, async () => {
-          client.findPossible3wa(validString).should.containEql(validString);
-        });
-      });
-
-      validSubstrings.forEach(substring => {
-        it(`should return a match if "${substring}" is provided`, async () => {
-          client
-            .findPossible3wa(substring)
-            .every(res => validStrings.includes(res))
-            .should.be.true();
+        it(`should return true if "${validString}" is provided`, async () => {
+          client.isPossible3wa(validString).should.be.true();
         });
       });
     });
