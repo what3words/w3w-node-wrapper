@@ -224,7 +224,7 @@ export class AutosuggestClient extends ApiClient<
    * @since 5.1.1
    */
   public findPossible3wa(text: string): string[] {
-    return text.match(W3W_POSSIBLE_REGEX) || [];
+    return text.match(W3W_REGEX) || [];
   }
 
   /**
@@ -234,7 +234,7 @@ export class AutosuggestClient extends ApiClient<
    * @since 5.1.1
    */
   public isPossible3wa(text: string): boolean {
-    return W3W_REGEX.test(text);
+    return W3W_POSSIBLE_REGEX.test(text);
   }
 
   /**
