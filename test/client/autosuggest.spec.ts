@@ -425,111 +425,179 @@ describe('Autosuggest Client', () => {
       .calledOnceWith(transportArguments)
       .should.be.equal(true, 'transport arguments do not match');
   });
-  context(
-    'should call /autosuggest-selection with initial request options override',
-    () => {
-      const input = `${CHANCE.word()}.${CHANCE.word()}.${CHANCE.letter()}`;
-      const nResults = CHANCE.natural();
-      const nFocusResults = CHANCE.natural();
-      const focus = generateCoordinate();
-      const clipToBoundingBox = {
-        southwest: { lat: 71.2, lng: -0.123 },
-        northeast: { lat: 91, lng: -0.12 },
+  describe('should call /autosuggest-selection with initial request options override', () => {
+    const input = `${CHANCE.word()}.${CHANCE.word()}.${CHANCE.letter()}`;
+    const nResults = CHANCE.natural();
+    const nFocusResults = CHANCE.natural();
+    const focus = generateCoordinate();
+    const clipToBoundingBox = {
+      southwest: { lat: 71.2, lng: -0.123 },
+      northeast: { lat: 91, lng: -0.12 },
+    };
+    const clipToCircle = {
+      center: generateCoordinate(),
+      radius: CHANCE.natural(),
+    };
+    const clipToCountry = [CHANCE.locale()];
+    const startEndCoordinate = generateCoordinate();
+    const clipToPolygon = [
+      startEndCoordinate,
+      generateCoordinate(),
+      generateCoordinate(),
+      generateCoordinate(),
+      startEndCoordinate,
+    ];
+    const language = CHANCE.locale();
+    const preferLand = CHANCE.bool();
+    const selected = generateAutosuggestSuggestion();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let transportArguments: { [key: string]: any };
+
+    beforeEach(() => {
+      transportArguments = {
+        method: 'get',
+        host: `${host.replace(/\/$/, '')}/${apiVersion}`,
+        url: '/autosuggest-selection',
+        query: {
+          key: apiKey,
+          'raw-input': input,
+          selection: selected.words,
+          rank: `${selected.rank}`,
+          'n-results': `${nResults}`,
+          focus: `${focus.lat},${focus.lng}`,
+          'n-focus-results': `${nFocusResults}`,
+          'clip-to-bounding-box': `${clipToBoundingBox.southwest.lat},${clipToBoundingBox.southwest.lng},${clipToBoundingBox.northeast.lat},${clipToBoundingBox.northeast.lng}`,
+          'clip-to-circle': `${clipToCircle.center.lat},${clipToCircle.center.lng},${clipToCircle.radius}`,
+          'clip-to-country': clipToCountry.join(','),
+          'clip-to-polygon': clipToPolygon
+            .map(coord => `${coord.lat},${coord.lng}`)
+            .join(','),
+          language,
+          'prefer-land': `${preferLand}`,
+        },
+        headers: { 'X-Api-Key': apiKey, ...HEADERS },
+        body: null,
       };
-      const clipToCircle = {
-        center: generateCoordinate(),
-        radius: CHANCE.natural(),
-      };
-      const clipToCountry = [CHANCE.locale()];
-      const startEndCoordinate = generateCoordinate();
-      const clipToPolygon = [
-        startEndCoordinate,
-        generateCoordinate(),
-        generateCoordinate(),
-        generateCoordinate(),
-        startEndCoordinate,
+    });
+
+    it('text input type', async () => {
+      const inputType = AutosuggestInputType.Text;
+      transportArguments.query['input-type'] = inputType;
+      transportArguments.query['source-api'] = 'text';
+
+      await client
+        .onSelected(selected, {
+          input,
+          inputType,
+          nResults,
+          nFocusResults,
+          focus,
+          clipToBoundingBox,
+          clipToCircle,
+          clipToCountry,
+          clipToPolygon,
+          language,
+          preferLand,
+        })
+        .should.resolvedWith(undefined);
+      transportSpy
+        .calledOnceWith(transportArguments)
+        .should.be.equal(true, 'transport arguments do not match');
+    });
+    it('voice input type', async () => {
+      const inputType = AutosuggestInputType.GenericVoice;
+      transportArguments.query['input-type'] = inputType;
+      transportArguments.query['source-api'] = 'voice';
+
+      await client
+        .onSelected(selected, {
+          input,
+          inputType,
+          nResults,
+          nFocusResults,
+          focus,
+          clipToBoundingBox,
+          clipToCircle,
+          clipToCountry,
+          clipToPolygon,
+          language,
+          preferLand,
+        })
+        .should.resolvedWith(undefined);
+      transportSpy
+        .calledOnceWith(transportArguments)
+        .should.be.equal(true, 'transport arguments do not match');
+    });
+  });
+  describe('findPossible3wa', () => {
+    it('should return an empty array if empty string is provided', async () => {
+      client.findPossible3wa('').should.be.empty();
+    });
+
+    describe('invalid value', () => {
+      const invalidStrings = [
+        CHANCE.letter(),
+        CHANCE.word(),
+        `${CHANCE.integer()}`,
+        `${CHANCE.word()}.${CHANCE.letter()}`,
+        `${CHANCE.word()}.${CHANCE.integer()}`,
+        `${CHANCE.word()}.${CHANCE.word()}.${CHANCE.integer()}`,
+        // word;a
+        `${CHANCE.word()}${CHANCE.character({
+          symbols: true,
+        })}${CHANCE.letter()}`,
+        // word;1
+        `${CHANCE.word()}${CHANCE.character({
+          symbols: true,
+        })}${CHANCE.integer()}`,
+        // word?word2;1
+        `${CHANCE.word()}${CHANCE.character({
+          symbols: true,
+        })}${CHANCE.word()}${CHANCE.character({
+          symbols: true,
+        })}${CHANCE.integer()}`,
       ];
-      const language = CHANCE.locale();
-      const preferLand = CHANCE.bool();
-      const selected = generateAutosuggestSuggestion();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let transportArguments: { [key: string]: any };
+      const invalidSubstrings = invalidStrings.map(
+        v => `text with invalid three word address: ${v}`
+      );
 
-      beforeEach(() => {
-        transportArguments = {
-          method: 'get',
-          host: `${host.replace(/\/$/, '')}/${apiVersion}`,
-          url: '/autosuggest-selection',
-          query: {
-            key: apiKey,
-            'raw-input': input,
-            selection: selected.words,
-            rank: `${selected.rank}`,
-            'n-results': `${nResults}`,
-            focus: `${focus.lat},${focus.lng}`,
-            'n-focus-results': `${nFocusResults}`,
-            'clip-to-bounding-box': `${clipToBoundingBox.southwest.lat},${clipToBoundingBox.southwest.lng},${clipToBoundingBox.northeast.lat},${clipToBoundingBox.northeast.lng}`,
-            'clip-to-circle': `${clipToCircle.center.lat},${clipToCircle.center.lng},${clipToCircle.radius}`,
-            'clip-to-country': clipToCountry.join(','),
-            'clip-to-polygon': clipToPolygon
-              .map(coord => `${coord.lat},${coord.lng}`)
-              .join(','),
-            language,
-            'prefer-land': `${preferLand}`,
-          },
-          headers: { 'X-Api-Key': apiKey, ...HEADERS },
-          body: null,
-        };
+      invalidStrings.forEach(invalidString => {
+        it(`should return an empty array if "${invalidString}" is provided`, async () => {
+          client.findPossible3wa(invalidString).should.be.empty();
+        });
       });
 
-      it('text input type', async () => {
-        const inputType = AutosuggestInputType.Text;
-        transportArguments.query['input-type'] = inputType;
-        transportArguments.query['source-api'] = 'text';
-
-        await client
-          .onSelected(selected, {
-            input,
-            inputType,
-            nResults,
-            nFocusResults,
-            focus,
-            clipToBoundingBox,
-            clipToCircle,
-            clipToCountry,
-            clipToPolygon,
-            language,
-            preferLand,
-          })
-          .should.resolvedWith(undefined);
-        transportSpy
-          .calledOnceWith(transportArguments)
-          .should.be.equal(true, 'transport arguments do not match');
+      invalidSubstrings.forEach(invalidSubstring => {
+        it(`should return an empty array if "${invalidSubstring}" is provided`, async () => {
+          client.findPossible3wa(invalidSubstring).should.be.empty();
+        });
       });
-      it('voice input type', async () => {
-        const inputType = AutosuggestInputType.GenericVoice;
-        transportArguments.query['input-type'] = inputType;
-        transportArguments.query['source-api'] = 'voice';
+    });
 
-        await client
-          .onSelected(selected, {
-            input,
-            inputType,
-            nResults,
-            nFocusResults,
-            focus,
-            clipToBoundingBox,
-            clipToCircle,
-            clipToCountry,
-            clipToPolygon,
-            language,
-            preferLand,
-          })
-          .should.resolvedWith(undefined);
-        transportSpy
-          .calledOnceWith(transportArguments)
-          .should.be.equal(true, 'transport arguments do not match');
+    describe('valid value', () => {
+      const validStrings = [
+        `${CHANCE.word()}.${CHANCE.word()}.${CHANCE.letter()}`,
+        `${CHANCE.word()}.${CHANCE.word()}.${CHANCE.letter()}`,
+        `${CHANCE.word()}.${CHANCE.word()}.${CHANCE.word()}`,
+      ];
+      const validSubstrings = validStrings.map(
+        v => `text with valid three word address: ${v}`
+      );
+
+      validStrings.forEach(validString => {
+        it(`should return a match if "${validString}" is provided`, async () => {
+          client.findPossible3wa(validString).should.containEql(validString);
+        });
       });
-    }
-  );
+
+      validSubstrings.forEach(substring => {
+        it(`should return a match if "${substring}" is provided`, async () => {
+          client
+            .findPossible3wa(substring)
+            .every(res => validStrings.includes(res))
+            .should.be.true();
+        });
+      });
+    });
+  });
 });
