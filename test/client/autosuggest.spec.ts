@@ -95,11 +95,11 @@ describe('Autosuggest Client', () => {
       client = AutosuggestClient.init(apiKey, config, transport);
     });
 
-    it('should return the api key when apiKey function is called with no parameter', () => {
+    it('should return the api key when called with no parameter', () => {
       client.apiKey().should.be.equal(apiKey, 'api key does not match');
     });
 
-    it('should set the api key when apiKey function is called with value', () => {
+    it('should set the api key when called with value', () => {
       const _apiKey = CHANCE.string({ length: 8 });
       client
         .apiKey()
@@ -137,11 +137,11 @@ describe('Autosuggest Client', () => {
       client = AutosuggestClient.init(apiKey, config, transport);
     });
 
-    it('should return the config when config function is called with no parameter', () => {
+    it('should return the config when called with no parameter', () => {
       client.config().should.be.eql(config, 'config does not match');
     });
 
-    it('should set the config when config function is called with value', () => {
+    it('should set the config when called with value', () => {
       const defaultConfig = { host, apiVersion, headers: {} };
       const config = {
         host: CHANCE.url(),
@@ -340,7 +340,7 @@ describe('Autosuggest Client', () => {
       client = AutosuggestClient.init(apiKey, config, transport);
     });
 
-    it('should call /autosuggest when run is called', async () => {
+    it('should call /autosuggest', async () => {
       const input = `${CHANCE.word()}.${CHANCE.word()}.${CHANCE.letter()}`;
       const inputType = AutosuggestInputType.Text;
       const nResults = CHANCE.natural();
