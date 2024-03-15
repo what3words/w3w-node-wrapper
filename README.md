@@ -374,6 +374,48 @@ client
 
 > **The requested box must not exceed 4km from corner to corner, or a BadBoundingBoxTooBig error will be returned. Latitudes must be >= -90 and <= 90, but longitudes are allowed to wrap around 180. To specify a bounding-box that crosses the anti-meridian, use longitude greater than 180.**
 
+### Input validation
+
+```typescript
+import {
+  GridSectionClient,
+  GridSectionOptions,
+  FeatureCollectionResponse,
+  GridSectionGeoJsonResponse,
+  GridSectionJsonResponse,
+} from '../src';
+
+const API_KEY = '<YOUR_API_KEY>';
+const client: GridSectionClient = GridSectionClient.init(API_KEY);
+const options: GridSectionOptions = {
+  boundingBox: {
+    southwest: { lat: 52.208867, lng: 0.11754 },
+    northeast: { lat: 52.207988, lng: 0.116126 },
+  },
+};
+
+// Search a string for any character sequences that could be three word addresses
+client.findPossible3wa('filled.count.soap'); // returns ['filled.count.soap']
+client.findPossible3wa(
+  'this string contains a three word address substring: filled.count.soap'
+); // returns ['filled.count.soap']
+client.findPossible3wa('filled.count'); // returns []
+
+// Search a string for any character sequences that could be three word addresses
+client.isPossible3wa('filled.count.soap'); // returns true
+client.isPossible3wa(
+  'this string contains a three word address substring: filled.count.soap'
+); // returns false
+client.isPossible3wa('filled.count'); // returns false
+
+// Search a string for any character sequences that could be three word addresses
+client.isValid3wa('filled.count.soap'); // returns Promise<true>
+client.isValid3wa(
+  'this string contains a three word address substring: filled.count.soap'
+); // returns Promise<false>
+client.isValid3wa('filled.count.negative'); // returns Promise<false>
+```
+
 ##
 
 [npm]: https://www.npmjs.com/
