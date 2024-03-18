@@ -18,7 +18,7 @@ export const VERSION = '__VERSION__';
 export const HEADERS = {
   'X-W3W-Wrapper':
     typeof window !== 'undefined'
-      ? `what3words-JavaScript/${VERSION} (${window.navigator.userAgent})`
+      ? `what3words-JavaScript/${VERSION}`
       : `what3words-Node/${VERSION} (Node ${process.version}; ${getPlatform(
           platform()
         )} ${release()})`,
