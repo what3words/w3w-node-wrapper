@@ -1,3 +1,4 @@
+import { v4 as uuid } from 'uuid';
 import { ApiClientConfiguration, ApiVersion } from './client.model';
 import {
   errorHandler,
@@ -111,6 +112,7 @@ export abstract class ApiClient<
         key: this._apiKey,
       },
       headers: {
+        'X-Correlation-Id': uuid(),
         ...(params?.headers || {}),
         'X-Api-Key': this._apiKey,
         ...HEADERS,
