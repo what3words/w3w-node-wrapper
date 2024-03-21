@@ -4,7 +4,10 @@ import { ClientRequest } from '../client';
 import { errorHandler } from './error';
 
 export function axiosTransport(): Transport {
+  // axios v0.x.x returns a function when imported via require (which is the expected behaviour)
+  // while axios v1.x.x returns an object when imported via require
   const axios = require('axios');
+  const transporter = axios.default || axios;
   return async function axiosTransport<T>(
     req: ClientRequest
   ): Promise<TransportResponse<T>> {
@@ -16,7 +19,7 @@ export function axiosTransport(): Transport {
       url: req.url,
       params,
     };
-    return await axios(options)
+    return await transporter(options)
       .then((res: AxiosResponse) => {
         const response = errorHandler({
           status: res.status,

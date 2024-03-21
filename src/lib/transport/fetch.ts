@@ -4,7 +4,7 @@ import { errorHandler } from './error';
 import { searchParams } from '../serializer';
 
 export function fetchTransport(): Transport {
-  const fetch = require('cross-fetch');
+  const transporter = require('cross-fetch');
   return async function fetchTransport<T>(
     req: ClientRequest
   ): Promise<TransportResponse<T>> {
@@ -13,7 +13,7 @@ export function fetchTransport(): Transport {
     if (req.format) query.format = req.format;
     const queryParams = searchParams(query);
     const fullPath = `${url}${queryParams.length > 0 ? `?${queryParams}` : ''}`;
-    const response = await fetch(fullPath, {
+    const response = await transporter(fullPath, {
       method: req.method,
       headers: req.headers,
       body: req.body ? JSON.stringify(req.body) : null,
