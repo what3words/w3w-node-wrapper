@@ -2,13 +2,11 @@ version: 2.1
 
 orbs:
   node: circleci/node@2.1.0
-  slack: circleci/slack@3.4.2
-  aws-s3: circleci/aws-s3@1.0.15
 
 executors:
   build-executor:
     docker:
-      - image: circleci/node:lts
+      - image: cimg/node:18.20.2
     resource_class: small
 
 commands:
@@ -32,13 +30,6 @@ commands:
     steps:
       - add_ssh_keys:
           fingerprints: << parameters.fingerprint >>
-
-  jobstatus:
-    description: "Send customised status messages to Slack"
-    steps:
-      - slack/status:
-          failure_message: ':red_circle: ${CIRCLE_JOB} job of pipeline ${PIPELINE_NUM} for ${CIRCLE_TAG:-$CIRCLE_BRANCH} by ${CIRCLE_USERNAME} has failed'
-          success_message: ':bananadance: ${CIRCLE_JOB} job of pipeline ${PIPELINE_NUM} for ${CIRCLE_TAG:-$CIRCLE_BRANCH} by ${CIRCLE_USERNAME} has passed'
 
   git_config:
     parameters:
