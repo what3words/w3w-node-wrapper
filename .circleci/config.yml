@@ -6,7 +6,7 @@ orbs:
 executors:
   build-executor:
     docker:
-      - image: cimg/node:18.20.2
+      - image: cimg/node:18.18.2
     resource_class: small
 
 commands:
@@ -73,6 +73,7 @@ jobs:
       - setup_environment
       - node/install-packages
       - run: npm run coverage
+      - run: npm run coverage:vitest
       - run:
           name: Inject version constant
           command: sed -ie "s/__VERSION__/${VERSION}/g" src/lib/constants.ts
@@ -87,7 +88,6 @@ jobs:
             - ./package-lock.json
             - ./package.json
       # - jobstatus
-
   publish:
     executor: build-executor
     steps:
