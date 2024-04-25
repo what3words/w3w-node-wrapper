@@ -1,6 +1,14 @@
 import { defineConfig } from 'vitest/config';
 
-const exclude = ['test/**', 'tests/mocks/**', 'docs/**', '.prettierrc.js'];
+const exclude = [
+  'test/**',
+  'tests/mocks/**',
+  'docs/**',
+  '.prettierrc.js',
+  'coverage/**',
+];
+
+const path = (path: string) => new URL(path, import.meta.url).pathname;
 
 export default defineConfig({
   test: {
@@ -10,15 +18,14 @@ export default defineConfig({
     globals: true,
     coverage: {
       exclude,
-      reportsDirectory: new URL('./coverage-vitest/', import.meta.url).pathname,
+      reportsDirectory: path('./coverage-vitest/'),
     },
     alias: {
-      '@/': new URL('./src/', import.meta.url).pathname,
-      '@utils/': new URL('./tests/utils/', import.meta.url).pathname,
+      '@/': path('./src/'),
+      '@utils/': path('./tests/utils/'),
     },
     outputFile: {
-      junit: new URL('./coverage/junit-vitest-report.xml', import.meta.url)
-        .pathname,
+      junit: path('./coverage/junit-vitest-report.xml'),
     },
   },
 });
