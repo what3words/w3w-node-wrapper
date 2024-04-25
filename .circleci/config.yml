@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  node: circleci/node@2.1.0
+  node: circleci/node@5.2.0
 
 executors:
   build-executor:
@@ -72,6 +72,7 @@ jobs:
       - checkout
       - setup_environment
       - node/install-packages
+        # - node-version: 18.18.2
       - run: npm run coverage
       - run: npm run coverage:vitest
       - run:
@@ -115,7 +116,6 @@ jobs:
       - git_push_tags
 
 workflows:
-  version: 2
   build-and-deploy:
     jobs:
       - build_test

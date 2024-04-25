@@ -4,20 +4,21 @@ const exclude = ['test/**', 'tests/mocks/**', 'docs/**', '.prettierrc.js'];
 
 export default defineConfig({
   test: {
-    reporters: ['default', ['junit', { suiteName: 'UI tests' }]],
+    reporters: ['default', 'junit'],
     exclude,
     include: ['tests/**/*.spec.ts'],
     globals: true,
     coverage: {
       // reporter: ['html'],
       exclude,
-      reportsDirectory: './coverage-vitest',
+      reportsDirectory: new URL('./coverage-vitest/', import.meta.url).pathname,
     },
     alias: {
       '@/': new URL('./src/', import.meta.url).pathname,
     },
     outputFile: {
-      junit: './coverage-vitest/junit-report.xml',
+      junit: new URL('./coverage/junit-vitest-report.xml', import.meta.url)
+        .pathname,
     },
   },
 });
