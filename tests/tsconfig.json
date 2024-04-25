@@ -4,7 +4,7 @@
     "useUnknownInCatchVariables": false,
     "paths": {
       "@/*": ["*"],
-      "@mocks/*": ["../tests/mocks/*"]
+      "@utils/*": ["../tests/utils/*"]
     },
     "types": ["vitest/globals", "node"]
   },

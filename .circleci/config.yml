@@ -72,7 +72,6 @@ jobs:
       - checkout
       - setup_environment
       - node/install-packages
-        # - node-version: 18.18.2
       - run: npm run coverage
       - run: npm run coverage:vitest
       - run:
