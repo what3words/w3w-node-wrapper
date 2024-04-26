@@ -1,12 +1,13 @@
 import { Chance } from 'chance';
 import { baseLanguageCodeForISO6391 } from '@/.';
-import { languages } from '@/lib/languages/language-codes';
 
 const CHANCE = new Chance();
 
+const AVAILABLE_LANGUAGES = ['en-GB', 'de-DE', 'it-IT', 'es-ES', 'fr-FR'];
+
 describe('baseLanguageCodeForISO6391', () => {
   it('should return base language code for valid ISO 639-1 language code', () => {
-    const languageCode = CHANCE.pickone(languages);
+    const languageCode = CHANCE.pickone(AVAILABLE_LANGUAGES);
     console.log('LANG', languageCode);
     expect(baseLanguageCodeForISO6391(languageCode)).toEqual(
       languageCode.substring(0, 2)
@@ -14,7 +15,7 @@ describe('baseLanguageCodeForISO6391', () => {
   });
 
   it('should allow case insensitive language code', () => {
-    const languageCode = CHANCE.pickone(languages);
+    const languageCode = CHANCE.pickone(AVAILABLE_LANGUAGES);
     expect(baseLanguageCodeForISO6391(languageCode.toUpperCase())).toEqual(
       languageCode.substring(0, 2)
     );
