@@ -20,14 +20,14 @@ export default defineConfig({
     globals: true,
     coverage: {
       exclude,
-      reportsDirectory: path('./coverage-vitest/'),
+      reportsDirectory: path('./coverage/'),
     },
     alias: {
       '@/': path('./src/'),
       '@utils/': path('./tests/utils/'),
     },
     outputFile: {
-      junit: path('./coverage/junit-vitest-report.xml'),
+      junit: path('./coverage/junit-report.xml'),
     },
   },
 });

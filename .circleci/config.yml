@@ -73,7 +73,6 @@ jobs:
       - setup_environment
       - node/install-packages
       - run: npm run coverage
-      - run: npm run coverage:vitest
       - run:
           name: Inject version constant
           command: sed -ie "s/__VERSION__/${VERSION}/g" src/lib/constants.ts

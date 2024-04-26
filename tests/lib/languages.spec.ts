@@ -8,7 +8,6 @@ const AVAILABLE_LANGUAGES = ['en-GB', 'de-DE', 'it-IT', 'es-ES', 'fr-FR'];
 describe('baseLanguageCodeForISO6391', () => {
   it('should return base language code for valid ISO 639-1 language code', () => {
     const languageCode = CHANCE.pickone(AVAILABLE_LANGUAGES);
-    console.log('LANG', languageCode);
     expect(baseLanguageCodeForISO6391(languageCode)).toEqual(
       languageCode.substring(0, 2)
     );
