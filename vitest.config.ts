@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitest/config';
+import commonjs from 'vite-plugin-commonjs';
 
 const exclude = [
   'test/**',
@@ -11,6 +12,7 @@ const exclude = [
 const path = (path: string) => new URL(path, import.meta.url).pathname;
 
 export default defineConfig({
+  plugins: [commonjs()],
   test: {
     reporters: ['junit', 'verbose'],
     exclude,
