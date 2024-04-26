@@ -78,7 +78,7 @@ jobs:
           command: sed -ie "s/__VERSION__/${VERSION}/g" src/lib/constants.ts
       - run: npm run compile
       - store_test_results:
-          path: ./coverage
+          path: ./coverage/junit.xml
       - persist_to_workspace:
           root: .
           paths:
