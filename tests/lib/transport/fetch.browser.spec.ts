@@ -1,12 +1,12 @@
-import 'should';
 import nock from 'nock';
 import { Chance } from 'chance';
-import { fetchTransport, HEADERS, searchParams } from '../../../src';
+import { useEffect } from 'react';
+import { renderComponent, setup } from '@utils/setup';
+import { fetchTransport, HEADERS, searchParams } from '@/.';
 
 const CHANCE = new Chance();
-const MOCK_ERROR_RESPONSE = { response: 'My custom error response message' };
 
-describe('Fetch Transport - Node', () => {
+describe('Fetch Transport - Browser ', () => {
   const query = {
     example: 'params',
     random: 'value',
@@ -32,6 +32,7 @@ describe('Fetch Transport - Node', () => {
       },
       body: null,
     };
+    setup();
   });
 
   afterEach(() => {
@@ -45,7 +46,17 @@ describe('Fetch Transport - Node', () => {
       .reply(200, response, {
         'Content-Type': 'application/json;charset=utf-8',
       });
-    (await fetchTransport()(request)).should.be.eql({
+
+    await renderComponent(res => {
+      useEffect(() => {
+        fetchTransport()(request).then(result => {
+          window.result = result;
+          res(null);
+        });
+      }, []);
+    });
+
+    expect(window.result).toEqual({
       status: 200,
       statusText: 'OK',
       body: response,
@@ -58,7 +69,17 @@ describe('Fetch Transport - Node', () => {
     nock(host)
       [method](`${url}?${searchParams(request.query)}`)
       .reply(200, response);
-    (await fetchTransport()(request)).should.be.eql({
+
+    await renderComponent(res => {
+      useEffect(() => {
+        fetchTransport()(request).then(result => {
+          window.result = result;
+          res(null);
+        });
+      }, []);
+    });
+
+    expect(window.result).toEqual({
       status: 200,
       statusText: 'OK',
       body: response,
@@ -70,7 +91,17 @@ describe('Fetch Transport - Node', () => {
     const response = CHANCE.sentence();
     delete request.query;
     nock(host)[method](url).reply(200, response);
-    (await fetchTransport()(request)).should.be.eql({
+
+    await renderComponent(res => {
+      useEffect(() => {
+        fetchTransport()(request).then(result => {
+          window.result = result;
+          res(null);
+        });
+      }, []);
+    });
+
+    expect(window.result).toEqual({
       status: 200,
       statusText: 'OK',
       body: response,
@@ -93,15 +124,21 @@ describe('Fetch Transport - Node', () => {
       it(`should handle ${status} errors`, async () => {
         nock(host)
           [method](`${url}?${searchParams(query)}`)
-          .reply(status, MOCK_ERROR_RESPONSE);
+          .reply(status);
 
-        try {
-          (await fetchTransport()(request)).should.be.eql(MOCK_ERROR_RESPONSE);
-        } catch (err: any) {
-          err.should.have.properties(['message', 'status']);
-          err.message.should.be.equal(message);
-          err.status.should.be.equal(status);
-        }
+        await renderComponent(res => {
+          useEffect(() => {
+            fetchTransport()(request).catch(error => {
+              window.result = {
+                message: error.message,
+                status: error.status,
+              };
+              res(null);
+            });
+          }, []);
+        });
+
+        expect(window.result).toEqual({ status, message });
       });
     });
   });

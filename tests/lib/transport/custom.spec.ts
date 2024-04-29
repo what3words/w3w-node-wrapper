@@ -1,4 +1,3 @@
-import 'should';
 import nock from 'nock';
 import Chance from 'chance';
 import what3words, {
@@ -7,7 +6,7 @@ import what3words, {
   HEADERS,
   What3wordsService,
   ApiVersion,
-} from '../../../src';
+} from '@/.';
 import superagent from 'superagent';
 
 function customTransport<ResponseType>(
@@ -94,7 +93,7 @@ describe('Custom Transport', () => {
         'Content-Type': 'application/json;charset=utf-8',
       });
 
-    (await customTransport(request)).should.be.eql({
+    expect(await customTransport(request)).toEqual({
       status: 200,
       statusText: JSON.stringify(MOCK_RESPONSE),
       headers: { 'content-type': 'application/json;charset=utf-8' },
@@ -108,7 +107,7 @@ describe('Custom Transport', () => {
       .query(request.query)
       .reply(500, MOCK_ERROR_RESPONSE);
 
-    (await customTransport(request)).should.be.eql({
+    expect(await customTransport(request)).toEqual({
       status: 500,
       statusText: MOCK_ERROR_RESPONSE,
       headers: {},
@@ -134,13 +133,11 @@ describe('Custom Transport', () => {
         'Content-Type': 'application/json;charset=utf-8',
       });
 
-    const result = await service.autosuggest({ input });
-    result.should.be.eql(mock_response);
+    expect(await service.autosuggest({ input })).toEqual(mock_response);
   });
 
   it('should call available-languages and return results', async () => {
     const mock_response = { languages: [] };
-
     nock(`${host}`, {
       reqheaders: {
         'X-Api-Key': api_key,
@@ -154,8 +151,7 @@ describe('Custom Transport', () => {
         'Content-Type': 'application/json;charset=utf-8',
       });
 
-    const result = await service.availableLanguages();
-    result.should.be.eql(mock_response);
+    expect(await service.availableLanguages()).toEqual(mock_response);
   });
 
   it('should call convert-to-3wa and return json results', async () => {
@@ -185,7 +181,6 @@ describe('Custom Transport', () => {
         'Content-Type': 'application/json;charset=utf-8',
       });
 
-    const result = await service.convertTo3wa(options);
-    result.should.be.eql(mock_response);
+    expect(await service.convertTo3wa(options)).toEqual(mock_response);
   });
 });

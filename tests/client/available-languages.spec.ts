@@ -1,5 +1,3 @@
-import 'should';
-import { spy, SinonSpy } from 'sinon';
 import { Chance } from 'chance';
 import {
   ApiClientConfiguration,
@@ -7,7 +5,8 @@ import {
   AvailableLanguagesClient,
   HEADERS,
   Transport,
-} from '../../src';
+} from '@/.';
+import type { Mock } from 'vitest';
 
 const CHANCE = new Chance();
 
@@ -16,7 +15,7 @@ describe('Available Languages Client', () => {
   let apiVersion: ApiVersion;
   let host: string;
   let config: ApiClientConfiguration;
-  let transportSpy: SinonSpy;
+  let transportSpy: Mock;
   let transport: Transport;
   let client: AvailableLanguagesClient;
 
@@ -25,7 +24,7 @@ describe('Available Languages Client', () => {
     apiVersion = ApiVersion.Version1;
     host = CHANCE.url({ path: '' });
     config = { host, apiVersion };
-    transportSpy = spy();
+    transportSpy = vi.fn();
     transport = async (...args) => {
       transportSpy(...args);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -35,37 +34,31 @@ describe('Available Languages Client', () => {
   });
 
   it('should return instantiate an Available Languages Client instance', () => {
-    client.should.be.instanceOf(AvailableLanguagesClient);
-    client.should.have.properties([
-      '_apiKey',
-      'apiKey',
-      '_config',
-      'config',
-      'run',
-      'transport',
-    ]);
-    client['_apiKey'].should.be
-      .String()
-      .and.equal(apiKey, 'api key does not match');
-    client['_config'].should.be
-      .Object()
-      .and.eql(config, 'config does not match');
-    client.apiKey.should.be.Function();
-    client.config.should.be.Function();
+    expect(client).toBeInstanceOf(AvailableLanguagesClient);
+    expect(client).toHaveProperty('_apiKey');
+    expect(client).toHaveProperty('apiKey');
+    expect(client).toHaveProperty('_config');
+    expect(client).toHaveProperty('config');
+    expect(client).toHaveProperty('run');
+    expect(client).toHaveProperty('transport');
+    expectTypeOf(client['_apiKey']).toBeString();
+    expect(client['_apiKey']).toEqual(apiKey);
+    expectTypeOf(client['_config']).toBeObject();
+    expect(client['_config']).toEqual(config);
+    expectTypeOf(client.apiKey).toBeFunction();
+    expectTypeOf(client.config).toBeFunction();
   });
   it('should return the api key when apiKey function is called with no parameter', () => {
-    client.apiKey().should.be.equal(apiKey, 'api key does not match');
+    expect(client.apiKey()).toEqual(apiKey);
   });
   it('should set the api key when apiKey function is called with value', () => {
     const _apiKey = CHANCE.string({ length: 8 });
-    client
-      .apiKey()
-      .should.be.equal(apiKey, 'initial api key should match new value');
-    client.apiKey(_apiKey).should.be.equal(client, 'api key does not match');
-    client.apiKey().should.be.equal(_apiKey, 'api key should match new value');
+    expect(client.apiKey()).toEqual(apiKey);
+    expect(client.apiKey(_apiKey)).toEqual(client);
+    expect(client.apiKey()).toEqual(_apiKey);
   });
   it('should return the config when config function is called with no parameter', () => {
-    client.config().should.be.eql(config, 'config does not match');
+    expect(client.config()).toEqual(config);
   });
   it('should set the config when config function is called with value', () => {
     const defaultConfig = { host, apiVersion };
@@ -74,11 +67,9 @@ describe('Available Languages Client', () => {
       apiVersion: CHANCE.pickone([ApiVersion.Version2, ApiVersion.Version3]),
       headers: {},
     };
-    client
-      .config()
-      .should.be.eql(defaultConfig, 'default config does not match');
-    client.config(config).should.be.eql(client, 'client instance not returned');
-    client.config().should.be.eql(config, 'config should match new value');
+    expect(client.config()).toEqual(defaultConfig);
+    expect(client.config(config)).toEqual(client);
+    expect(client.config()).toEqual(config);
   });
   it('should call /available-languages when run is called', async () => {
     const transportArguments = {
@@ -90,8 +81,6 @@ describe('Available Languages Client', () => {
       body: null,
     };
     await client.run();
-    transportSpy
-      .calledOnceWith(transportArguments)
-      .should.be.equal(true, 'transport arguments do not match');
+    expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
   });
 });

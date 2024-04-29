@@ -211,4 +211,6 @@ $RECYCLE.BIN/
 # Snyk cacke
 .dccache
 
+# What3words
 pacts/
+coverage*/

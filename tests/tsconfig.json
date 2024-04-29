@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "useUnknownInCatchVariables": false,
+    "paths": {
+      "@/*": ["*"],
+      "@utils/*": ["../tests/utils/*"]
+    },
+    "types": ["vitest/globals", "node"]
+  },
+  "include": ["**/*.spec.ts"]
+}
