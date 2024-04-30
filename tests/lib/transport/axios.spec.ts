@@ -1,8 +1,6 @@
-import 'should';
 import nock from 'nock';
 import { Chance } from 'chance';
-import { axiosTransport, HEADERS, searchParams } from '../../../src';
-import { AxiosHeaders } from 'axios';
+import { axiosTransport, HEADERS, searchParams } from '@/.';
 
 const CHANCE = new Chance();
 const MOCK_RESPONSE = { foo: 'bar' };
@@ -46,12 +44,13 @@ describe('Axios Transport', () => {
       .reply(200, MOCK_RESPONSE, {
         'Content-Type': 'application/json;charset=utf-8',
       });
-    (await axiosTransport()(request)).should.be.eql({
+
+    expect(await axiosTransport()(request)).toMatchObject({
       status: 200,
       statusText: null,
-      headers: new AxiosHeaders({
+      headers: {
         'content-type': 'application/json;charset=utf-8',
-      }),
+      },
       body: MOCK_RESPONSE,
     });
   });
@@ -74,11 +73,12 @@ describe('Axios Transport', () => {
           .reply(status, MOCK_ERROR_RESPONSE);
 
         try {
-          (await axiosTransport()(request)).should.be.eql(MOCK_ERROR_RESPONSE);
-        } catch (err: any) {
-          err.should.have.properties(['message', 'status']);
-          err.message.should.be.equal(message);
-          err.status.should.be.equal(status);
+          expect(await axiosTransport()(request)).toEqual(MOCK_ERROR_RESPONSE);
+        } catch (err) {
+          expect(err).toHaveProperty('message');
+          expect(err).toHaveProperty('status');
+          expect(err.message).toEqual(message);
+          expect(err.status).toEqual(status);
         }
       });
     });

@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@what3words/api": "../../../.."
+    "@what3words/api": "file:../../../.."
   },
   "devDependencies": {
     "esbuild": "^0.19.11",

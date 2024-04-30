@@ -1,4 +1,3 @@
-import 'should';
 import { Chance } from 'chance';
 import {
   searchParams,
@@ -6,8 +5,8 @@ import {
   boundsToString,
   arrayToString,
   getPlatform,
-} from '../../src';
-import { generateCoordinate } from '../fixtures';
+} from '@/.';
+import { generateCoordinate } from '@utils/fixtures';
 
 const CHANCE = new Chance();
 
@@ -18,7 +17,7 @@ describe('searchParams()', () => {
       bar: CHANCE.bool(),
       x: CHANCE.natural(),
     };
-    searchParams(params).should.be.equal(
+    expect(searchParams(params)).toEqual(
       `foo=${encodeURIComponent(params.foo)}&bar=${params.bar}&x=${params.x}`
     );
   });
@@ -28,7 +27,7 @@ describe('coordinateToString()', () => {
   it('should serialize coordinates to a string (ordered)', () => {
     const coordinates = generateCoordinate();
     const ordered = true;
-    coordinatesToString(coordinates, ordered).should.be.equal(
+    expect(coordinatesToString(coordinates, ordered)).toEqual(
       coordinates.lat < coordinates.lng
         ? `${coordinates.lng},${coordinates.lat}`
         : `${coordinates.lat},${coordinates.lng}`
@@ -37,14 +36,14 @@ describe('coordinateToString()', () => {
   it('should serialize coordinates to a string (ordered) lat < lng', () => {
     const coordinates = { lat: 1, lng: 10 };
     const ordered = true;
-    coordinatesToString(coordinates, ordered).should.be.equal(
+    expect(coordinatesToString(coordinates, ordered)).toEqual(
       `${coordinates.lng},${coordinates.lat}`
     );
   });
   it('should serialize coordinates to a string (unordered)', () => {
     const coordinates = generateCoordinate();
     const ordered = false;
-    coordinatesToString(coordinates, ordered).should.be.equal(
+    expect(coordinatesToString(coordinates, ordered)).toEqual(
       `${coordinates.lat},${coordinates.lng}`
     );
   });
@@ -53,26 +52,26 @@ describe('coordinateToString()', () => {
 describe('arrayToString()', () => {
   it('should serialize an array to string', () => {
     const array = [CHANCE.word(), CHANCE.letter(), CHANCE.natural()];
-    arrayToString(array).should.be.equal(`${array[0]},${array[1]},${array[2]}`);
+    expect(arrayToString(array)).toEqual(`${array[0]},${array[1]},${array[2]}`);
   });
 });
 
 describe('getPlatform()', () => {
   it('should serialize platform for darwin', () => {
     const platform = 'darwin';
-    getPlatform(platform).should.be.equal('Mac OS X');
+    expect(getPlatform(platform)).toEqual('Mac OS X');
   });
   it('should serialize platform for win32', () => {
     const platform = 'win32';
-    getPlatform(platform).should.be.equal('Windows');
+    expect(getPlatform(platform)).toEqual('Windows');
   });
   it('should serialize platform for linux', () => {
     const platform = 'linux';
-    getPlatform(platform).should.be.equal('Linux');
+    expect(getPlatform(platform)).toEqual('Linux');
   });
   it('should serialize platform for non-matched value', () => {
     const platform = CHANCE.word();
-    getPlatform(platform).should.be.equal('');
+    expect(getPlatform(platform)).toEqual('');
   });
 });
 
@@ -83,7 +82,7 @@ describe('boundsToString()', () => {
       northeast: generateCoordinate(),
     };
     const ordered = false;
-    boundsToString(bounds, ordered).should.be.equal(
+    expect(boundsToString(bounds, ordered)).toEqual(
       `${bounds.southwest.lat},${bounds.southwest.lng},${bounds.northeast.lat},${bounds.northeast.lng}`
     );
   });
@@ -93,7 +92,7 @@ describe('boundsToString()', () => {
       northeast: { lat: 12, lng: 4 },
     };
     const ordered = true;
-    boundsToString(bounds, ordered).should.be.equal(
+    expect(boundsToString(bounds, ordered)).toEqual(
       `${bounds.southwest.lng},${bounds.southwest.lat},${bounds.northeast.lat},${bounds.northeast.lng}`
     );
   });

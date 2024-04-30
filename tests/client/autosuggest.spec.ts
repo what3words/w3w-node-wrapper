@@ -1,5 +1,4 @@
-import 'should';
-import { spy, SinonSpy } from 'sinon';
+import { Mock } from 'vitest';
 import nock from 'nock';
 import { Chance } from 'chance';
 import {
@@ -9,9 +8,12 @@ import {
   AutosuggestInputType,
   HEADERS,
   Transport,
-} from '../../src';
-import { generateAutosuggestSuggestion, generateCoordinate } from '../fixtures';
-import { languages } from '../../src/lib/languages/language-codes';
+} from '@/.';
+import {
+  generateAutosuggestSuggestion,
+  generateCoordinate,
+} from '@utils/fixtures';
+import { languages } from '@/lib/languages/language-codes';
 
 const CHANCE = new Chance();
 
@@ -21,7 +23,7 @@ describe('Autosuggest Client', () => {
     let apiVersion: ApiVersion;
     let host: string;
     let config: ApiClientConfiguration;
-    let transportSpy: SinonSpy;
+    let transportSpy: Mock;
     let transport: Transport;
     let client: AutosuggestClient;
 
@@ -30,7 +32,7 @@ describe('Autosuggest Client', () => {
       apiVersion = ApiVersion.Version1;
       host = CHANCE.url({ path: '' });
       config = { host, apiVersion, headers: {} };
-      transportSpy = spy();
+      transportSpy = vi.fn();
       transport = async (...args) => {
         transportSpy(...args);
         return {
@@ -43,29 +45,24 @@ describe('Autosuggest Client', () => {
     });
 
     it('should instantiate an Autosuggest Client instance', () => {
-      client.should.be.instanceOf(AutosuggestClient);
-      client.should.have.properties([
-        '_apiKey',
-        'apiKey',
-        '_config',
-        'config',
-        'lastReqOpts',
-        'onSelected',
-        'run',
-        'transport',
-      ]);
-      client['_apiKey'].should.be
-        .String()
-        .and.equal(apiKey, 'api key does not match');
-      client['_config'].should.be
-        .Object()
-        .and.eql(config, 'config does not match');
-      client['lastReqOpts'].should.be
-        .Object()
-        .and.be.eql({ input: '' }, 'lastReqOpts does not match');
-      client.apiKey.should.be.Function();
-      client.config.should.be.Function();
-      client.onSelected.should.be.Function();
+      expect(client).toBeInstanceOf(AutosuggestClient);
+      expect(client).toHaveProperty('_apiKey');
+      expect(client).toHaveProperty('apiKey');
+      expect(client).toHaveProperty('_config');
+      expect(client).toHaveProperty('config');
+      expect(client).toHaveProperty('lastReqOpts');
+      expect(client).toHaveProperty('onSelected');
+      expect(client).toHaveProperty('run');
+      expect(client).toHaveProperty('transport');
+      expectTypeOf(client['_apiKey']).toBeString();
+      expect(client['_apiKey']).toEqual(apiKey);
+      expectTypeOf(client['_config']).toBeObject();
+      expect(client['_config']).toEqual(config);
+      expectTypeOf(client['lastReqOpts']).toBeObject();
+      expect(client['lastReqOpts']).toEqual({ input: '' });
+      expectTypeOf(client.apiKey).toBeFunction();
+      expectTypeOf(client.config).toBeFunction();
+      expectTypeOf(client.onSelected).toBeFunction();
     });
   });
 
@@ -74,7 +71,7 @@ describe('Autosuggest Client', () => {
     let apiVersion: ApiVersion;
     let host: string;
     let config: ApiClientConfiguration;
-    let transportSpy: SinonSpy;
+    let transportSpy: Mock;
     let transport: Transport;
     let client: AutosuggestClient;
 
@@ -83,7 +80,7 @@ describe('Autosuggest Client', () => {
       apiVersion = ApiVersion.Version1;
       host = CHANCE.url({ path: '' });
       config = { host, apiVersion, headers: {} };
-      transportSpy = spy();
+      transportSpy = vi.fn();
       transport = async (...args) => {
         transportSpy(...args);
         return {
@@ -96,18 +93,14 @@ describe('Autosuggest Client', () => {
     });
 
     it('should return the api key when called with no parameter', () => {
-      client.apiKey().should.be.equal(apiKey, 'api key does not match');
+      expect(client.apiKey()).toEqual(apiKey);
     });
 
     it('should set the api key when called with value', () => {
       const _apiKey = CHANCE.string({ length: 8 });
-      client
-        .apiKey()
-        .should.be.equal(apiKey, 'initial api key should match new value');
-      client.apiKey(_apiKey).should.be.equal(client, 'api key does not match');
-      client
-        .apiKey()
-        .should.be.equal(_apiKey, 'api key should match new value');
+      expect(client.apiKey()).toEqual(apiKey);
+      expect(client.apiKey(_apiKey)).toEqual(client);
+      expect(client.apiKey()).toEqual(_apiKey);
     });
   });
 
@@ -116,7 +109,7 @@ describe('Autosuggest Client', () => {
     let apiVersion: ApiVersion;
     let host: string;
     let config: ApiClientConfiguration;
-    let transportSpy: SinonSpy;
+    let transportSpy: Mock;
     let transport: Transport;
     let client: AutosuggestClient;
 
@@ -125,7 +118,7 @@ describe('Autosuggest Client', () => {
       apiVersion = ApiVersion.Version1;
       host = CHANCE.url({ path: '' });
       config = { host, apiVersion, headers: {} };
-      transportSpy = spy();
+      transportSpy = vi.fn();
       transport = async (...args) => {
         transportSpy(...args);
         return {
@@ -138,7 +131,7 @@ describe('Autosuggest Client', () => {
     });
 
     it('should return the config when called with no parameter', () => {
-      client.config().should.be.eql(config, 'config does not match');
+      expect(client.config()).toEqual(config);
     });
 
     it('should set the config when called with value', () => {
@@ -148,13 +141,9 @@ describe('Autosuggest Client', () => {
         apiVersion: CHANCE.pickone([ApiVersion.Version2, ApiVersion.Version3]),
         headers: {},
       };
-      client
-        .config()
-        .should.be.eql(defaultConfig, 'default config does not match');
-      client
-        .config(config)
-        .should.be.eql(client, 'client instance not returned');
-      client.config().should.be.eql(config, 'config should match new value');
+      expect(client.config()).toEqual(defaultConfig);
+      expect(client.config(config)).toEqual(client);
+      expect(client.config()).toEqual(config);
     });
   });
 
@@ -163,7 +152,7 @@ describe('Autosuggest Client', () => {
     let apiVersion: ApiVersion;
     let host: string;
     let config: ApiClientConfiguration;
-    let transportSpy: SinonSpy;
+    let transportSpy: Mock;
     let transport: Transport;
     let client: AutosuggestClient;
 
@@ -172,7 +161,7 @@ describe('Autosuggest Client', () => {
       apiVersion = ApiVersion.Version1;
       host = CHANCE.url({ path: '' });
       config = { host, apiVersion, headers: {} };
-      transportSpy = spy();
+      transportSpy = vi.fn();
       transport = async (...args) => {
         transportSpy(...args);
         return {
@@ -201,11 +190,8 @@ describe('Autosuggest Client', () => {
         body: null,
       };
 
-      await client.onSelected(selected).should.resolvedWith(undefined);
-      // console.log(transportSpy.args[0][0], transportArguments);
-      transportSpy
-        .calledOnceWith(transportArguments)
-        .should.be.equal(true, 'transport arguments do not match');
+      expect(client.onSelected(selected)).resolves.toBeUndefined();
+      expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
     });
 
     describe('should call /autosuggest-selection with initial request options override', () => {
@@ -268,8 +254,8 @@ describe('Autosuggest Client', () => {
         transportArguments.query['input-type'] = inputType;
         transportArguments.query['source-api'] = 'text';
 
-        await client
-          .onSelected(selected, {
+        expect(
+          client.onSelected(selected, {
             input,
             inputType,
             nResults,
@@ -282,18 +268,16 @@ describe('Autosuggest Client', () => {
             language,
             preferLand,
           })
-          .should.resolvedWith(undefined);
-        transportSpy
-          .calledOnceWith(transportArguments)
-          .should.be.equal(true, 'transport arguments do not match');
+        ).resolves.toBeUndefined();
+        expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
       });
       it('voice input type', async () => {
         const inputType = AutosuggestInputType.GenericVoice;
         transportArguments.query['input-type'] = inputType;
         transportArguments.query['source-api'] = 'voice';
 
-        await client
-          .onSelected(selected, {
+        expect(
+          client.onSelected(selected, {
             input,
             inputType,
             nResults,
@@ -306,10 +290,8 @@ describe('Autosuggest Client', () => {
             language,
             preferLand,
           })
-          .should.resolvedWith(undefined);
-        transportSpy
-          .calledOnceWith(transportArguments)
-          .should.be.equal(true, 'transport arguments do not match');
+        ).resolves.toBeUndefined();
+        expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
       });
     });
   });
@@ -319,7 +301,7 @@ describe('Autosuggest Client', () => {
     let apiVersion: ApiVersion;
     let host: string;
     let config: ApiClientConfiguration;
-    let transportSpy: SinonSpy;
+    let transportSpy: Mock;
     let transport: Transport;
     let client: AutosuggestClient;
 
@@ -328,7 +310,7 @@ describe('Autosuggest Client', () => {
       apiVersion = ApiVersion.Version1;
       host = CHANCE.url({ path: '' });
       config = { host, apiVersion, headers: {} };
-      transportSpy = spy();
+      transportSpy = vi.fn();
       transport = async (...args) => {
         transportSpy(...args);
         return {
@@ -402,9 +384,7 @@ describe('Autosuggest Client', () => {
         language,
         preferLand,
       });
-      transportSpy
-        .calledOnceWith(transportArguments)
-        .should.be.equal(true, 'transport arguments do not match');
+      expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
     });
 
     it('should call /autosuggest with voice input type', async () => {
@@ -434,9 +414,7 @@ describe('Autosuggest Client', () => {
         inputType,
         language,
       });
-      transportSpy
-        .calledOnceWith(transportArguments)
-        .should.be.equal(true, 'transport arguments do not match');
+      expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
     });
 
     it('should throw error when no language provided with voice input type', async () => {
@@ -452,15 +430,12 @@ describe('Autosuggest Client', () => {
           input,
           inputType,
         });
-      } catch (err: any) {
-        err.message.should.be.equal(
+      } catch (err) {
+        expect(err.message).toEqual(
           'You must provide language when using a speech input type'
         );
       } finally {
-        transportSpy.notCalled.should.be.equal(
-          true,
-          'transport should not be called'
-        );
+        expect(transportSpy).not.toHaveBeenCalled();
       }
     });
 
@@ -468,13 +443,10 @@ describe('Autosuggest Client', () => {
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         await client.run(undefined as any);
-      } catch (err: any) {
-        err.message.should.be.equal('You must provide at least options.input');
+      } catch (err) {
+        expect(err.message).toEqual('You must provide at least options.input');
       } finally {
-        transportSpy.notCalled.should.be.equal(
-          true,
-          'transport should not be called'
-        );
+        expect(transportSpy).not.toHaveBeenCalled();
       }
     });
 
@@ -483,13 +455,10 @@ describe('Autosuggest Client', () => {
 
       try {
         await client.run({ input });
-      } catch (err: any) {
-        err.message.should.be.equal('You must specify an input value');
+      } catch (err) {
+        expect(err.message).toEqual('You must specify an input value');
       } finally {
-        transportSpy.notCalled.should.be.equal(
-          true,
-          'transport should not be called'
-        );
+        expect(transportSpy).not.toHaveBeenCalled();
       }
     });
 
@@ -502,15 +471,12 @@ describe('Autosuggest Client', () => {
 
       try {
         await client.run({ input, clipToBoundingBox });
-      } catch (err: any) {
-        err.message.should.be.equal(
+      } catch (err) {
+        expect(err.message).toEqual(
           'Southwest lat must be less than or equal to northeast lat and southwest lng must be less than or equal to northeast lng'
         );
       } finally {
-        transportSpy.notCalled.should.be.equal(
-          true,
-          'transport should not be called'
-        );
+        expect(transportSpy).not.toHaveBeenCalled();
       }
     });
 
@@ -523,15 +489,12 @@ describe('Autosuggest Client', () => {
 
       try {
         await client.run({ input, clipToBoundingBox });
-      } catch (err: any) {
-        err.message.should.be.equal(
+      } catch (err) {
+        expect(err.message).toEqual(
           'Southwest lat must be less than or equal to northeast lat and southwest lng must be less than or equal to northeast lng'
         );
       } finally {
-        transportSpy.notCalled.should.be.equal(
-          true,
-          'transport should not be called'
-        );
+        expect(transportSpy).not.toHaveBeenCalled();
       }
     });
 
@@ -545,15 +508,12 @@ describe('Autosuggest Client', () => {
 
       try {
         await client.run({ input, clipToCountry });
-      } catch (err: any) {
-        err.message.should.be.equal(
+      } catch (err) {
+        expect(err.message).toEqual(
           'Invalid clip to country. All values must be an ISO 3166-1 alpha-2 country code'
         );
       } finally {
-        transportSpy.notCalled.should.be.equal(
-          true,
-          'transport should not be called'
-        );
+        expect(transportSpy).not.toHaveBeenCalled();
       }
     });
 
@@ -568,15 +528,12 @@ describe('Autosuggest Client', () => {
 
       try {
         await client.run({ input, clipToPolygon });
-      } catch (err: any) {
-        err.message.should.be.equal(
+      } catch (err) {
+        expect(err.message).toEqual(
           'Invalid clip to polygon value. Array must contain at least 4 coordinates and no more than 25'
         );
       } finally {
-        transportSpy.notCalled.should.be.equal(
-          true,
-          'transport should not be called'
-        );
+        expect(transportSpy).not.toHaveBeenCalled();
       }
     });
 
@@ -591,15 +548,12 @@ describe('Autosuggest Client', () => {
 
       try {
         await client.run({ input, clipToPolygon });
-      } catch (err: any) {
-        err.message.should.be.equal(
+      } catch (err) {
+        expect(err.message).toEqual(
           'Invalid clip to polygon value. The polygon bounds must be closed.'
         );
       } finally {
-        transportSpy.notCalled.should.be.equal(
-          true,
-          'transport should not be called'
-        );
+        expect(transportSpy).not.toHaveBeenCalled();
       }
     });
 
@@ -609,15 +563,12 @@ describe('Autosuggest Client', () => {
 
       try {
         await client.run({ input, inputType });
-      } catch (err: any) {
-        err.message.should.be.equal(
+      } catch (err) {
+        expect(err.message).toEqual(
           'Invalid input type provided. Must provide a valid input type.'
         );
       } finally {
-        transportSpy.notCalled.should.be.equal(
-          true,
-          'transport should not be called'
-        );
+        expect(transportSpy).not.toHaveBeenCalled();
       }
     });
 
@@ -627,15 +578,12 @@ describe('Autosuggest Client', () => {
 
       try {
         await client.run({ input, language });
-      } catch (err: any) {
-        err.message.should.be.equal(
+      } catch (err) {
+        expect(err.message).toEqual(
           `The language ${language} is not supported. Refer to our API for supported languages.`
         );
       } finally {
-        transportSpy.notCalled.should.be.equal(
-          true,
-          'transport should not be called'
-        );
+        expect(transportSpy).not.toHaveBeenCalled();
       }
     });
 
@@ -651,15 +599,12 @@ describe('Autosuggest Client', () => {
 
         try {
           await client.run({ input, inputType });
-        } catch (err: any) {
-          err.message.should.be.equal(
+        } catch (err) {
+          expect(err.message).toEqual(
             'You must provide language when using a speech input type'
           );
         } finally {
-          transportSpy.notCalled.should.be.equal(
-            true,
-            'transport should not be called'
-          );
+          expect(transportSpy).not.toHaveBeenCalled();
         }
       });
     });
@@ -719,7 +664,7 @@ describe('Autosuggest Client', () => {
 
     describe('findPossible3wa()', () => {
       it('should return an empty array if empty string is provided', async () => {
-        client.findPossible3wa('').should.be.empty();
+        expect(client.findPossible3wa('')).toHaveLength(0);
       });
 
       describe('invalid value', () => {
@@ -729,13 +674,13 @@ describe('Autosuggest Client', () => {
 
         invalidStrings.forEach(invalidString => {
           it(`should return an empty array if "${invalidString}" is provided`, async () => {
-            client.findPossible3wa(invalidString).should.be.empty();
+            expect(client.findPossible3wa(invalidString)).toHaveLength(0);
           });
         });
 
         invalidSubstrings.forEach(invalidSubstring => {
           it(`should return an empty array if "${invalidSubstring}" is provided`, async () => {
-            client.findPossible3wa(invalidSubstring).should.be.empty();
+            expect(client.findPossible3wa(invalidSubstring)).toHaveLength(0);
           });
         });
       });
@@ -747,16 +692,19 @@ describe('Autosuggest Client', () => {
 
         validStrings.forEach(validString => {
           it(`should return a match if "${validString}" is provided`, async () => {
-            client.findPossible3wa(validString).should.containEql(validString);
+            expect(client.findPossible3wa(validString)).toContainEqual(
+              validString
+            );
           });
         });
 
         validSubstrings.forEach(substring => {
           it(`should return a match if "${substring}" is provided`, async () => {
-            client
-              .findPossible3wa(substring)
-              .every(res => validStrings.includes(res))
-              .should.be.true();
+            expect(
+              client
+                .findPossible3wa(substring)
+                .every(res => validStrings.includes(res))
+            ).toBeTruthy();
           });
         });
       });
@@ -764,16 +712,16 @@ describe('Autosuggest Client', () => {
 
     describe('isPossible3wa()', () => {
       it('should return false if empty string is provided', async () => {
-        client.isPossible3wa('').should.be.false();
+        expect(client.isPossible3wa('')).toBeFalsy();
       });
       invalidStrings.forEach(invalidString => {
         it(`should return false if "${invalidString}" is provided`, async () => {
-          client.isPossible3wa(invalidString).should.be.false();
+          expect(client.isPossible3wa(invalidString)).toBeFalsy();
         });
       });
       validStrings.forEach(validString => {
         it(`should return true if "${validString}" is provided`, async () => {
-          client.isPossible3wa(validString).should.be.true();
+          expect(client.isPossible3wa(validString)).toBeTruthy();
         });
       });
     });
@@ -781,21 +729,17 @@ describe('Autosuggest Client', () => {
     describe('isValid3wa()', () => {
       it('should return false if empty string is provided', async () => {
         const input = '';
-
         const isValid = client.isValid3wa(input);
-        isValid.should.be.Promise();
-        (await isValid).should.be.false(); // .should.be.resolvedWith doesn't catch fail cases
+        expect(isValid).toBeInstanceOf(Promise);
+        expect(isValid).resolves.toBeFalsy();
       });
       it('should return false if invalid value is provided', async () => {
         const input = invalidStrings[0];
-
         const isValid = client.isValid3wa(input);
-        isValid.should.be.Promise();
-        (await isValid).should.be.false(); // .should.be.resolvedWith doesn't catch fail cases
+        expect(isValid).toBeInstanceOf(Promise);
+        expect(isValid).resolves.toBeFalsy();
       });
       describe('valid values', () => {
-        before(() => {});
-        after(() => {});
         validStrings.forEach(input => {
           it(`should return true if valid value "${input}" is provided`, async () => {
             nock(host, {
@@ -806,7 +750,7 @@ describe('Autosuggest Client', () => {
               .reply(200, { suggestions: [{ words: input }] });
 
             const isValid = await client.isValid3wa(input);
-            isValid.should.be.true();
+            expect(isValid).toBeTruthy();
             nock.cleanAll();
           });
         });
