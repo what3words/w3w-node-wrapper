@@ -1,5 +1,6 @@
 import { ApiClient, boundsToString } from '../lib';
 import type { ApiClientConfiguration, Transport } from '../lib';
+import { UtilisationFn } from '../lib/utilisation';
 import type { Coordinates, FeatureCollectionResponse } from './response.model';
 
 export interface GridSectionJsonResponse {
@@ -33,9 +34,10 @@ export class GridSectionClient extends ApiClient<
   public static init(
     apiKey?: string,
     config?: ApiClientConfiguration,
-    transport?: Transport
+    transport?: Transport,
+    utilisation?: UtilisationFn
   ): GridSectionClient {
-    return new GridSectionClient(apiKey, config, transport);
+    return new GridSectionClient(apiKey, config, transport, utilisation);
   }
 
   protected query(options: GridSectionOptions) {

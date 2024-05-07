@@ -15,6 +15,8 @@ describe('Grid Section Client', () => {
   let apiKey: string;
   let apiVersion: ApiVersion;
   let host: string;
+  let utilisation: string;
+  let sessionId: string;
   let config: ApiClientConfiguration;
   let transportSpy: Mock;
   let transport: Transport;
@@ -24,7 +26,15 @@ describe('Grid Section Client', () => {
     apiKey = CHANCE.string({ length: 8 });
     apiVersion = ApiVersion.Version1;
     host = CHANCE.url({ path: '' });
-    config = { host, apiVersion };
+    utilisation = CHANCE.url({ path: '' });
+    sessionId = CHANCE.guid();
+    config = {
+      host,
+      apiVersion,
+      utilisation,
+      headers: {},
+      sessionId,
+    };
     transportSpy = vi.fn();
     transport = async (...args) => {
       transportSpy(...args);
@@ -63,11 +73,19 @@ describe('Grid Section Client', () => {
     expect(client.config()).toEqual(config);
   });
   it('should set the config when config function is called with value', () => {
-    const defaultConfig = { host, apiVersion };
+    const defaultConfig = {
+      host,
+      apiVersion,
+      utilisation,
+      headers: {},
+      sessionId,
+    };
     const config = {
       host: CHANCE.url(),
       apiVersion: CHANCE.pickone([ApiVersion.Version2, ApiVersion.Version3]),
       headers: {},
+      sessionId,
+      utilisation: CHANCE.url(),
     };
     expect(client.config()).toEqual(defaultConfig);
     expect(client.config(config)).toEqual(client);
@@ -87,7 +105,11 @@ describe('Grid Section Client', () => {
         'bounding-box': `${boundingBox.southwest.lat},${boundingBox.southwest.lng},${boundingBox.northeast.lat},${boundingBox.northeast.lng}`,
         format: 'json',
       },
-      headers: { 'X-Api-Key': apiKey, ...HEADERS },
+      headers: {
+        'X-Api-Key': apiKey,
+        'X-Correlation-ID': sessionId,
+        ...HEADERS,
+      },
       body: null,
     };
     await client.run({ boundingBox });

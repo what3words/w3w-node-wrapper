@@ -5,6 +5,7 @@ import what3words, {
   ApiVersion,
   searchParams,
   axiosTransport,
+  fetchTransport,
 } from '@/.';
 import { What3wordsService } from '@/service';
 
@@ -20,6 +21,7 @@ describe('what3words', () => {
   let service: What3wordsService;
   let apiVersion: ApiVersion;
   let apiKey: string;
+  let sessionId: string;
   let config: ApiClientConfiguration;
 
   beforeEach(() => {
@@ -29,10 +31,13 @@ describe('what3words', () => {
       ApiVersion.Version2,
       ApiVersion.Version3,
     ]);
+    sessionId = CHANCE.guid();
     config = {
       host: CHANCE.url(),
       apiVersion,
       headers: {},
+      sessionId,
+      utilisation: CHANCE.url(),
     };
   });
 
@@ -94,6 +99,8 @@ describe('what3words', () => {
           ].filter(v => v !== apiVersion)
         ),
         headers: {},
+        sessionId,
+        utilisation: CHANCE.url(),
       };
 
       expect(service.clients.autosuggest.config()).toEqual(config);
@@ -136,22 +143,67 @@ describe('what3words', () => {
 
     it('should use the axios transport', () => {
       expect(service.clients.autosuggest['transport'].name).toEqual(
-        'axiosTransport2'
+        'axiosTransporter'
       );
       expect(service.clients.availableLanguages['transport'].name).toEqual(
-        'axiosTransport2'
+        'axiosTransporter'
       );
       expect(service.clients.convertTo3wa['transport'].name).toEqual(
-        'axiosTransport2'
+        'axiosTransporter'
       );
       expect(service.clients.convertToCoordinates['transport'].name).toEqual(
-        'axiosTransport2'
+        'axiosTransporter'
       );
       expect(service.clients.gridSection['transport'].name).toEqual(
-        'axiosTransport2'
+        'axiosTransporter'
       );
     });
     it('should use the axios transport to make autosuggest requests', async () => {
+      const response = await service.autosuggest({ input });
+      expect(response).toEqual(MOCK_AUTOSUGGEST_RESPONSE);
+    });
+  });
+
+  describe('Fetch Transport', () => {
+    let input: string;
+    beforeEach(() => {
+      service = what3words(apiKey, config, { transport: fetchTransport() });
+      input = CHANCE.string();
+      nock(`${config.host!}/${config.apiVersion}`)
+        .get(`/autosuggest?${searchParams({ input, key: apiKey })}`)
+        .reply(200, MOCK_AUTOSUGGEST_RESPONSE)
+        .get('/available-languages')
+        .reply(200, MOCK_AVAILABLE_LANGUAGES_RESPONSE)
+        .get('/convert-to-3wa')
+        .reply(200, MOCK_C2C_RESPONSE)
+        .get('/convert-to-coordinates')
+        .reply(200, MOCK_C23WA_RESPONSE)
+        .get('/grid-section')
+        .reply(200, MOCK_GRID_SECTION_RESPONSE);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
+    it('should use the fetch transport', () => {
+      expect(service.clients.autosuggest['transport'].name).toEqual(
+        'fetchTransporter'
+      );
+      expect(service.clients.availableLanguages['transport'].name).toEqual(
+        'fetchTransporter'
+      );
+      expect(service.clients.convertTo3wa['transport'].name).toEqual(
+        'fetchTransporter'
+      );
+      expect(service.clients.convertToCoordinates['transport'].name).toEqual(
+        'fetchTransporter'
+      );
+      expect(service.clients.gridSection['transport'].name).toEqual(
+        'fetchTransporter'
+      );
+    });
+    it('should use the fetch transport to make autosuggest requests', async () => {
       const response = await service.autosuggest({ input });
       expect(response).toEqual(MOCK_AUTOSUGGEST_RESPONSE);
     });

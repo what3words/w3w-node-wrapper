@@ -1,5 +1,6 @@
 import { ApiClient } from '../lib';
 import type { ApiClientConfiguration, Transport } from '../lib';
+import { UtilisationFn } from '../lib/utilisation';
 import type {
   FeatureCollectionResponse,
   LocationGeoJsonResponse,
@@ -22,9 +23,15 @@ export class ConvertToCoordinatesClient extends ApiClient<
   public static init(
     apiKey?: string,
     config?: ApiClientConfiguration,
-    transport?: Transport
+    transport?: Transport,
+    utilisation?: UtilisationFn
   ): ConvertToCoordinatesClient {
-    return new ConvertToCoordinatesClient(apiKey, config, transport);
+    return new ConvertToCoordinatesClient(
+      apiKey,
+      config,
+      transport,
+      utilisation
+    );
   }
 
   protected query(options: ConvertToCoordinatesOptions) {

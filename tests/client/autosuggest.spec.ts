@@ -7,8 +7,10 @@ import {
   AutosuggestClient,
   AutosuggestInputType,
   HEADERS,
+  RequestParams,
   Transport,
 } from '@/.';
+import { UtilisationFn } from '@/lib/utilisation';
 import {
   generateAutosuggestSuggestion,
   generateCoordinate,
@@ -22,6 +24,8 @@ describe('Autosuggest Client', () => {
     let apiKey: string;
     let apiVersion: ApiVersion;
     let host: string;
+    let utilisation: string;
+    let sessionId: string;
     let config: ApiClientConfiguration;
     let transportSpy: Mock;
     let transport: Transport;
@@ -31,7 +35,15 @@ describe('Autosuggest Client', () => {
       apiKey = CHANCE.string({ length: 8 });
       apiVersion = ApiVersion.Version1;
       host = CHANCE.url({ path: '' });
-      config = { host, apiVersion, headers: {} };
+      utilisation = CHANCE.url({ path: '' });
+      sessionId = CHANCE.guid();
+      config = {
+        host,
+        apiVersion,
+        headers: {},
+        sessionId,
+        utilisation,
+      };
       transportSpy = vi.fn();
       transport = async (...args) => {
         transportSpy(...args);
@@ -70,6 +82,7 @@ describe('Autosuggest Client', () => {
     let apiKey: string;
     let apiVersion: ApiVersion;
     let host: string;
+    let sessionId: string;
     let config: ApiClientConfiguration;
     let transportSpy: Mock;
     let transport: Transport;
@@ -79,7 +92,13 @@ describe('Autosuggest Client', () => {
       apiKey = CHANCE.string({ length: 8 });
       apiVersion = ApiVersion.Version1;
       host = CHANCE.url({ path: '' });
-      config = { host, apiVersion, headers: {} };
+      sessionId = CHANCE.guid();
+      config = {
+        host,
+        apiVersion,
+        headers: {},
+        sessionId,
+      };
       transportSpy = vi.fn();
       transport = async (...args) => {
         transportSpy(...args);
@@ -108,6 +127,8 @@ describe('Autosuggest Client', () => {
     let apiKey: string;
     let apiVersion: ApiVersion;
     let host: string;
+    let utilisation: string;
+    let sessionId: string;
     let config: ApiClientConfiguration;
     let transportSpy: Mock;
     let transport: Transport;
@@ -117,7 +138,15 @@ describe('Autosuggest Client', () => {
       apiKey = CHANCE.string({ length: 8 });
       apiVersion = ApiVersion.Version1;
       host = CHANCE.url({ path: '' });
-      config = { host, apiVersion, headers: {} };
+      utilisation = CHANCE.url({ path: '' });
+      sessionId = CHANCE.guid();
+      config = {
+        host,
+        apiVersion,
+        headers: {},
+        sessionId,
+        utilisation,
+      };
       transportSpy = vi.fn();
       transport = async (...args) => {
         transportSpy(...args);
@@ -135,11 +164,19 @@ describe('Autosuggest Client', () => {
     });
 
     it('should set the config when called with value', () => {
-      const defaultConfig = { host, apiVersion, headers: {} };
+      const defaultConfig = {
+        host,
+        apiVersion,
+        headers: {},
+        sessionId,
+        utilisation,
+      };
       const config = {
         host: CHANCE.url(),
         apiVersion: CHANCE.pickone([ApiVersion.Version2, ApiVersion.Version3]),
         headers: {},
+        sessionId,
+        utilisation: CHANCE.url(),
       };
       expect(client.config()).toEqual(defaultConfig);
       expect(client.config(config)).toEqual(client);
@@ -151,6 +188,8 @@ describe('Autosuggest Client', () => {
     let apiKey: string;
     let apiVersion: ApiVersion;
     let host: string;
+    let utilisation: string;
+    let sessionId: string;
     let config: ApiClientConfiguration;
     let transportSpy: Mock;
     let transport: Transport;
@@ -160,7 +199,15 @@ describe('Autosuggest Client', () => {
       apiKey = CHANCE.string({ length: 8 });
       apiVersion = ApiVersion.Version1;
       host = CHANCE.url({ path: '' });
-      config = { host, apiVersion, headers: {} };
+      utilisation = CHANCE.url({ path: CHANCE.word() });
+      sessionId = CHANCE.guid();
+      config = {
+        host,
+        utilisation,
+        apiVersion,
+        headers: {},
+        sessionId,
+      };
       transportSpy = vi.fn();
       transport = async (...args) => {
         transportSpy(...args);
@@ -173,7 +220,7 @@ describe('Autosuggest Client', () => {
       client = AutosuggestClient.init(apiKey, config, transport);
     });
 
-    it('should call /autosuggest-selection with selected suggestion', async () => {
+    it('should call /autosuggest-selection with selected suggestion', () => {
       const selected = generateAutosuggestSuggestion();
       const transportArguments = {
         method: 'get',
@@ -186,7 +233,11 @@ describe('Autosuggest Client', () => {
           'source-api': 'text',
           key: apiKey,
         },
-        headers: { 'X-Api-Key': apiKey, ...HEADERS },
+        headers: {
+          'X-Api-Key': apiKey,
+          'X-Correlation-ID': sessionId,
+          ...HEADERS,
+        },
         body: null,
       };
 
@@ -244,7 +295,11 @@ describe('Autosuggest Client', () => {
             language,
             'prefer-land': `${preferLand}`,
           },
-          headers: { 'X-Api-Key': apiKey, ...HEADERS },
+          headers: {
+            'X-Api-Key': apiKey,
+            'X-Correlation-ID': sessionId,
+            ...HEADERS,
+          },
           body: null,
         };
       });
@@ -300,16 +355,28 @@ describe('Autosuggest Client', () => {
     let apiKey: string;
     let apiVersion: ApiVersion;
     let host: string;
+    let utilisation: string;
+    let sessionId: string;
     let config: ApiClientConfiguration;
     let transportSpy: Mock;
     let transport: Transport;
+    let utilisationFnSpy: Mock;
+    let utilisationFn: UtilisationFn;
     let client: AutosuggestClient;
 
     beforeEach(() => {
       apiKey = CHANCE.string({ length: 8 });
       apiVersion = ApiVersion.Version1;
       host = CHANCE.url({ path: '' });
-      config = { host, apiVersion, headers: {} };
+      utilisation = CHANCE.url({ path: CHANCE.word() });
+      sessionId = CHANCE.guid();
+      config = {
+        host,
+        utilisation,
+        apiVersion,
+        headers: {},
+        sessionId,
+      };
       transportSpy = vi.fn();
       transport = async (...args) => {
         transportSpy(...args);
@@ -319,7 +386,21 @@ describe('Autosuggest Client', () => {
           body: {} as any,
         };
       };
-      client = AutosuggestClient.init(apiKey, config, transport);
+      utilisationFnSpy = vi.fn();
+      utilisationFn = (path: string, data?: RequestParams) => {
+        utilisationFnSpy([path, data]);
+        switch (path) {
+          case '/autosuggest':
+            return {
+              headers: data?.headers,
+              body: null,
+            };
+          case '/autosuggest-selection':
+          default:
+            return null;
+        }
+      };
+      client = AutosuggestClient.init(apiKey, config, transport, utilisationFn);
     });
 
     it('should call /autosuggest', async () => {
@@ -367,7 +448,11 @@ describe('Autosuggest Client', () => {
           'prefer-land': `${preferLand}`,
           'input-type': inputType,
         },
-        headers: { 'X-Api-Key': apiKey, ...HEADERS },
+        headers: {
+          'X-Api-Key': apiKey,
+          'X-Correlation-ID': sessionId,
+          ...HEADERS,
+        },
         body: null,
       };
 
@@ -385,6 +470,95 @@ describe('Autosuggest Client', () => {
         preferLand,
       });
       expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
+    });
+
+    it('should send metrics to utilisation-api when /autosuggest is called', async () => {
+      client = AutosuggestClient.init(
+        apiKey,
+        { ...config, host: 'http://api.what3words.com' },
+        transport,
+        utilisationFn
+      );
+      const input = `${CHANCE.word()}.${CHANCE.word()}.${CHANCE.letter()}`;
+      const inputType = AutosuggestInputType.Text;
+      const nResults = CHANCE.natural();
+      const nFocusResults = CHANCE.natural();
+      const focus = generateCoordinate();
+      const clipToBoundingBox = {
+        southwest: { lat: 71.2, lng: -0.123 },
+        northeast: { lat: 91, lng: -0.12 },
+      };
+      const clipToCircle = {
+        center: generateCoordinate(),
+        radius: CHANCE.natural(),
+      };
+      const clipToCountry = [CHANCE.locale()];
+      const startEndCoordinate = generateCoordinate();
+      const clipToPolygon = [
+        startEndCoordinate,
+        generateCoordinate(),
+        generateCoordinate(),
+        generateCoordinate(),
+        startEndCoordinate,
+      ];
+      const language = CHANCE.pickone(languages);
+      const preferLand = CHANCE.bool();
+      const transportArguments = {
+        method: 'get',
+        host: `http://api.what3words.com/${apiVersion}`,
+        url: '/autosuggest',
+        query: {
+          key: apiKey,
+          input,
+          'n-results': `${nResults}`,
+          focus: `${focus.lat},${focus.lng}`,
+          'n-focus-results': `${nFocusResults}`,
+          'clip-to-bounding-box': `${clipToBoundingBox.southwest.lat},${clipToBoundingBox.southwest.lng},${clipToBoundingBox.northeast.lat},${clipToBoundingBox.northeast.lng}`,
+          'clip-to-circle': `${clipToCircle.center.lat},${clipToCircle.center.lng},${clipToCircle.radius}`,
+          'clip-to-country': clipToCountry.join(','),
+          'clip-to-polygon': clipToPolygon
+            .map(coord => `${coord.lat},${coord.lng}`)
+            .join(','),
+          language,
+          'prefer-land': `${preferLand}`,
+          'input-type': inputType,
+        },
+        headers: {
+          'X-Api-Key': apiKey,
+          'X-Correlation-ID': sessionId,
+          ...HEADERS,
+        },
+        body: null,
+      };
+
+      await client.run({
+        input,
+        inputType,
+        nResults,
+        nFocusResults,
+        focus,
+        clipToBoundingBox,
+        clipToCircle,
+        clipToCountry,
+        clipToPolygon,
+        language,
+        preferLand,
+      });
+      // Additional assertion to ensure that transport is called twice.
+      // This will prove that `sendUtilisation` was invoked which also uses the transport instance.
+      expect(transportSpy).toHaveBeenCalledTimes(2);
+      expect(transportSpy).toHaveBeenNthCalledWith(1, {
+        method: 'post',
+        host: utilisation,
+        url: '/autosuggest-session',
+        headers: {
+          'X-Api-Key': apiKey,
+          'X-Correlation-ID': sessionId,
+          ...HEADERS,
+        },
+        body: null,
+      });
+      expect(transportSpy).toHaveBeenNthCalledWith(2, transportArguments);
     });
 
     it('should call /autosuggest with voice input type', async () => {
@@ -405,7 +579,11 @@ describe('Autosuggest Client', () => {
           'input-type': inputType,
           language,
         },
-        headers: { 'X-Api-Key': apiKey, ...HEADERS },
+        headers: {
+          'X-Api-Key': apiKey,
+          'X-Correlation-ID': sessionId,
+          ...HEADERS,
+        },
         body: null,
       };
 
@@ -656,9 +834,12 @@ describe('Autosuggest Client', () => {
     beforeEach(() => {
       apiKey = CHANCE.string({ length: 8 });
       apiVersion = ApiVersion.Version1;
-      // host = CHANCE.url({ path: '' });
       host = 'https://api.dev.non-production.w3w.io';
-      config = { host, apiVersion, headers: {} };
+      config = {
+        host,
+        apiVersion,
+        headers: {},
+      };
       client = AutosuggestClient.init(apiKey, config);
     });
 

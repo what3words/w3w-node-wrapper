@@ -8,6 +8,7 @@ import {
   coordinatesToString,
   validLanguage,
 } from '../lib';
+import { UtilisationFn } from '../lib/utilisation';
 
 import type { Bounds, Coordinates } from './response.model';
 
@@ -54,9 +55,10 @@ export class AutosuggestClient extends ApiClient<
   public static init(
     apiKey?: string,
     config?: ApiClientConfiguration,
-    transport?: Transport
+    transport?: Transport,
+    utilisation?: UtilisationFn
   ): AutosuggestClient {
-    return new AutosuggestClient(apiKey, config, transport);
+    return new AutosuggestClient(apiKey, config, transport, utilisation);
   }
 
   protected query(options: AutosuggestOptions) {
@@ -199,7 +201,7 @@ export class AutosuggestClient extends ApiClient<
     selected: AutosuggestSuggestion,
     initialRequestOptions: AutosuggestOptions = this.lastReqOpts
   ): Promise<void> {
-    await this.makeClientRequest('get', '/autosuggest-selection', {
+    this.makeClientRequest('get', '/autosuggest-selection', {
       query: {
         ...this.autosuggestOptionsToQuery(initialRequestOptions),
         'raw-input': initialRequestOptions.input,

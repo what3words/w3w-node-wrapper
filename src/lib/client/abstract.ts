@@ -1,11 +1,18 @@
-import { ApiClientConfiguration, ApiVersion } from './client.model';
+import {
+  ApiClientConfiguration,
+  ApiVersion,
+  ClientRequest,
+  RequestParams,
+} from './client.model';
 import {
   errorHandler,
   fetchTransport,
   Transport,
   TransportResponse,
 } from '../transport';
+import { utilisationFn, UtilisationFn } from '../utilisation';
 import { HEADERS } from '../constants';
+import { v4 } from 'uuid';
 
 export abstract class ApiClient<
   JsonResponse,
@@ -17,17 +24,21 @@ export abstract class ApiClient<
   protected _config: ApiClientConfiguration;
   private static DEFAULT_CONFIG = {
     host: 'https://api.what3words.com',
+    utilisation: 'https://utilisation-api.what3words.com',
     apiVersion: ApiVersion.Version3,
   };
   private transport: Transport;
+  private utilisation: UtilisationFn;
 
   constructor(
     private _apiKey: string = '',
     config: ApiClientConfiguration = {},
-    transport: Transport = fetchTransport()
+    transport: Transport = fetchTransport(),
+    utilisation: UtilisationFn = utilisationFn
   ) {
     this._config = Object.assign({}, ApiClient.DEFAULT_CONFIG, config);
     this.transport = transport;
+    this.utilisation = utilisation;
   }
 
   public apiKey(apiKey?: string): this | string {
@@ -55,51 +66,53 @@ export abstract class ApiClient<
     options: Params & { format: 'geojson' }
   ): Promise<GeoJsonResponse>;
   public async run(options?: Params): Promise<JsonResponse | GeoJsonResponse> {
-    const validation = await this.validate(options);
-    if (!validation.valid) {
-      throw new Error(
-        validation.message ||
-          'There was a problem validating your request options'
-      );
-    }
-    const params = {
-      headers: { ...this.headers(), ...(this._config.headers || {}) },
-      body: this.body(options),
-      query: this.query(options),
-    };
-    const response = await this.makeClientRequest<
-      JsonResponse | GeoJsonResponse
-    >(this.method, this.url, params);
-    if (!response.body) throw new Error('No response body set');
-    return response.body;
+    return this.validate(options)
+      .then(validation => {
+        if (!validation.valid) {
+          throw new Error(
+            validation.message ||
+              'There was a problem validating your request options'
+          );
+        }
+
+        const params = {
+          headers: { ...this.headers(), ...(this._config.headers || {}) },
+          body: this.body(options),
+          query: this.query(options),
+        };
+
+        return this.makeClientRequest<JsonResponse | GeoJsonResponse>(
+          this.method,
+          this.url,
+          params
+        );
+      })
+      .then(({ body }) => {
+        if (!body) throw new Error('No response body set');
+        return body;
+      });
   }
 
   protected async makeClientRequest<T>(
     method: 'get' | 'post',
     url: string,
-    params?: {
-      headers?: { [key: string]: string };
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      body?: { [key: string]: any } | null;
-      query?: { [key: string]: string };
-    }
+    params?: RequestParams
   ): Promise<TransportResponse<T>> {
-    const clientRequest = this.getClientRequest(method, url, params);
-    const response = await this.transport<T>(clientRequest);
-    const result = await errorHandler(response);
-    return result;
+    const clientRequest = this.prepareClientRequest(method, url, params);
+    const { headers, query, body } = clientRequest;
+    // NOTE: This assumes that we should send utilisation data for each client request regardless if it's successful or not.
+    this.sendUtilisation(url, { headers, query, body });
+    return this.transport<T>(clientRequest).then(response => {
+      return errorHandler(response);
+    });
   }
 
-  protected getClientRequest(
+  protected prepareClientRequest(
     method: 'get' | 'post',
     url: string,
-    params?: {
-      headers?: { [key: string]: string };
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      body?: { [key: string]: any } | null;
-      query?: { [key: string]: string };
-    }
-  ) {
+    params?: RequestParams
+  ): ClientRequest {
+    const { body, headers, query } = params ?? {};
     return {
       method,
       host: `${this._config.host?.replace(/\/$/, '')}/${
@@ -107,16 +120,55 @@ export abstract class ApiClient<
       }`,
       url,
       query: {
-        ...(params?.query || {}),
+        ...(query || {}),
         key: this._apiKey,
       },
       headers: {
-        ...(params?.headers || {}),
+        ...(headers || {}),
+        'X-Correlation-ID': this._config.sessionId ?? v4(),
         'X-Api-Key': this._apiKey,
         ...HEADERS,
       },
-      body: params?.body || null,
+      body: body || null,
     };
+  }
+
+  /**
+   * Sends data to utilisation-api (public api use only).
+   * @param path - The path for the utilisation request.
+   * @param params - Optional request parameters.
+   * @returns A Promise that resolves to void.
+   */
+  private async sendUtilisation(
+    path: string,
+    params?: RequestParams
+  ): Promise<void> {
+    // const regex = new RegExp(
+    //   ['localhost.*', '.*\\.what3words\\.com'].join('|')
+    // );
+
+    // if (!this._config.host || !regex.test(this._config.host)) {
+    //   return;
+    // }
+    if (!this._config.host || !/.*\.what3words\.com/.test(this._config.host)) {
+      return;
+    }
+
+    // Invoke the utilisation callback function to retrieve data to be sent to utilisation-api.
+    // If this is null, then we simply don't return anything to the server.
+    const utilisation = this.utilisation(path, params);
+    if (!utilisation) {
+      return;
+    }
+    this.transport<void>({
+      method: 'post',
+      host: `${this._config.utilisation?.replace(/\/$/, '')}`,
+      url: '/autosuggest-session',
+      ...utilisation,
+    }).then(response => {
+      // TODO: replace this with something else
+      console.log('Response', response);
+    });
   }
 
   protected async validate(

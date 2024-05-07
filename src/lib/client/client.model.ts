@@ -7,24 +7,20 @@ export interface ApiClientConfiguration {
   apiVersion?: ApiVersion;
   host?: string;
   headers?: { [key: string]: string };
+  utilisation?: string;
+  sessionId?: string;
 }
-export interface ClientRequest {
+
+export interface RequestParams {
+  headers?: Record<string, string>;
+  query?: Record<string, string>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  body?: Record<string, any> | null;
+}
+
+export interface ClientRequest extends RequestParams {
   method: 'get' | 'post';
   host: string;
   url: string;
-  query?: { [key: string]: string };
-  headers?: { [key: string]: string };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  body?: { [key: string]: any } | null;
   format?: 'json' | 'geojson';
 }
-export type ExecFnResponse = [
-  'get' | 'post',
-  string,
-  {
-    headers?: { [key: string]: string };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    body?: { [key: string]: any };
-    query?: { [key: string]: string };
-  }?
-];

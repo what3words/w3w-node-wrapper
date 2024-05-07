@@ -1,5 +1,6 @@
 import { ApiClient } from '../lib';
 import type { ApiClientConfiguration, Transport } from '../lib';
+import { UtilisationFn } from '../lib/utilisation';
 import type {
   Coordinates,
   FeatureCollectionResponse,
@@ -24,9 +25,10 @@ export class ConvertTo3waClient extends ApiClient<
   public static init(
     apiKey?: string,
     config?: ApiClientConfiguration,
-    transport?: Transport
+    transport?: Transport,
+    utilisation?: UtilisationFn
   ): ConvertTo3waClient {
-    return new ConvertTo3waClient(apiKey, config, transport);
+    return new ConvertTo3waClient(apiKey, config, transport, utilisation);
   }
 
   protected query(options: ConvertTo3waOptions) {

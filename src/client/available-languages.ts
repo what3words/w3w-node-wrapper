@@ -1,5 +1,6 @@
 import { ApiClient } from '../lib';
 import type { ApiClientConfiguration, Transport } from '../lib';
+import { UtilisationFn } from '../lib/utilisation';
 
 export interface AvailableLanguagesResponse {
   languages: {
@@ -15,8 +16,9 @@ export class AvailableLanguagesClient extends ApiClient<AvailableLanguagesRespon
   public static init(
     apiKey?: string,
     config?: ApiClientConfiguration,
-    transport?: Transport
+    transport?: Transport,
+    utilisation?: UtilisationFn
   ): AvailableLanguagesClient {
-    return new AvailableLanguagesClient(apiKey, config, transport);
+    return new AvailableLanguagesClient(apiKey, config, transport, utilisation);
   }
 }
