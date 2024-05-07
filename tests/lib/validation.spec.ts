@@ -10,10 +10,6 @@ describe('validation', () => {
       const words = `${CHANCE.word()}.${CHANCE.word()}.${CHANCE.letter()}`;
       expect(valid3wa(words)).toBeTruthy();
     });
-    it.skip('should return true if valid 3wa is provided', () => {
-      const words = `${CHANCE.word()}.${CHANCE.word()}.${CHANCE.word()}`;
-      expect(valid3wa(words)).toBeTruthy();
-    });
     it('should return false if invalid 3wa is provided', () => {
       const words = `${CHANCE.word()}`;
       expect(valid3wa(words)).toBeFalsy();

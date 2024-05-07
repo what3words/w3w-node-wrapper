@@ -6,19 +6,19 @@ orbs:
 executors:
   build-executor:
     docker:
-      - image: cimg/node:18.18.2
+      - image: cimg/node:18.19.1
     resource_class: small
 
 commands:
   setup_environment:
-    description: "Export pipeline number as env var"
+    description: 'Export pipeline number as env var'
     parameters:
       version_path:
         type: string
         default: .
     steps:
       - run:
-          name: "Export pipeline number"
+          name: 'Export pipeline number'
           command: |
             echo "export PIPELINE_NUM=<< pipeline.number >>" >> $BASH_ENV
             echo "export VERSION=$(cat << parameters.version_path >>/package.json | grep '\"version\":' | sed -e 's/  \"version\": \"//' | sed -e 's/\",//')" >> $BASH_ENV
@@ -45,7 +45,7 @@ commands:
             git config --global user.name << parameters.author >>
             ssh-keyscan github.com >> ~/.ssh/known_hosts
   git_tag:
-    description: "Tag the project"
+    description: 'Tag the project'
     parameters:
       tag:
         type: string
@@ -59,7 +59,7 @@ commands:
             git tag -f << parameters.tag >>
           when: << parameters.when >>
   git_push_tags:
-    description: "Push tags to remote repository"
+    description: 'Push tags to remote repository'
     steps:
       - run:
           name: git push tags
@@ -95,7 +95,7 @@ jobs:
       - setup_environment:
           version_path: /tmp/workspace
       - run:
-          name: "publish npm"
+          name: 'publish npm'
           command: cd /tmp/workspace && npm publish
       # - jobstatus
 
@@ -104,7 +104,7 @@ jobs:
     steps:
       - checkout
       - add_fingerprint:
-          fingerprint: "81:f0:38:72:86:c7:e4:b2:92:6b:d8:b8:43:fb:24:6a"
+          fingerprint: '81:f0:38:72:86:c7:e4:b2:92:6b:d8:b8:43:fb:24:6a'
       - setup_environment
       - git_config:
           email: circleci@what3words.com
@@ -127,4 +127,3 @@ workflows:
       - tag:
           requires:
             - publish
-

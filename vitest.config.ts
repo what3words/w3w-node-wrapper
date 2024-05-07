@@ -14,7 +14,7 @@ const path = (path: string) => new URL(path, import.meta.url).pathname;
 export default defineConfig({
   plugins: [commonjs()],
   test: {
-    reporters: ['junit', 'verbose'],
+    reporters: ['verbose'],
     exclude,
     include: ['tests/**/*.spec.ts'],
     globals: true,
