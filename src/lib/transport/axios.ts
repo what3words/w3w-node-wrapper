@@ -8,7 +8,7 @@ export function axiosTransport(): Transport {
   // while axios v1.x.x returns an object when imported via require
   const axios = require('axios');
   const transporter = axios.default || axios;
-  return async function axiosTransport<T>(
+  return async function axiosTransporter<T>(
     req: ClientRequest
   ): Promise<TransportResponse<T>> {
     const params = req.query || {};
@@ -19,25 +19,30 @@ export function axiosTransport(): Transport {
       url: req.url,
       params,
     };
-    return await transporter(options)
-      .then((res: AxiosResponse) => {
-        const response = errorHandler({
-          status: res.status,
-          statusText: res.statusText,
-          body: res.data,
-          headers: res.headers as Record<string, string>,
-        });
-        return response;
-      })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .catch((err: any) => {
-        if (err.isAxiosError)
-          errorHandler<T>({
-            status: err.response?.status || err.status || 500,
-            statusText: err.response?.statusText || err.statusText,
-            headers: err.response?.headers,
+    return (
+      transporter(options)
+        .then((res: AxiosResponse) => {
+          const { status, statusText, data: body, headers } = res;
+          const response = errorHandler({
+            status,
+            statusText,
+            body,
+            headers: headers as Record<string, string>,
           });
-        throw err;
-      });
+          return response;
+        })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .catch((err: any) => {
+          if (err.isAxiosError) {
+            const { response, status, statusText } = err;
+            errorHandler<T>({
+              status: response?.status || status || 500,
+              statusText: response?.statusText || statusText,
+              headers: response?.headers,
+            });
+          }
+          throw err;
+        })
+    );
   };
 }
