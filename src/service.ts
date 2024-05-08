@@ -19,8 +19,8 @@ import type {
   LocationGeoJsonResponse,
   LocationJsonResponse,
 } from './client';
-import { ApiClientConfiguration } from './lib';
-import type { Transport } from './lib';
+import { ApiClientConfiguration, utilisationFn } from './lib';
+import type { Transport, UtilisationFn } from './lib';
 
 export interface What3wordsService {
   clients: {
@@ -63,22 +63,40 @@ export interface What3wordsService {
 export function what3words(
   apiKey?: string,
   config?: ApiClientConfiguration,
-  opts?: { transport: Transport }
+  opts?: { transport?: Transport; utilisation?: UtilisationFn }
 ): What3wordsService {
   const transport = opts?.transport || require('./lib').fetchTransport();
-  const autosuggestClient = new AutosuggestClient(apiKey, config, transport);
+  const utilisation = opts?.utilisation ?? utilisationFn;
+  const autosuggestClient = new AutosuggestClient(
+    apiKey,
+    config,
+    transport,
+    utilisation
+  );
   const availableLanguagesClient = new AvailableLanguagesClient(
     apiKey,
     config,
-    transport
+    transport,
+    utilisation
   );
-  const convertTo3waClient = new ConvertTo3waClient(apiKey, config, transport);
+  const convertTo3waClient = new ConvertTo3waClient(
+    apiKey,
+    config,
+    transport,
+    utilisation
+  );
   const convertToCoordinatesClient = new ConvertToCoordinatesClient(
     apiKey,
     config,
-    transport
+    transport,
+    utilisation
   );
-  const gridSectionClient = new GridSectionClient(apiKey, config, transport);
+  const gridSectionClient = new GridSectionClient(
+    apiKey,
+    config,
+    transport,
+    utilisation
+  );
   const service = {
     clients: {
       autosuggest: autosuggestClient,
