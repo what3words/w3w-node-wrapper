@@ -14,6 +14,8 @@ import { utilisationFn, UtilisationFn } from '../utilisation';
 import { HEADERS } from '../constants';
 import { v4 } from 'uuid';
 
+const UTILISATION_ENABLED_HOSTS = ['.*\\.w3w\\.io', '.*\\.what3words\\.com'];
+
 export abstract class ApiClient<
   JsonResponse,
   Params = undefined,
@@ -143,17 +145,10 @@ export abstract class ApiClient<
     path: string,
     params?: RequestParams
   ): Promise<void> {
-    // const regex = new RegExp(
-    //   ['localhost.*', '.*\\.what3words\\.com'].join('|')
-    // );
-
-    // if (!this._config.host || !regex.test(this._config.host)) {
-    //   return;
-    // }
-    if (!this._config.host || !/.*\.what3words\.com/.test(this._config.host)) {
+    const regex = new RegExp(UTILISATION_ENABLED_HOSTS.join('|'));
+    if (!this._config.host || !regex.test(this._config.host)) {
       return;
     }
-
     // Invoke the utilisation callback function to retrieve data to be sent to utilisation-api.
     // If this is null, then we simply don't return anything to the server.
     const utilisation = this.utilisation(path, params);

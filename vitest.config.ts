@@ -1,13 +1,7 @@
 import { defineConfig } from 'vitest/config';
 import commonjs from 'vite-plugin-commonjs';
 
-const exclude = [
-  'test/**',
-  'tests/mocks/**',
-  'docs/**',
-  '.prettierrc.js',
-  'coverage/**',
-];
+const exclude = ['docs/**', '.prettierrc.js', 'coverage/**', 'tests/utils/**'];
 
 const path = (path: string) => new URL(path, import.meta.url).pathname;
 

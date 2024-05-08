@@ -16,17 +16,19 @@ export const utilisationFn = (
   path: string,
   params?: RequestParams
 ): RequestParams | null => {
+  const { headers, query } = params ?? {};
   switch (path) {
-    case '/autosuggest': {
-      const { headers, query, body } = params ?? {};
+    case '/autosuggest':
+    case '/available-languages':
+    case '/convert-to-3wa':
+    case '/convert-to-coordinates':
+    case '/grid-section':
       return {
         headers,
         body: {
           ...query,
-          ...body,
         },
       };
-    }
     case '/autosuggest-selection':
     default:
       return null;

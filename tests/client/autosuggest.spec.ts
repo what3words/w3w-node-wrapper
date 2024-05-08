@@ -18,6 +18,7 @@ import {
 import { languages } from '@/lib/languages/language-codes';
 
 const CHANCE = new Chance();
+const PUBLIC_API_HOST = 'http://api.what3words.com';
 
 describe('Autosuggest Client', () => {
   describe('init()', () => {
@@ -245,6 +246,36 @@ describe('Autosuggest Client', () => {
       expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
     });
 
+    it('should not invoke utilisation when /autosuggest-selection is called with selected suggestion', async () => {
+      client = AutosuggestClient.init(
+        apiKey,
+        { ...config, host: PUBLIC_API_HOST },
+        transport
+      );
+      const selected = generateAutosuggestSuggestion();
+      const transportArguments = {
+        method: 'get',
+        host: `${PUBLIC_API_HOST}/${apiVersion}`,
+        url: '/autosuggest-selection',
+        query: {
+          'raw-input': '',
+          selection: selected.words,
+          rank: `${selected.rank}`,
+          'source-api': 'text',
+          key: apiKey,
+        },
+        headers: {
+          'X-Api-Key': apiKey,
+          'X-Correlation-ID': sessionId,
+          ...HEADERS,
+        },
+        body: null,
+      };
+      expect(await client.onSelected(selected)).toBeUndefined();
+      expect(transportSpy).toHaveBeenCalledOnce();
+      expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
+    });
+
     describe('should call /autosuggest-selection with initial request options override', () => {
       const input = `${CHANCE.word()}.${CHANCE.word()}.${CHANCE.letter()}`;
       const nResults = CHANCE.natural();
@@ -387,13 +418,16 @@ describe('Autosuggest Client', () => {
         };
       };
       utilisationFnSpy = vi.fn();
-      utilisationFn = (path: string, data?: RequestParams) => {
-        utilisationFnSpy([path, data]);
+      utilisationFn = (path: string, params?: RequestParams) => {
+        utilisationFnSpy([path, params]);
+        const { query, headers } = params ?? {};
         switch (path) {
           case '/autosuggest':
             return {
-              headers: data?.headers,
-              body: null,
+              headers,
+              body: {
+                fromQueryParams: query,
+              },
             };
           case '/autosuggest-selection':
           default:
@@ -472,10 +506,10 @@ describe('Autosuggest Client', () => {
       expect(transportSpy).toHaveBeenNthCalledWith(1, transportArguments);
     });
 
-    it('should send metrics to utilisation-api when /autosuggest is called', async () => {
+    it('should send custom metrics to utilisation-api when /autosuggest is called', async () => {
       client = AutosuggestClient.init(
         apiKey,
-        { ...config, host: 'http://api.what3words.com' },
+        { ...config, host: PUBLIC_API_HOST },
         transport,
         utilisationFn
       );
@@ -505,7 +539,7 @@ describe('Autosuggest Client', () => {
       const preferLand = CHANCE.bool();
       const transportArguments = {
         method: 'get',
-        host: `http://api.what3words.com/${apiVersion}`,
+        host: `${PUBLIC_API_HOST}/${apiVersion}`,
         url: '/autosuggest',
         query: {
           key: apiKey,
@@ -556,9 +590,12 @@ describe('Autosuggest Client', () => {
           'X-Correlation-ID': sessionId,
           ...HEADERS,
         },
-        body: null,
+        body: {
+          fromQueryParams: transportArguments.query,
+        },
       });
       expect(transportSpy).toHaveBeenNthCalledWith(2, transportArguments);
+      expect(utilisationFnSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should call /autosuggest with voice input type', async () => {
