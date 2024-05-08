@@ -9,8 +9,8 @@ import {
   HEADERS,
   RequestParams,
   Transport,
+  UtilisationFn,
 } from '@/.';
-import { UtilisationFn } from '@/lib/utilisation';
 import {
   generateAutosuggestSuggestion,
   generateCoordinate,

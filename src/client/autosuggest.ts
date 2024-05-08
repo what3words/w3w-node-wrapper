@@ -1,4 +1,4 @@
-import type { ApiClientConfiguration, Transport } from '../lib';
+import type { ApiClientConfiguration, Transport, UtilisationFn } from '../lib';
 import {
   ApiClient,
   W3W_POSSIBLE_REGEX,
@@ -8,7 +8,6 @@ import {
   coordinatesToString,
   validLanguage,
 } from '../lib';
-import { UtilisationFn } from '../lib/utilisation';
 
 import type { Bounds, Coordinates } from './response.model';
 

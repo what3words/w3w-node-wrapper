@@ -1,6 +1,5 @@
 import { ApiClient, boundsToString } from '../lib';
-import type { ApiClientConfiguration, Transport } from '../lib';
-import { UtilisationFn } from '../lib/utilisation';
+import type { ApiClientConfiguration, Transport, UtilisationFn } from '../lib';
 import type { Coordinates, FeatureCollectionResponse } from './response.model';
 
 export interface GridSectionJsonResponse {
