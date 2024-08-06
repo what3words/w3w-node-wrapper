@@ -15,6 +15,13 @@ export class UnauthorizedError extends TransportError {
     super(message || 'Unauthorized', 401);
   }
 }
+
+export class PaymentRequiredError extends TransportError {
+  constructor(message?: string) {
+    super(message || 'Payment Required', 402);
+  }
+}
+
 export class ForbiddenError extends TransportError {
   constructor(message?: string) {
     super(message || 'Forbidden', 403);
@@ -57,6 +64,8 @@ export function errorHandler<T>(
         throw new BadRequestError(message);
       case 401:
         throw new UnauthorizedError(message);
+      case 402:
+        throw new PaymentRequiredError(message);
       case 403:
         throw new ForbiddenError(message);
       case 404:
