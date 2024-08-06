@@ -54,6 +54,7 @@ export const languages = [
   'ru',
   'si',
   'sk',
+  'sl',
   'sv',
   'sw',
   'ta',
