@@ -656,7 +656,6 @@ describe('Autosuggest Client', () => {
     beforeEach(() => {
       apiKey = CHANCE.string({ length: 8 });
       apiVersion = ApiVersion.Version1;
-      // host = CHANCE.url({ path: '' });
       host = 'https://api.dev.non-production.w3w.io';
       config = { host, apiVersion, headers: {} };
       client = AutosuggestClient.init(apiKey, config);
