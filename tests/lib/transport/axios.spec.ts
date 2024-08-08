@@ -82,7 +82,6 @@ describe('Axios Transport', () => {
             details || MOCK_ERROR_RESPONSE
           );
         } catch (err) {
-          console.log('error', err);
           expect(err).toHaveProperty('message');
           expect(err).toHaveProperty('status');
           expect(err.message).toEqual(message);
