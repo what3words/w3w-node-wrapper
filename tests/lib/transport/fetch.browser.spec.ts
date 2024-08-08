@@ -113,6 +113,11 @@ describe('Fetch Transport - Browser ', () => {
     const errorStatuses = [
       { status: 400, message: 'Bad Request' },
       { status: 401, message: 'Unauthorized' },
+      {
+        status: 402,
+        message: 'Payment Required',
+        details: { error: { code: 'QuotaExceeded' } },
+      },
       { status: 403, message: 'Forbidden' },
       { status: 404, message: 'Not Found' },
       { status: 500, message: 'Internal Server Error' },
@@ -120,11 +125,11 @@ describe('Fetch Transport - Browser ', () => {
       { status: 503, message: 'Service Unavailable' },
       { status: 504, message: 'Gateway Timeout' },
     ];
-    errorStatuses.forEach(({ status, message }) => {
+    errorStatuses.forEach(({ status, message, details }) => {
       it(`should handle ${status} errors`, async () => {
         nock(host)
           [method](`${url}?${searchParams(query)}`)
-          .reply(status);
+          .reply(status, details);
 
         await renderComponent(res => {
           useEffect(() => {
@@ -132,13 +137,17 @@ describe('Fetch Transport - Browser ', () => {
               window.result = {
                 message: error.message,
                 status: error.status,
+                details: error.details,
               };
               res(null);
             });
           }, []);
         });
 
-        expect(window.result).toEqual({ status, message });
+        expect(window.result.message).toEqual(message);
+        expect(window.result.status).toEqual(status);
+        if (details?.error)
+          expect(window.result.details).toEqual(details?.error);
       });
     });
   });

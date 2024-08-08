@@ -59,6 +59,11 @@ describe('Axios Transport', () => {
     const errorStatuses = [
       { status: 400, message: 'Bad Request' },
       { status: 401, message: 'Unauthorized' },
+      {
+        status: 402,
+        message: 'Payment Required',
+        details: { error: { code: 'QuotaExceeded' } },
+      },
       { status: 403, message: 'Forbidden' },
       { status: 404, message: 'Not Found' },
       { status: 500, message: 'Internal Server Error' },
@@ -66,19 +71,23 @@ describe('Axios Transport', () => {
       { status: 503, message: 'Service Unavailable' },
       { status: 504, message: 'Gateway Timeout' },
     ];
-    errorStatuses.forEach(({ status, message }) => {
+    errorStatuses.forEach(({ status, message, details }) => {
       it(`should handle ${status} errors`, async () => {
         nock(host)
           [method](`${url}?${searchParams(query)}`)
-          .reply(status, MOCK_ERROR_RESPONSE);
+          .reply(status, details || MOCK_ERROR_RESPONSE);
 
         try {
-          expect(await axiosTransport()(request)).toEqual(MOCK_ERROR_RESPONSE);
+          expect(await axiosTransport()(request)).toEqual(
+            details || MOCK_ERROR_RESPONSE
+          );
         } catch (err) {
+          console.log('error', err);
           expect(err).toHaveProperty('message');
           expect(err).toHaveProperty('status');
           expect(err.message).toEqual(message);
           expect(err.status).toEqual(status);
+          if (details?.error) expect(err.details).toEqual(details?.error);
         }
       });
     });
