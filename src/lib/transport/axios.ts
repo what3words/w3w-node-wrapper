@@ -36,6 +36,7 @@ export function axiosTransport(): Transport {
             status: err.response?.status || err.status || 500,
             statusText: err.response?.statusText || err.statusText,
             headers: err.response?.headers,
+            body: err.response?.data,
           });
         throw err;
       });
