@@ -1,13 +1,10 @@
-import * as esbuild from "esbuild";
-import { polyfillNode } from "esbuild-plugin-polyfill-node";
+import * as esbuild from 'esbuild';
+import { buildOptions } from './common.mjs';
 
 const PORT = 3000;
 
 const ctx = await esbuild.context({
-  entryPoints: ["src/what3words.js"],
-  bundle: true,
-  outfile: "public/dist/bundle.js",
-  plugins: [polyfillNode()],
+  ...buildOptions,
   sourcemap: true,
 });
 
@@ -15,7 +12,7 @@ await ctx.watch();
 
 const { host, port } = await ctx.serve({
   port: PORT,
-  servedir: "public",
+  servedir: 'public',
 });
 
 console.log(`⚡ Serving app at http://${host}:${port}`);

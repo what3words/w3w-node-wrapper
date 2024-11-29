@@ -1,12 +1,15 @@
 import * as esbuild from 'esbuild';
-import { polyfillNode } from 'esbuild-plugin-polyfill-node';
+import { buildOptions } from './common.mjs';
+
+const define = {};
+
+for (const k in process.env) {
+  if (k.startsWith('W3W_')) {
+    define[`process.env.${k}`] = JSON.stringify(process.env[k]);
+  }
+}
 
 await esbuild
-  .build({
-    entryPoints: ['src/what3words.js'],
-    bundle: true,
-    outfile: 'public/dist/bundle.js',
-    plugins: [polyfillNode({})],
-  })
+  .build(buildOptions)
   .then(() => console.log('⚡ Done'))
   .catch(() => process.exit(1));

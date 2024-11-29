@@ -3,11 +3,14 @@ import { initMap } from './google';
 
 // SETUP
 const DEFAULT_MAP_CENTER = { lat: 51.52086, lng: -0.195499 };
-const GOOGLE_API_KEY = ''; //TODO: Add your Google Maps API key here
 const MAP_SELECTOR = 'div#w3w-map';
 const MAP_ZOOM = 20;
 const THREE_WORD_ADDRESS = 'filled.count.soap';
-const W3W_API_KEY = ''; //TODO: Add your What3words API key here
+const W3W_API_KEY = process.env.W3W_API_KEY;
+const W3W_API_ENDPOINT = process.env.W3W_API_ENDPOINT;
+const GOOGLE_API_KEY = process.env.W3W_MAP_API_KEY;
+
+if (!GOOGLE_API_KEY) throw new Error('Missing Google Maps API key');
 
 // Dynamically load google maps API - must attach to DOM after callback is defined
 const googleScript = document.createElement('script');
@@ -51,19 +54,26 @@ function getGrid() {
   const ne = map.getBounds().getNorthEast();
   const sw = map.getBounds().getSouthWest();
 
-  // Call the what3words Grid API to obtain the grid squares within the current visble bounding box
-  return window.what3words.gridSection({
-    boundingBox: {
-      southwest: {
-        lat: sw.lat(),
-        lng: sw.lng(),
+  // Call the what3words Grid API to obtain the grid squares within the current visible bounding box
+  return window.what3words
+    .gridSection({
+      boundingBox: {
+        southwest: {
+          lat: sw.lat(),
+          lng: sw.lng(),
+        },
+        northeast: {
+          lat: ne.lat(),
+          lng: ne.lng(),
+        },
       },
-      northeast: {
-        lat: ne.lat(),
-        lng: ne.lng(),
-      },
-    },
-  });
+    })
+    .catch(err => {
+      const {
+        details: { code, message },
+      } = err;
+      console.error(`Error retrieving grid sections - ${code}: ${message}`);
+    });
 }
 
 function onMapClick(e) {
@@ -121,16 +131,17 @@ function plotGrid(newGrid) {
  * Make use of google maps script callback functionality to load the app
  */
 window.init = function () {
+  if (!W3W_API_KEY) throw new Error('Invalid or missing what3words API key.');
+
   window.what3words = what3words(
     W3W_API_KEY,
-    { apiVersion: ApiVersion.Version3 },
+    { apiVersion: ApiVersion.Version3, host: W3W_API_ENDPOINT },
     { transport: axiosTransport() }
   );
 
   // Retrieve and print out supported languages
   window.what3words.availableLanguages().then(res => {
     languages = res.languages;
-    console.log({ supportedLanguages: languages });
   });
 
   // Retrieve coordinates for initial three word address
@@ -138,7 +149,14 @@ window.init = function () {
     .convertToCoordinates({ words: THREE_WORD_ADDRESS })
     .then(res => {
       mapCenter = res.coordinates;
-      console.log(res);
+    })
+    .catch(err => {
+      const {
+        details: { code, message },
+      } = err;
+      console.error(
+        `Error converting 3wa to coordinates - ${code}: ${message}`
+      );
     })
     .finally(() => {
       // Initialise map instance
@@ -153,7 +171,7 @@ window.init = function () {
       map.addListener('bounds_changed', e => {
         const zoom = map.getZoom();
         clearGrid();
-        if (zoom > 15) getGrid(map).then(plotGrid);
+        if (zoom > 15) getGrid(map).then(grid => grid && plotGrid(grid));
       });
       map.addListener('click', onMapClick);
     });
