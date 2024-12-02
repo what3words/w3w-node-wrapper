@@ -3,7 +3,13 @@ import { buildOptions } from './common.mjs';
 
 const PORT = 3000;
 
-const ctx = await esbuild.context({ ...buildOptions, sourcemap: true });
+const ctx = await esbuild.context({
+  ...buildOptions,
+  banner: {
+    js: `new EventSource('/esbuild').addEventListener('change', () => location.reload());`,
+  },
+  sourcemap: true,
+});
 
 await ctx.watch();
 
