@@ -8,7 +8,8 @@ import what3words, {
 const COMPONENT_SELECTOR = 'div#w3w-autosuggest';
 const INPUT_SELECTOR = 'input#autosuggest';
 const SUGGESTIONS_SELECTOR = 'div#suggestions';
-const W3W_API_KEY = ''; //TODO: Add your what3words API key here
+const W3W_API_KEY = process.env.W3W_API_KEY;
+const W3W_API_ENDPOINT = process.env.W3W_API_ENDPOINT;
 
 // DECLARATIONS
 let component, input, selected;
@@ -91,6 +92,8 @@ function displaySuggestions(suggestions = []) {
  * Use an IIFE to load the app
  */
 (function init() {
+  if (!W3W_API_KEY) throw new Error('Invalid or missing what3words API key.');
+
   input = document.querySelector(INPUT_SELECTOR);
   component = document.querySelector(COMPONENT_SELECTOR);
 
@@ -98,14 +101,14 @@ function displaySuggestions(suggestions = []) {
    * what3words is now available!
    */
   window.what3words = what3words(
-    '',
-    { apiVersion: ApiVersion.Version3 },
+    W3W_API_KEY,
+    { apiVersion: ApiVersion.Version3, host: W3W_API_ENDPOINT },
     { transport: axiosTransport() }
   );
   let timeout = null;
 
-  // Configure what3words node wrapper
-  window.what3words.setApiKey(W3W_API_KEY);
+  // Alternatively, you can set the API key like this:
+  // window.what3words.setApiKey(W3W_API_KEY);
 
   // Attach event listeners to target input element
   input.addEventListener('focus', ({ target }) => {
